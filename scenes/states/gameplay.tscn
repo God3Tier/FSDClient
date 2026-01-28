@@ -1,0 +1,12 @@
+[gd_scene format=3 uid="uid://oaytnoujefro"]
+
+[ext_resource type="Texture2D" uid="uid://bc8twhgpbhyxn" path="res://assets/battlefield/background/background_test_box.png" id="1_i81dy"]
+[ext_resource type="Script" uid="uid://juxgwh0vufqt" path="res://gameplay/Gameloop.cs" id="2_iwad7"]
+
+[node name="Gameplay" type="Node2D" unique_id=1619366378]
+
+[node name="BackgroundTestBox" type="Sprite2D" parent="." unique_id=474274137]
+position = Vector2(2413, 1562)
+scale = Vector2(1.0383619, 0.97017634)
+texture = ExtResource("1_i81dy")
+script = ExtResource("2_iwad7")
