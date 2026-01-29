@@ -1,25 +1,53 @@
+using System;
+using System.Collections.Generic;
+using System.Threading;
 using Client.autoLoad;
 using Client.data;
+using Godot;
+using static Godot.GD;
 
 namespace Client.gameplay;
 
 
-public class Gameplay(PlayerData playerData1, PlayerData playerData2)
+public partial class Gameloop: Node2D
 {
 
-    private NetworkManager NetworkManager;
-    private PlayerData PlayerData1 = playerData1;
-    private PlayerData PlayerData2 = playerData2;
+    public NetworkManager NetworkManager { get; set; }
+    public PlayerData PlayerData1 { get; set; }
+    public PlayerData PlayerData2 { get; set; }
     // Haha funny math
-    private CardData[][] Board = new CardData[4][];
+    private CardData[][] Board { get; set; } = new CardData[4][];
 
 
-    public void startGameLoop()
+    public void StartGameLoop()
     {
         
     }
     
+    // I am of the assumption that this is what is being called by the 
+    public override void _Ready()
+    {
+
+        // This is just for me to test out my threading implementation of the program
+        List<CardData> cardDatas = [new(10, "Hello"), new(15, "Goodbye")];
+        PlayerData pd1 = new("John", "Gay icon", cardDatas);
     
+        Thread.Sleep(8000);
+        Print("pd1 Elixer " + pd1.Elixer);
+        pd1.EndGame();
+
+        pd1.SyncRemoveElixer(3); 
+        Print("pd1 Elixer after removing 3 " + pd1.Elixer); 
+        
+        
+    }
+
+    public override void _Process(double delta)
+    {
+        
+    }
+
+
 
     /*
     * This function is to explicitely listen to server's response from the network
@@ -35,13 +63,13 @@ public class Gameplay(PlayerData playerData1, PlayerData playerData2)
     {
 
     }
-    
+
     /*
-    * I am going on a whim here but this should be called within the main game loop 
+    * I am going on a whim here but this should be called within the main game loop
     */
     public static void writeToServer()
     {
-
+        
     }
 
 }

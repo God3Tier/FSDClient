@@ -7,13 +7,12 @@ namespace Client.autoLoad;
 public class NetworkManager
 {
 
-
-    public static void listenForPlayerConnection()
+    public static void ListenForPlayerConnection()
     {
 
     }
 
-    public static void writeToServer(string msg)
+    public static void WriteToServer(string msg)
     {
 
     }

@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Godot;
+using static Godot.GD;
 
 namespace Client.data;
 
@@ -9,9 +11,9 @@ public class PlayerData
     private string Username { get; set; }
     private readonly System.Threading.Mutex Mutex = new();
     private readonly System.Threading.CancellationTokenSource _ctx = new();
-    private int Elixer = 0;
+    public int Elixer { get; private set; } = 0;
     private string IconName { get; set; }
-    private Sprite2D Sprite2D { get; } = new();
+    private Sprite2D Sprite2D { get; }
     private int Health { get; set; } = 250;
     private int Attack { get; } = 5;
     private List<CardData> CurrHand { get; } = new();
@@ -22,23 +24,25 @@ public class PlayerData
         Username = username;
         IconName = iconName;
         DeckCardDatas = deckCardDatas;
+        Sprite2D = new Sprite2D();
         // TODO change this to the actual directory
-        var texture2D = ResourceLoader.Load<Texture2D>(iconName);
-        Sprite2D.Texture = texture2D;
-        
-        // YES FOR SURE THIS IS A GOOD IDEA 
+        // var texture2D = ResourceLoader.Load<Texture2D>(iconName);
+        // Sprite2D.Texture = texture2D;
+
+        // YES FOR SURE THIS IS A GOOD IDEA
         Task.Run(() =>
         {
-            if (_ctx.IsCancellationRequested)
+            while (!_ctx.IsCancellationRequested)
             {
-                return;
+                Thread.Sleep(200);
+                SyncIncreaseElixer();
             }
-            syncIncreaseElixer();
+
         });
     }
 
     // This function should be thrown in a thread and forgotten later
-    private async void syncIncreaseElixer()
+    private async void SyncIncreaseElixer()
     {
         Mutex.WaitOne();
         if (Elixer <= 7)
@@ -49,7 +53,7 @@ public class PlayerData
     }
 
 
-    public void syncRemoveElixer(int cardCost)
+    public void SyncRemoveElixer(int cardCost)
     {
         Mutex.WaitOne();
         if (Elixer < cardCost)
@@ -64,11 +68,11 @@ public class PlayerData
         }
         Mutex.ReleaseMutex();
     }
-    
-    
 
 
-    public void endGame()
+
+
+    public void EndGame()
     {
         _ctx.Cancel();
     }

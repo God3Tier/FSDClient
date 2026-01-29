@@ -20,7 +20,7 @@ public class CardData
 
         // Set url of this later
         string url = "";
-        var texture2D = ResourceLoader.Load<Texture2D>(url);
-        CardIcon.Texture = texture2D;
+        // var texture2D = ResourceLoader.Load<Texture2D>(url);
+        // CardIcon.Texture = texture2D;
     }
 }
