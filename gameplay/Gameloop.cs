@@ -4,18 +4,22 @@ using Client.data;
 namespace Client.gameplay;
 
 
-public class Gameplay
+public class Gameplay(PlayerData playerData1, PlayerData playerData2)
 {
 
     private NetworkManager NetworkManager;
-    private PlayerData PlayerData1;
-    private PlayerData PlayerData2;
+    private PlayerData PlayerData1 = playerData1;
+    private PlayerData PlayerData2 = playerData2;
+    // Haha funny math
+    private CardData[][] Board = new CardData[4][];
 
 
     public void startGameLoop()
     {
         
     }
+    
+    
 
     /*
     * This function is to explicitely listen to server's response from the network
