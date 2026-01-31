@@ -1,4 +1,11 @@
 # Godot 4+ specific ignores
 .godot/
 /android/
-.env
+.env 
+[Dd]ebug/
+[Rr]elease/
+[Bb]in/
+[Oo]bj/
+Tester*
+.DS_Store
+.editorconfig
