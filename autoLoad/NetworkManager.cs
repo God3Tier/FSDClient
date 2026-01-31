@@ -1,20 +1,23 @@
-namespace Client.autoLoad;
-
+using Godot;
 
 // I will leave this as static empty methods or will load fake data into here
-// since the server is not up yet 
+// since the server is not up yet
 // Also I do not want to learn network code yet so....
-public class NetworkManager
+public partial class NetworkManager : Node
 {
 
-    public static void ListenForPlayerConnection()
-    {
+	public override void _Ready()
+	{
 
-    }
+	}
+	public void ListenForPlayerConnection()
+	{
 
-    public static void WriteToServer(string msg)
-    {
+	}
 
-    }
+	public void WriteToServer(string msg)
+	{
+
+	}
 
 }

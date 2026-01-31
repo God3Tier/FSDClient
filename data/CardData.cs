@@ -23,4 +23,6 @@ public class CardData
         // var texture2D = ResourceLoader.Load<Texture2D>(url);
         // CardIcon.Texture = texture2D;
     }
+    
+    
 }

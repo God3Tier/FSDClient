@@ -15,6 +15,12 @@ run/main_scene="uid://oaytnoujefro"
 config/features=PackedStringArray("4.6", "C#", "GL Compatibility")
 config/icon="res://icon.svg"
 
+[autoload]
+
+GameStateManager="*uid://5p8jvukstm3j"
+PlayerStateManager="*res://autoLoad/PlayerStateManager.cs"
+NetworkManager="*uid://bbwqfw7nmkams"
+
 [dotnet]
 
 project/assembly_name="Client"

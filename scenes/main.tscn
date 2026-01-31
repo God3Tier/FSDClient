@@ -4,4 +4,6 @@
 
 [node name="Main" type="Node" unique_id=2053187803]
 
-[node name="Gameplay" parent="." unique_id=1619366378 instance=ExtResource("1_o5qli")]
+[node name="SceneContainer" type="Node" parent="." unique_id=948683439]
+
+[node name="Gameplay" parent="SceneContainer" unique_id=1619366378 instance=ExtResource("1_o5qli")]
