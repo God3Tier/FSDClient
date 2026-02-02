@@ -26,8 +26,8 @@ scale = Vector2(1.3633854, 1.292035)
 texture = ExtResource("3_uugvl")
 
 [node name="BattlefieldSquare22" type="Sprite2D" parent="StaticBackground/Battlefield" unique_id=671101364]
-position = Vector2(699.50006, 368.59973)
-scale = Vector2(1.2920356, 1.2920355)
+position = Vector2(681.75, 361.7999)
+scale = Vector2(1.2134956, 1.2619478)
 texture = ExtResource("3_uugvl")
 
 [node name="BattlefieldSquare30" type="Sprite2D" parent="StaticBackground/Battlefield" unique_id=1839681790]
@@ -36,13 +36,13 @@ scale = Vector2(1.3683629, 1.2853979)
 texture = ExtResource("3_uugvl")
 
 [node name="BattlefieldSquare31" type="Sprite2D" parent="StaticBackground/Battlefield" unique_id=1278638324]
-position = Vector2(70.49997, 982.0997)
-scale = Vector2(1.2920352, 1.2544249)
+position = Vector2(48.00004, 985.24994)
+scale = Vector2(1.3849559, 1.2776557)
 texture = ExtResource("3_uugvl")
 
 [node name="BattlefieldSquare32" type="Sprite2D" parent="StaticBackground/Battlefield" unique_id=1097677055]
-position = Vector2(700.5, 993.5996)
-scale = Vector2(1.3517699, 1.1924778)
+position = Vector2(689, 989)
+scale = Vector2(1.3517699, 1.225884)
 texture = ExtResource("3_uugvl")
 
 [node name="BattlefieldTurnTimerEmpty" type="Sprite2D" parent="StaticBackground/Battlefield" unique_id=2060408673]

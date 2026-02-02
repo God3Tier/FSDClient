@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Godot;
 using static Godot.GD;
 
-namespace Client.data;
+namespace FSDClient.data;
 
 public class PlayerData
 {
@@ -13,8 +13,8 @@ public class PlayerData
     // TODO: Not sure whether this is standard to keep it individual or to create an abstracted class
     //       that acts as a wrapper around the data but ts looks ugly
     private readonly System.Threading.Mutex Mutex = new();
-    private readonly System.Threading.CancellationTokenSource _ctx = new();
     public int Elixer { get; private set; } = 0;
+    private readonly System.Threading.CancellationTokenSource _ctx = new();
     private string IconName { get; set; }
     private bool MainPlayer { get; set; }
     private Sprite2D Sprite2D { get; }
@@ -45,7 +45,7 @@ public class PlayerData
         {
             return;
         }
-        
+
         Task.Run(() =>
         {
             while (!_ctx.IsCancellationRequested)

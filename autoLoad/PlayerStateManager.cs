@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Client.data;
+using FSDClient.data;
 using Godot;
 
 
@@ -17,8 +17,10 @@ public partial class PlayerStateManager : Node
         Instance = this;
     }
 
+    // Here, we should request however the server stores the data of the user
     public void LoadIntoData()
     {
+        
     }
 
 
