@@ -8,21 +8,17 @@ public class CardData
     // How to sync with server? 
     private int Cost { get; }
     private string Name { get; }
+    private Colour Color { get; set;}
     private int Health { get; set; }
     private int Attack { get; }
-    private Sprite2D CardIcon { get; } = new();
 
 
-    public CardData(int cost, string name)
+    public CardData(int cost, string name, Colour colour)
     {
         Cost = cost;
         Name = name;
-
+        Color = colour;
         // Set url of this later
-        string url = "";
-        // var texture2D = ResourceLoader.Load<Texture2D>(url);
-        // CardIcon.Texture = texture2D;
     }
-    
     
 }

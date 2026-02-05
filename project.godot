@@ -21,6 +21,15 @@ GameStateManager="*uid://5p8jvukstm3j"
 PlayerStateManager="*res://autoLoad/PlayerStateManager.cs"
 NetworkManager="*uid://bbwqfw7nmkams"
 
+[display]
+
+window/size/viewport_width=3500
+window/size/viewport_height=6000
+window/size/minimize_disabled=true
+window/size/maximize_disabled=true
+window/stretch/scale=0.5
+window/handheld/orientation=1
+
 [dotnet]
 
 project/assembly_name="Client"
