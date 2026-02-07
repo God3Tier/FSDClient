@@ -14,12 +14,19 @@ config/name="Client"
 run/main_scene="uid://oaytnoujefro"
 config/features=PackedStringArray("4.6", "C#", "GL Compatibility")
 config/icon="res://icon.svg"
+boot_splash/stretch/aspect="keep"
+boot_splash/stretch/mode="disabled"
 
 [autoload]
 
 GameStateManager="*uid://5p8jvukstm3j"
 PlayerStateManager="*res://autoLoad/PlayerStateManager.cs"
 NetworkManager="*uid://bbwqfw7nmkams"
+
+[display]
+
+window/stretch/mode="viewport"
+window/stretch/aspect="expand"
 
 [dotnet]
 

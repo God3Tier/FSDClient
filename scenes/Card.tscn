@@ -1,0 +1,23 @@
+[gd_scene format=3 uid="uid://bln7quiudsln"]
+
+[ext_resource type="Texture2D" uid="uid://dtn5pffptbq5p" path="res://assets/cards/purple_card_outline.png" id="1_3lqu5"]
+[ext_resource type="Texture2D" uid="uid://bsnnj0lt2cyse" path="res://assets/characters/robot.png" id="1_ptqf6"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ptqf6"]
+size = Vector2(124, 150)
+
+[node name="Card" type="Sprite2D" unique_id=465922005]
+
+[node name="CardBackground" type="Sprite2D" parent="." unique_id=311578133]
+scale = Vector2(0.36127162, 0.36127162)
+texture = ExtResource("1_3lqu5")
+
+[node name="CardSprite" type="Sprite2D" parent="CardBackground" unique_id=140093776]
+position = Vector2(1.3840332, -7.751953)
+scale = Vector2(0.9743362, 0.9743362)
+texture = ExtResource("1_ptqf6")
+
+[node name="Area2D" type="Area2D" parent="." unique_id=792340437]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=194522212]
+shape = SubResource("RectangleShape2D_ptqf6")

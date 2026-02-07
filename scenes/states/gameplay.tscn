@@ -5,14 +5,19 @@
 [ext_resource type="Texture2D" uid="uid://b3asc25yhdbs7" path="res://assets/battlefield/battlefield_square.png" id="3_uugvl"]
 [ext_resource type="Texture2D" uid="uid://dykma1bmow6ut" path="res://assets/battlefield/battlefield_turn_timer_empty.png" id="4_sggww"]
 [ext_resource type="Texture2D" uid="uid://rswv3dvbgt2r" path="res://assets/battlefield/battlefield_battle.png" id="5_vtlph"]
+[ext_resource type="PackedScene" uid="uid://bln7quiudsln" path="res://scenes/Card.tscn" id="6_vtlph"]
+[ext_resource type="Script" uid="uid://dn8g5j3fg63ie" path="res://scenes/states/CardManager.cs" id="7_4igqj"]
 
 [node name="Gameplay" type="Node2D" unique_id=419605887]
 script = ExtResource("2_iwad7")
 
 [node name="StaticBackground" type="Node2D" parent="." unique_id=247447099]
+position = Vector2(-480, -355)
 
 [node name="Battlefield" type="Sprite2D" parent="StaticBackground" unique_id=1829463805]
-position = Vector2(2113, 2087)
+visible = false
+position = Vector2(1061, 680)
+scale = Vector2(0.19513297, 0.19513296)
 texture = ExtResource("1_i81dy")
 
 [node name="BattlefieldSquare20" type="Sprite2D" parent="StaticBackground/Battlefield" unique_id=2103368358]
@@ -83,3 +88,12 @@ texture = ExtResource("3_uugvl")
 position = Vector2(666, -961)
 scale = Vector2(1.271172, 1.2548656)
 texture = ExtResource("3_uugvl")
+
+[node name="Card" parent="." unique_id=465922005 instance=ExtResource("6_vtlph")]
+position = Vector2(462, 233)
+
+[node name="Card2" parent="." unique_id=1416912940 instance=ExtResource("6_vtlph")]
+position = Vector2(248, 236)
+
+[node name="CardManager" type="Node2D" parent="." unique_id=30739936]
+script = ExtResource("7_4igqj")
