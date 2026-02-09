@@ -9,7 +9,7 @@ public partial class PlayerView : Control
     private static readonly string BACKGROUND_BASE = "res://assets/heros/PLACEHOLDER_hero.png";
     private static readonly string COUNTER_ATTACK = "res://assets/symbols/counterattack_symbol.png";
     private static readonly string DEFENCE_SYMBOL = "res://assets/symbols/counterattack_symbol.png";
-    
+
     public PlayerView(PlayerViewData playerViewData)
     {
         var Background = new TextureRect();
@@ -26,7 +26,12 @@ public partial class PlayerView : Control
         var counterAttackTexture = GD.Load<Texture2D>(COUNTER_ATTACK);
         CounterAttack.Texture = counterAttackTexture;
         AddChild(CounterAttack);
-        
+
+
+    }
+    
+    public void SetPosition()
+    {
         
     }
 }

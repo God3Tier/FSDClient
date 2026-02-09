@@ -2,10 +2,7 @@ namespace FSDClient.data;
 
 using Godot;
 
-public record CardViewData(string Color, string IconName, int Cost, int Health, int Attack)
-{
-
-}
+public record CardViewData(string Color, string IconName, int Cost, int Health, int Attack);
 
 public class CardViewTextures
 {
