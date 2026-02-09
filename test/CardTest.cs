@@ -25,7 +25,7 @@ public partial class CardTest : Node2D
 		// await ToSignal(GetTree().CreateTimer(1.0), "timeout");
 		// CardView.UpdateHealth(50);
 		// await ToSignal(GetTree().CreateTimer(1.0), "timeout");
-		CardView.OnFieldMode();
+		// CardView.OnFieldMode();
 
 	}
 
