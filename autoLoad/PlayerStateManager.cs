@@ -16,7 +16,7 @@ public partial class PlayerStateManager : Node
         PlayerData = new PlayerData("Placeholder", "Placeholder", DeckCardDatas, true);
         Instance = this;
     }
-
+    
     // Here, we should request however the server stores the data of the user
     public void LoadIntoData()
     {
