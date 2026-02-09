@@ -9,18 +9,18 @@ public enum Colour
     GREEN,
     YELLOW,
     PURPLE,
-    GREY
+    GREY,
 }
 
 public class CardData
 {
     // Ts is not exaustive yet. I need to see whether i need a timer here. But 
     // How to sync with server? 
-    private int Cost { get; }
-    private string Name { get; }
-    private Colour Color { get; set; }
-    private int Health { get; set; }
-    private int Attack { get; }
+    public int Cost { get; }
+    public string Name { get; }
+    public Colour Color { get; set; }
+    public int Health { get; private set; }
+    public int Attack { get; }
 
 
     public CardData(int cost, string name, Colour colour, int health, int attack)

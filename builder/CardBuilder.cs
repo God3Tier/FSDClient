@@ -8,10 +8,12 @@ public record CardViewData(string Color, string IconName, int Cost, int Health, 
 
 public class CardBuilder
 {
-    public CardView Build(CardData CardData)
+    public static CardView Build(CardData CardData)
     {
-        
-        return null;
+        var data = new CardViewData(CardData.Color.ToString().ToLower(), CardData.Name, CardData.Cost, CardData.Health, CardData.Attack);
+        var CardDisplay = new CardView();
+        CardDisplay.Setup(data);
+        return CardDisplay;
     }
 
 }
