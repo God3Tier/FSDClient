@@ -19,19 +19,20 @@ public partial class CardTest : Node2D
 	{
 
 		TestCard = new CardData(10, "robot", Colour.RED, 100, 10);
-		var CardView = CardBuilder.Build(TestCard);
+		var CardView = Builder.Build(TestCard);
 		AddChild(CardView);
 
-		await ToSignal(GetTree().CreateTimer(1.0), "timeout");
-
-		CardView.UpdateHealth(50);
+		// await ToSignal(GetTree().CreateTimer(1.0), "timeout");
+		// CardView.UpdateHealth(50);
+		// await ToSignal(GetTree().CreateTimer(1.0), "timeout");
+		CardView.OnFieldMode();
 
 	}
 
 
 	public override void _Process(double delta)
 	{
-
+		
 
 	}
 }

@@ -6,13 +6,13 @@ using Godot;
 
 public record CardViewData(string Color, string IconName, int Cost, int Health, int Attack);
 
-public class CardBuilder
+public class Builder
 {
     public static CardView Build(CardData CardData)
     {
         var data = new CardViewData(CardData.Color.ToString().ToLower(), CardData.Name, CardData.Cost, CardData.Health, CardData.Attack);
-        var CardDisplay = new CardView();
-        CardDisplay.Setup(data);
+        var CardDisplay = new CardView(data);
+        // CardDisplay.Setup(data);
         return CardDisplay;
     }
 
