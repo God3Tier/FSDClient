@@ -11,9 +11,9 @@ config_version=5
 [application]
 
 config/name="Client"
-run/main_scene="uid://oaytnoujefro"
+run/main_scene="uid://bbgm8t1esyy3b"
 config/features=PackedStringArray("4.6", "C#", "GL Compatibility")
-config/icon="res://icon.svg"
+config/icon="uid://cedlkakda2e78"
 
 [autoload]
 
@@ -21,9 +21,23 @@ GameStateManager="*uid://5p8jvukstm3j"
 PlayerStateManager="*res://autoLoad/PlayerStateManager.cs"
 NetworkManager="*uid://bbwqfw7nmkams"
 
+[display]
+
+window/size/viewport_width=320
+window/size/viewport_height=568
+window/size/window_width_override=640
+window/size/window_height_override=1136
+window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
+window/handheld/orientation=1
+
 [dotnet]
 
 project/assembly_name="Client"
+
+[input_devices]
+
+pointing/emulate_touch_from_mouse=true
 
 [physics]
 
