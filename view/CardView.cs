@@ -20,9 +20,10 @@ public partial class CardView : Control
     private Label ElixirCost { get; set; }
     private Label CurrentHealth { get; set; }
 
-    // There should be a better way to do this. Ts looking like YandereDev's code
-    // I think I should abstract the code to another preperation function for the scale. Otherwise
-    // this looks abit too messy
+    /*
+        Instantiate the CardView as a Control that has all the different textures it renders as a 
+        
+    */
     public CardView(CardViewTextures CardViewTextures)
     {
         // Spawn the card diagrams (may have plans to abstract this to the record directly loading in)

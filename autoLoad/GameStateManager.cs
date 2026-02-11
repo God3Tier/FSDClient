@@ -1,13 +1,22 @@
 using Godot;
 
+/*
+    These are the different Gamestates that can exist for the application. The player is always either in
+    one of these scenes
+*/
 public enum GameState
 {
-	HOMESCREEN,
-	DECKSELECTION,
-	SEARCHINGFORPLAYER,
-	INGAMEMODE
+    HOMESCREEN,
+    DECKSELECTION,
+    SEARCHINGFORPLAYER,
+    INGAMEMODE
 }
 
+/*
+    This is an autoloaded Manager that has a static instance that is a reference to the class. It is to be instantiated 
+    at the start of the client being open. This manages at which scene the main node will be running and is to be called 
+    to switch between scenes
+*/
 public partial class GameStateManager : Node
 {
 
@@ -16,7 +25,8 @@ public partial class GameStateManager : Node
 	
 	public static GameStateManager Instance { get; private set; }
 
-	// Here, we initialize the gamestate 
+	// This will be run when the class is constrcuted. It will get the SceneContainer and will initialise to the 
+	// homescreen state
 	public override void _Ready()
 	{
 		var sceneContainer = GetNode<Node>("SceneContainer");

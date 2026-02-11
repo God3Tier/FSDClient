@@ -18,14 +18,17 @@ public partial class CardTest : Node2D
 	public async override void _Ready()
 	{
 
-		TestCard = new CardData(10, "robot", Colour.RED, 100, 10);
-		var CardView = Builder.BuildCard(TestCard);
-		AddChild(CardView);
+		// TestCard = new CardData(10, "robot", Colour.RED, 100, 10);
+		// var CardView = Builder.BuildCard(TestCard);
+		// AddChild(CardView);
 
 		// await ToSignal(GetTree().CreateTimer(1.0), "timeout");
 		// CardView.UpdateHealth(50);
 		// await ToSignal(GetTree().CreateTimer(1.0), "timeout");
 		// CardView.OnFieldMode();
+
+		var playerView = Builder.BuildPlayer();
+		AddChild(playerView);
 
 	}
 
