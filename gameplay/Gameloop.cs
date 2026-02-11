@@ -11,7 +11,6 @@ namespace FSDClient.gameplay;
 public partial class Gameloop: Node2D
 {
 
-	public NetworkManager NetworkManager { get; set; }
 	// Unsure to keep this as the state manager or make it it's own individual player data. TBD on a later date
 	public PlayerStateManager MainPlayer { get; set; }
 	// This info, leave majority null, the info is not needed so extensively
