@@ -89,11 +89,11 @@ position = Vector2(666, -961)
 scale = Vector2(1.271172, 1.2548656)
 texture = ExtResource("3_uugvl")
 
-[node name="Card" parent="." unique_id=465922005 instance=ExtResource("6_vtlph")]
-position = Vector2(462, 233)
-
-[node name="Card2" parent="." unique_id=1416912940 instance=ExtResource("6_vtlph")]
-position = Vector2(248, 236)
-
 [node name="CardManager" type="Node2D" parent="." unique_id=30739936]
 script = ExtResource("7_4igqj")
+
+[node name="Card" parent="CardManager" unique_id=465922005 instance=ExtResource("6_vtlph")]
+position = Vector2(658, 458)
+
+[node name="Card2" parent="CardManager" unique_id=1416912940 instance=ExtResource("6_vtlph")]
+position = Vector2(458, 470)

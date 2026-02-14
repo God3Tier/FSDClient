@@ -32,6 +32,22 @@ public partial class CardManager : Node2D
 		}
 	}
 	
+	// For the hover effect
+	private void ConnectCardSignal(Card card)
+	{
+		card.Hovered += OnHoverOverCard;
+		card.HoveredOff += OnHoverOffCard;
+	}
+	
+	public void OnHoverOverCard(Card card)
+	{
+		GD.Print("Hovering", card);
+	}
+	
+	public void OnHoverOffCard(Card card)
+	{
+		GD.Print("Hover off", card);
+	}
 	// To return what is under our cursor when clicking
 	public Node2D _raycastCheckForCard()
 	{
@@ -57,6 +73,15 @@ public partial class CardManager : Node2D
 	{
 		// TODO: Find out why there is a bug with this = screenSize is xxx,2 when using this
 		// screenSize = GetViewportRect().Size;
+		
+		// Connect all the cards
+		foreach (Node child in GetChildren())
+		{
+			if (child is Card card)
+			{
+				ConnectCardSignal(card);
+			}
+		}
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
