@@ -3,10 +3,14 @@
 [ext_resource type="Texture2D" uid="uid://bc8twhgpbhyxn" path="res://assets/battlefield/background/background_test_box.png" id="1_48th5"]
 [ext_resource type="Texture2D" uid="uid://c6dhfdlmxtuc8" path="res://assets/tab/home.png" id="2_f80lo"]
 [ext_resource type="Texture2D" uid="uid://4c5emdt4j6ja" path="res://assets/tab/card.png" id="3_wh6in"]
+[ext_resource type="Texture2D" uid="uid://tl43u2wwetbq" path="res://assets/header/banner.png" id="4_eyscv"]
 [ext_resource type="Texture2D" uid="uid://k3uu1nfrcl6k" path="res://assets/cards/pack.png" id="4_pl3n4"]
 [ext_resource type="Texture2D" uid="uid://bc4bhq6ekhakm" path="res://assets/tab/flag.png" id="4_s07j5"]
 [ext_resource type="Texture2D" uid="uid://kbq3mfbrep06" path="res://assets/tab/gold.png" id="5_pl3n4"]
+[ext_resource type="Texture2D" uid="uid://pu52dbw7egqc" path="res://assets/header/crystal_colored.png" id="5_y784y"]
+[ext_resource type="Texture2D" uid="uid://dwxiivscfager" path="res://assets/header/gold_colored.png" id="6_6n0se"]
 [ext_resource type="Texture2D" uid="uid://bw77ugcghk103" path="res://assets/heros/grey_hero.png" id="6_wh6in"]
+[ext_resource type="Texture2D" uid="uid://cnboeuly7ue15" path="res://assets/header/rank.png" id="7_6fqk1"]
 [ext_resource type="Texture2D" uid="uid://bafexwmexied8" path="res://assets/heros/purple_hero.png" id="7_s07j5"]
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_48th5"]
@@ -72,43 +76,83 @@ alignment = 1
 custom_minimum_size = Vector2(100, 30)
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Header/Row 1/XP" unique_id=998170290]
+[node name="Banner" type="TextureRect" parent="Header/Row 1/XP" unique_id=1757761528]
+layout_mode = 0
+offset_right = 30.0
+offset_bottom = 30.0
+texture = ExtResource("4_eyscv")
+expand_mode = 2
+stretch_mode = 4
+
+[node name="Level" type="Label" parent="Header/Row 1/XP/Banner" unique_id=1093041657]
+layout_mode = 0
+offset_left = 7.0
+offset_right = 22.0
+offset_bottom = 23.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "1"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="EXP" type="Label" parent="Header/Row 1/XP" unique_id=998170290]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = 34.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 text = "2/10"
+vertical_alignment = 1
 
 [node name="Crystal" type="ColorRect" parent="Header/Row 1" unique_id=1576728251]
 custom_minimum_size = Vector2(100, 30)
 layout_mode = 2
+
+[node name="Crystal" type="TextureRect" parent="Header/Row 1/Crystal" unique_id=2052757135]
+layout_mode = 0
+offset_right = 30.0
+offset_bottom = 30.0
+texture = ExtResource("5_y784y")
+expand_mode = 2
+stretch_mode = 4
 
 [node name="Label" type="Label" parent="Header/Row 1/Crystal" unique_id=540847687]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = 30.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 text = "3,810"
+vertical_alignment = 1
 
 [node name="Gold" type="ColorRect" parent="Header/Row 1" unique_id=677711949]
 custom_minimum_size = Vector2(100, 30)
 layout_mode = 2
+
+[node name="Gold" type="TextureRect" parent="Header/Row 1/Gold" unique_id=1804721799]
+layout_mode = 0
+offset_right = 30.0
+offset_bottom = 30.0
+texture = ExtResource("6_6n0se")
+expand_mode = 2
+stretch_mode = 4
 
 [node name="Label" type="Label" parent="Header/Row 1/Gold" unique_id=1351824071]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = 37.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 text = "4,009"
+vertical_alignment = 1
 
 [node name="Row 2" type="HBoxContainer" parent="Header" unique_id=1672282126]
 layout_mode = 2
@@ -127,20 +171,32 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 text = "John Doe"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="Leaderboard" type="ColorRect" parent="Header/Row 2" unique_id=1078582662]
 custom_minimum_size = Vector2(100, 30)
 layout_mode = 2
+
+[node name="Rank" type="TextureRect" parent="Header/Row 2/Leaderboard" unique_id=516834410]
+layout_mode = 0
+offset_right = 30.0
+offset_bottom = 30.0
+texture = ExtResource("7_6fqk1")
+expand_mode = 2
+stretch_mode = 4
 
 [node name="Label" type="Label" parent="Header/Row 2/Leaderboard" unique_id=114001333]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = 36.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 text = "1"
+vertical_alignment = 1
 
 [node name="Packs" type="HBoxContainer" parent="." unique_id=1128346248]
 layout_mode = 1
