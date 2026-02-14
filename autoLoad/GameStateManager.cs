@@ -1,5 +1,9 @@
 using Godot;
 
+/*
+    These are the different Gamestates that can exist for the application. The player is always either in
+    one of these scenes
+*/
 public enum GameState
 {
 	HOMESCREEN,
@@ -8,6 +12,11 @@ public enum GameState
 	INGAMEMODE
 }
 
+/*
+    This is an autoloaded Manager that has a static instance that is a reference to the class. It is to be instantiated 
+    at the start of the client being open. This manages at which scene the main node will be running and is to be called 
+    to switch between scenes
+*/
 public partial class GameStateManager : Node
 {
 
