@@ -106,7 +106,8 @@ public partial class Gameloop: Node2D
 
 	private void ReturnToHomeScreen()
 	{
-		GameStateManager.Instance.ChangeGameState(GameState.HOMESCREEN);
+		var GameStateManager = GetNode<GameStateManager>("/root/GameStateManager");
+		GameStateManager.ChangeGameState(GameState.HOMESCREEN);
 	}
 
 }

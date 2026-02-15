@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://oaytnoujefro"]
 
 [ext_resource type="Texture2D" uid="uid://bc8twhgpbhyxn" path="res://assets/battlefield/background/background_test_box.png" id="1_i81dy"]
-[ext_resource type="Script" uid="uid://juxgwh0vufqt" path="res://gameplay/Gameloop.cs" id="2_iwad7"]
+[ext_resource type="Script" uid="uid://juxgwh0vufqt" path="res://scenesScripts/gameplay/Gameloop.cs" id="2_iwad7"]
 [ext_resource type="Texture2D" uid="uid://b3asc25yhdbs7" path="res://assets/battlefield/battlefield_square.png" id="3_uugvl"]
 [ext_resource type="Texture2D" uid="uid://dykma1bmow6ut" path="res://assets/battlefield/battlefield_turn_timer_empty.png" id="4_sggww"]
 [ext_resource type="Texture2D" uid="uid://rswv3dvbgt2r" path="res://assets/battlefield/battlefield_battle.png" id="5_vtlph"]
