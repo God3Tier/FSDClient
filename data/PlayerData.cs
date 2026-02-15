@@ -13,7 +13,7 @@ public class PlayerData
     // TODO: Not sure whether this is standard to keep it individual or to create an abstracted class
     //       that acts as a wrapper around the data but ts looks ugly
     private readonly System.Threading.Mutex Mutex = new();
-    public int Elixer { get; private set; } = 0;
+    public int Elixir { get; private set; } = 0;
     private readonly System.Threading.CancellationTokenSource _ctx = new();
     private string IconName { get; set; }
     private bool MainPlayer { get; set; }
@@ -39,7 +39,7 @@ public class PlayerData
         
     }
 
-    public void SpawnElixer()
+    public void SpawnElixir()
     {
         if (!MainPlayer)
         {
@@ -52,19 +52,19 @@ public class PlayerData
             {
                 // TODO: Numbers unconfirmed please try again soon
                 Thread.Sleep(200);
-                SyncIncreaseElixer();
+                SyncIncreaseElixir();
             }
 
         });
     }
 
     // This function should be thrown in a thread and forgotten later
-    private async void SyncIncreaseElixer()
+    private async void SyncIncreaseElixir()
     {
         Mutex.WaitOne();
-        if (Elixer <= 7)
+        if (Elixir <= 7)
         {
-            Elixer += 1;
+            Elixir += 1;
         }
         Mutex.ReleaseMutex();
     }
@@ -73,7 +73,7 @@ public class PlayerData
     public void SyncRemoveElixer(int cardCost)
     {
         Mutex.WaitOne();
-        if (Elixer < cardCost)
+        if (Elixir < cardCost)
         {
             Mutex.ReleaseMutex();
             // Throw some sort of Exception
@@ -81,7 +81,7 @@ public class PlayerData
         }
         else
         {
-            Elixer -= cardCost;
+            Elixir -= cardCost;
         }
         Mutex.ReleaseMutex();
     }

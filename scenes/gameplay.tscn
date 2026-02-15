@@ -54,7 +54,7 @@ scale = Vector2(1.3517699, 1.225884)
 texture = ExtResource("3_ctvyo")
 
 [node name="BattlefieldTurnTimerEmpty" type="Sprite2D" parent="StaticBackground/Battlefield" unique_id=2060408673]
-position = Vector2(65.5, 19.59961)
+position = Vector2(36, -97.99997)
 scale = Vector2(1.2103004, 1)
 texture = ExtResource("4_qixtg")
 

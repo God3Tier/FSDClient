@@ -11,11 +11,9 @@ config_version=5
 [application]
 
 config/name="Client"
-run/main_scene="uid://4qrorpyul053"
+run/main_scene="uid://bbgm8t1esyy3b"
 config/features=PackedStringArray("4.6", "C#", "GL Compatibility")
-config/icon="res://icon.svg"
-boot_splash/stretch/aspect="keep"
-boot_splash/stretch/mode="disabled"
+config/icon="uid://cedlkakda2e78"
 
 [autoload]
 
@@ -33,6 +31,10 @@ window/stretch/aspect="expand"
 [dotnet]
 
 project/assembly_name="Client"
+
+[input_devices]
+
+pointing/emulate_touch_from_mouse=true
 
 [physics]
 
