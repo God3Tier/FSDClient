@@ -6,10 +6,10 @@ using Godot;
 */
 public enum GameState
 {
-    HOMESCREEN,
-    DECKSELECTION,
-    SEARCHINGFORPLAYER,
-    INGAMEMODE
+	HOMESCREEN,
+	DECKSELECTION,
+	SEARCHINGFORPLAYER,
+	INGAMEMODE
 }
 
 /*
@@ -25,8 +25,7 @@ public partial class GameStateManager : Node
 	
 	public static GameStateManager Instance { get; private set; }
 
-	// This will be run when the class is constrcuted. It will get the SceneContainer and will initialise to the 
-	// homescreen state
+	// Here, we initialize the gamestate 
 	public override void _Ready()
 	{
 		var sceneContainer = GetNode<Node>("SceneContainer");
@@ -45,6 +44,7 @@ public partial class GameStateManager : Node
 		{
 			case GameState.HOMESCREEN:
 				{
+					ChangeScene("res://scenes/states/home.tscn");
 					break;
 				}
 			case GameState.DECKSELECTION:
