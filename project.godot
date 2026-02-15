@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Client"
-run/main_scene="uid://oaytnoujefro"
+run/main_scene="uid://4qrorpyul053"
 config/features=PackedStringArray("4.6", "C#", "GL Compatibility")
 config/icon="res://icon.svg"
 boot_splash/stretch/aspect="keep"
@@ -25,6 +25,8 @@ NetworkManager="*uid://bbwqfw7nmkams"
 
 [display]
 
+window/size/viewport_width=1920
+window/size/viewport_height=1080
 window/stretch/mode="viewport"
 window/stretch/aspect="expand"
 

@@ -7,6 +7,9 @@ public partial class CardManager : Node2D
 	private Vector2 dragOffset;
 	private Vector2 screenSize;
 	private Boolean highlighting = false;
+	private uint COLLISION_MASK_CARD = 1;
+	private uint COLLISION_MASK_CARD_SLOT = 2;
+	private PlayerHand handReference;
 
 	// For handling game input
 	public override void _Input(InputEvent inputEvent)
@@ -41,7 +44,18 @@ public partial class CardManager : Node2D
 	private void StopDrag()
 	{
 		cardBeingDragged.Scale = new Vector2(1.05f, 1.05f);
+		var cardSlotFound = _raycastCheckForCardSlot();
+		if (cardSlotFound != null && !cardSlotFound.CardInSlot) {
+			cardBeingDragged.Position = cardSlotFound.Position;
+			cardSlotFound.CardInSlot = true;
+			var collisionShape = cardBeingDragged.GetNode<CollisionShape2D>("Area2D/CollisionShape2D");
+			collisionShape.Disabled = true;
+		}
+		else {
+			handReference.AddCardToHand((Card)cardBeingDragged);
+		}
 		cardBeingDragged = null;
+		
 	}
 	
 	// For the hover effect
@@ -82,6 +96,7 @@ public partial class CardManager : Node2D
 			card.ZIndex = 1;
 		}
 	}
+	
 	// To return what is under our cursor when clicking
 	public Node2D _raycastCheckForCard()
 	{
@@ -90,13 +105,33 @@ public partial class CardManager : Node2D
 		{
 			Position = GetGlobalMousePosition(),
 			CollideWithAreas = true,
-			CollisionMask = 1
+			CollisionMask = COLLISION_MASK_CARD
 		};
 
 		var result = spaceState.IntersectPoint(parameters);
 		if (result.Count > 0) {
 			var cardParent = GetHighestZIndex(result);
 			dragOffset = cardParent.GlobalPosition - GetGlobalMousePosition();
+			return cardParent;
+		}
+		return null;
+	}
+	
+	// To return what is under our cursor when clicking
+	public CardSlot? _raycastCheckForCardSlot()
+	{
+		var spaceState = GetWorld2D().DirectSpaceState;
+		var parameters = new PhysicsPointQueryParameters2D
+		{
+			Position = GetGlobalMousePosition(),
+			CollideWithAreas = true,
+			CollisionMask = COLLISION_MASK_CARD_SLOT
+		};
+
+		var result = spaceState.IntersectPoint(parameters);
+		if (result.Count > 0) {
+			var collider = (Area2D)result[0]["collider"];
+			var cardParent = collider.GetParent<CardSlot>();
 			return cardParent;
 		}
 		return null;
@@ -131,6 +166,8 @@ public partial class CardManager : Node2D
 				ConnectCardSignal(card);
 			}
 		}
+		
+		handReference = GetNode<PlayerHand>("../PlayerHand");
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.

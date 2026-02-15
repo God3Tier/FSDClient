@@ -1,15 +1,18 @@
-[gd_scene format=3 uid="uid://oaytnoujefro"]
+[gd_scene format=3 uid="uid://4qrorpyul053"]
 
-[ext_resource type="Texture2D" uid="uid://bc8twhgpbhyxn" path="res://assets/battlefield/background/background_test_box.png" id="1_i81dy"]
-[ext_resource type="Script" uid="uid://juxgwh0vufqt" path="res://gameplay/Gameloop.cs" id="2_iwad7"]
-[ext_resource type="Texture2D" uid="uid://b3asc25yhdbs7" path="res://assets/battlefield/battlefield_square.png" id="3_uugvl"]
-[ext_resource type="Texture2D" uid="uid://dykma1bmow6ut" path="res://assets/battlefield/battlefield_turn_timer_empty.png" id="4_sggww"]
-[ext_resource type="Texture2D" uid="uid://rswv3dvbgt2r" path="res://assets/battlefield/battlefield_battle.png" id="5_vtlph"]
-[ext_resource type="PackedScene" uid="uid://bln7quiudsln" path="res://scenes/Card.tscn" id="6_vtlph"]
-[ext_resource type="Script" uid="uid://dn8g5j3fg63ie" path="res://scenes/states/CardManager.cs" id="7_4igqj"]
+[ext_resource type="Script" uid="uid://juxgwh0vufqt" path="res://gameplay/Gameloop.cs" id="1_101mb"]
+[ext_resource type="Texture2D" uid="uid://bc8twhgpbhyxn" path="res://assets/battlefield/background/background_test_box.png" id="2_hbo4f"]
+[ext_resource type="Texture2D" uid="uid://b3asc25yhdbs7" path="res://assets/battlefield/battlefield_square.png" id="3_ctvyo"]
+[ext_resource type="Texture2D" uid="uid://dykma1bmow6ut" path="res://assets/battlefield/battlefield_turn_timer_empty.png" id="4_qixtg"]
+[ext_resource type="Texture2D" uid="uid://rswv3dvbgt2r" path="res://assets/battlefield/battlefield_battle.png" id="5_nt65e"]
+[ext_resource type="Script" uid="uid://dn8g5j3fg63ie" path="res://scenes/states/CardManager.cs" id="6_bhmdk"]
+[ext_resource type="PackedScene" uid="uid://dp2kyvllo3ish" path="res://scenes/card_slot.tscn" id="7_s5y6v"]
+[ext_resource type="Script" uid="uid://l6honkscejd0" path="res://scenes/states/CardSlot.cs" id="8_407ns"]
+[ext_resource type="Script" uid="uid://c2otjqq67dmh1" path="res://scenes/states/PlayerHand.cs" id="9_w3w6i"]
 
 [node name="Gameplay" type="Node2D" unique_id=419605887]
-script = ExtResource("2_iwad7")
+visibility_layer = 3
+script = ExtResource("1_101mb")
 
 [node name="StaticBackground" type="Node2D" parent="." unique_id=247447099]
 position = Vector2(-480, -355)
@@ -18,82 +21,103 @@ position = Vector2(-480, -355)
 visible = false
 position = Vector2(1061, 680)
 scale = Vector2(0.19513297, 0.19513296)
-texture = ExtResource("1_i81dy")
+texture = ExtResource("2_hbo4f")
 
 [node name="BattlefieldSquare20" type="Sprite2D" parent="StaticBackground/Battlefield" unique_id=2103368358]
 position = Vector2(-597.37494, 355.5996)
 scale = Vector2(1.3412613, 1.2571905)
-texture = ExtResource("3_uugvl")
+texture = ExtResource("3_ctvyo")
 
 [node name="BattlefieldSquare21" type="Sprite2D" parent="StaticBackground/Battlefield" unique_id=2032219518]
 position = Vector2(60.499893, 364.59973)
 scale = Vector2(1.3633854, 1.292035)
-texture = ExtResource("3_uugvl")
+texture = ExtResource("3_ctvyo")
 
 [node name="BattlefieldSquare22" type="Sprite2D" parent="StaticBackground/Battlefield" unique_id=671101364]
 position = Vector2(681.75, 361.7999)
 scale = Vector2(1.2134956, 1.2619478)
-texture = ExtResource("3_uugvl")
+texture = ExtResource("3_ctvyo")
 
 [node name="BattlefieldSquare30" type="Sprite2D" parent="StaticBackground/Battlefield" unique_id=1839681790]
 position = Vector2(-595.75, 982.09955)
 scale = Vector2(1.3683629, 1.2853979)
-texture = ExtResource("3_uugvl")
+texture = ExtResource("3_ctvyo")
 
 [node name="BattlefieldSquare31" type="Sprite2D" parent="StaticBackground/Battlefield" unique_id=1278638324]
 position = Vector2(48.00004, 985.24994)
 scale = Vector2(1.3849559, 1.2776557)
-texture = ExtResource("3_uugvl")
+texture = ExtResource("3_ctvyo")
 
 [node name="BattlefieldSquare32" type="Sprite2D" parent="StaticBackground/Battlefield" unique_id=1097677055]
 position = Vector2(689, 989)
 scale = Vector2(1.3517699, 1.225884)
-texture = ExtResource("3_uugvl")
+texture = ExtResource("3_ctvyo")
 
 [node name="BattlefieldTurnTimerEmpty" type="Sprite2D" parent="StaticBackground/Battlefield" unique_id=2060408673]
 position = Vector2(65.5, 19.59961)
 scale = Vector2(1.2103004, 1)
-texture = ExtResource("4_sggww")
+texture = ExtResource("4_qixtg")
 
 [node name="BattlefieldBattle" type="Sprite2D" parent="StaticBackground/Battlefield" unique_id=1304234213]
 position = Vector2(-945.5, 21.59961)
-texture = ExtResource("5_vtlph")
+texture = ExtResource("5_nt65e")
 
 [node name="BattlefieldSquare00" type="Sprite2D" parent="StaticBackground/Battlefield" unique_id=1150861854]
 position = Vector2(-594, -963)
 scale = Vector2(1.271172, 1.2548656)
-texture = ExtResource("3_uugvl")
+texture = ExtResource("3_ctvyo")
 
 [node name="BattlefieldSquare10" type="Sprite2D" parent="StaticBackground/Battlefield" unique_id=1042317343]
 position = Vector2(-591.49994, -366.4004)
 scale = Vector2(1.3412613, 1.2571905)
-texture = ExtResource("3_uugvl")
+texture = ExtResource("3_ctvyo")
 
 [node name="BattlefieldSquare12" type="Sprite2D" parent="StaticBackground/Battlefield" unique_id=269730815]
 position = Vector2(649.8037, -369.42532)
 scale = Vector2(1.365913, 1.2346236)
-texture = ExtResource("3_uugvl")
+texture = ExtResource("3_ctvyo")
 
 [node name="BattlefieldSquare11" type="Sprite2D" parent="StaticBackground/Battlefield" unique_id=2097266029]
 position = Vector2(31.500061, -370.4004)
 scale = Vector2(1.3412613, 1.2571905)
-texture = ExtResource("3_uugvl")
+texture = ExtResource("3_ctvyo")
 
 [node name="BattlefieldSquare01" type="Sprite2D" parent="StaticBackground/Battlefield" unique_id=442130251]
 position = Vector2(36.5, -955.4004)
 scale = Vector2(1.271172, 1.2548656)
-texture = ExtResource("3_uugvl")
+texture = ExtResource("3_ctvyo")
 
 [node name="BattlefieldSquare02" type="Sprite2D" parent="StaticBackground/Battlefield" unique_id=141369027]
 position = Vector2(666, -961)
 scale = Vector2(1.271172, 1.2548656)
-texture = ExtResource("3_uugvl")
+texture = ExtResource("3_ctvyo")
 
 [node name="CardManager" type="Node2D" parent="." unique_id=30739936]
-script = ExtResource("7_4igqj")
+script = ExtResource("6_bhmdk")
 
-[node name="Card" parent="CardManager" unique_id=465922005 instance=ExtResource("6_vtlph")]
-position = Vector2(658, 458)
+[node name="CardSlot" parent="." unique_id=1553162117 instance=ExtResource("7_s5y6v")]
+position = Vector2(713, 569)
+script = ExtResource("8_407ns")
 
-[node name="Card2" parent="CardManager" unique_id=1416912940 instance=ExtResource("6_vtlph")]
-position = Vector2(458, 470)
+[node name="CardSlot2" parent="." unique_id=1454064906 instance=ExtResource("7_s5y6v")]
+position = Vector2(941, 566)
+script = ExtResource("8_407ns")
+
+[node name="CardSlot3" parent="." unique_id=1033699585 instance=ExtResource("7_s5y6v")]
+position = Vector2(710, 358)
+script = ExtResource("8_407ns")
+
+[node name="CardSlot4" parent="." unique_id=2119496540 instance=ExtResource("7_s5y6v")]
+position = Vector2(938, 355)
+script = ExtResource("8_407ns")
+
+[node name="CardSlot5" parent="." unique_id=725847297 instance=ExtResource("7_s5y6v")]
+position = Vector2(1171, 564)
+script = ExtResource("8_407ns")
+
+[node name="CardSlot6" parent="." unique_id=658250543 instance=ExtResource("7_s5y6v")]
+position = Vector2(1168, 353)
+script = ExtResource("8_407ns")
+
+[node name="PlayerHand" type="Node2D" parent="." unique_id=1397496898]
+script = ExtResource("9_w3w6i")
