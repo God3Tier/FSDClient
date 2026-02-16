@@ -1,7 +1,8 @@
 namespace FSDClient.builder;
 
-using FSDClient.view;
-using FSDClient.data;
+using FSDClient.card.display;
+using FSDClient.card;
+using FSDClient.player.display;
 
 /*
     This is a static class that contains the 2 builder methods to construct the control (NOT NODE) of the card. 

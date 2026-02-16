@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://bln7quiudsln"]
+
+[ext_resource type="Script" uid="uid://c1yx10hsdaqrr" path="res://scenes/states/Card.cs" id="1_4dx8l"]
+
+[node name="Card" type="Sprite2D" unique_id=465922005]
+script = ExtResource("1_4dx8l")

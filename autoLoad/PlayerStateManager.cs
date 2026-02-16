@@ -1,5 +1,6 @@
 using System.Collections.Generic;
-using FSDClient.data;
+using FSDClient.player;
+using FSDClient.card;
 using Godot;
 
 

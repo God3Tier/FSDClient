@@ -1,7 +1,6 @@
-namespace FSDClient.view;
+namespace FSDClient.card.display;
 
 using Godot;
-using FSDClient.data;
 using System.Collections.Generic;
 
 /*
@@ -58,6 +57,7 @@ public partial class CardView : Control
         AddChild(CurrentHealth);
 
         SetPosition();
+        MouseFilter = Control.MouseFilterEnum.Ignore;
     }
     
     // Again we have now just moved the problem somewhere else 
