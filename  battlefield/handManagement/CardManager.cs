@@ -1,5 +1,8 @@
+namespace FSDClient.battlefield.handManagement;
 using Godot;
 using System;
+using FSDClient.card.display;
+
 
 public partial class CardManager : Node2D
 {

@@ -1,7 +1,6 @@
-namespace FSDClient.view;
+namespace FSDClient.player.display;
 
 using Godot;
-using FSDClient.data;
 using FSDClient.builder;
 
 public partial class PlayerView : Control

@@ -1,10 +1,11 @@
-using FSDClient.data;
 using FSDClient.builder;
 using Godot;
-using FSDClient.view;
-using static Godot.GD;
+using FSDClient.player;
+using FSDClient.card.display;
+using FSDClient.card;
+using FSDClient.battlefield.handManagement;
 
-namespace FSDClient.gameplay;
+namespace FSDClient.battlefield;
 
 
 public partial class Gameloop: Node2D

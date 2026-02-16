@@ -1,9 +1,10 @@
+namespace FSDClient.battlefield;
+
 using Godot;
 using System;
 
-public partial class CardSlot : Node2D
+public partial class Battlefield : Sprite2D
 {
-	public bool CardInSlot = false;
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
