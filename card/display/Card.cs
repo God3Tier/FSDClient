@@ -12,6 +12,7 @@ public partial class Card : Sprite2D
     public Vector2 StartingPosition;
     private Area2D DesignatedArea;
     private CardManager cardManager;
+    // hi 
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
