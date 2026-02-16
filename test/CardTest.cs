@@ -1,7 +1,9 @@
 namespace FSDClient.test;
 
 using Godot;
-using FSDClient.data;
+using FSDClient.player;
+using FSDClient.card.display;
+using FSDClient.card;
 using FSDClient.builder;
 
 /*
