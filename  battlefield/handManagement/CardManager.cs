@@ -21,14 +21,12 @@ public partial class CardManager : Node2D
         // Check for mouse button
         if (inputEvent is InputEventMouseButton mouseEvent)
         {
-            GD.Print("Input event detected");
             // Check if it was left button
             if (mouseEvent.ButtonIndex == MouseButton.Left)
             {
 
                 if (mouseEvent.IsPressed())
                 {
-                    GD.Print("Mouse has been pressed");
                     var card = _raycastCheckForCard();
                     if (card != null)
                     {

@@ -11,12 +11,10 @@ using FSDClient.player.display;
 public class Builder
 {
     // This constructs the card from the CardData class 
-    public static CardView BuildCard(CardData CardData)
+    public static CardViewTextures BuildCard(CardData CardData)
     {
         var data = new CardViewData(CardData.Color.ToString().ToLower(), CardData.Name, CardData.Cost, CardData.Health, CardData.Attack);
-        var CardViewTextures = new CardViewTextures(data);
-        var CardDisplay = new CardView(CardViewTextures);
-        return CardDisplay;
+        return new CardViewTextures(data);
     }
 
     // Have not figured out how I wish to parse data to it. Will use placeholders for the time being 

@@ -93,7 +93,9 @@ texture = ExtResource("3_uugvl")
 script = ExtResource("7_4igqj")
 
 [node name="Card2" parent="CardManager" unique_id=1416912940 instance=ExtResource("6_vtlph")]
+visible = false
 position = Vector2(248, 236)
 
 [node name="Card" parent="CardManager" unique_id=465922005 instance=ExtResource("6_vtlph")]
+visible = false
 position = Vector2(462, 233)

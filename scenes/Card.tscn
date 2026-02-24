@@ -4,9 +4,10 @@
 [ext_resource type="Texture2D" uid="uid://1loqoe55ae6" path="res://assets/complete_unit.png" id="2_tgmmg"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_4dx8l"]
-size = Vector2(176, 200)
+size = Vector2(194, 227)
 
 [node name="Card" type="Node2D" unique_id=1192453098]
+position = Vector2(0, 1)
 script = ExtResource("1_4dx8l")
 
 [node name="CompleteUnit" type="Sprite2D" parent="." unique_id=283534853]
@@ -18,43 +19,61 @@ texture = ExtResource("2_tgmmg")
 [node name="Area2D" type="Area2D" parent="." unique_id=579981226]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=441486096]
-position = Vector2(88, 100)
+position = Vector2(97, 113.5)
 shape = SubResource("RectangleShape2D_4dx8l")
 
 [node name="Border" type="TextureRect" parent="." unique_id=1002218825]
 offset_right = 176.0
 offset_bottom = 201.0
+metadata/_edit_use_anchors_ = true
 
 [node name="Icon" type="TextureRect" parent="." unique_id=900111894]
 offset_left = 26.0
 offset_top = 9.0
 offset_right = 151.0
 offset_bottom = 170.0
+metadata/_edit_use_anchors_ = true
 
 [node name="AttackIcon" type="TextureRect" parent="." unique_id=1904314102]
-offset_left = 5.0
-offset_top = 187.0
-offset_right = 17.0
-offset_bottom = 197.0
+offset_left = 18.0
+offset_top = 200.0
+offset_right = 30.0
+offset_bottom = 210.0
+metadata/_edit_use_anchors_ = true
 
 [node name="HealthIcon" type="TextureRect" parent="." unique_id=216936153]
-offset_left = 127.0
-offset_top = 185.0
-offset_right = 139.0
-offset_bottom = 195.0
+offset_left = 133.0
+offset_top = 200.0
+offset_right = 145.0
+offset_bottom = 210.0
+metadata/_edit_use_anchors_ = true
 
 [node name="Health" type="RichTextLabel" parent="." unique_id=133566933]
-offset_left = 144.0
-offset_top = 178.0
-offset_right = 175.0
-offset_bottom = 201.0
+modulate = Color(0, 0, 0, 1)
+offset_left = 147.0
+offset_top = 200.0
+offset_right = 178.0
+offset_bottom = 223.0
 text = "0"
 fit_content = true
+metadata/_edit_use_anchors_ = true
 
 [node name="Attack" type="RichTextLabel" parent="." unique_id=1321693604]
-offset_left = 20.0
-offset_top = 178.0
-offset_right = 59.0
-offset_bottom = 201.0
+modulate = Color(0, 0, 0, 1)
+offset_left = 42.0
+offset_top = 197.0
+offset_right = 81.0
+offset_bottom = 220.0
 text = "0"
 fit_content = true
+metadata/_edit_use_anchors_ = true
+
+[node name="ElixirCost" type="RichTextLabel" parent="." unique_id=1578044079]
+modulate = Color(0.0035191667, 0.0035191681, 0.0035191672, 1)
+offset_left = 33.0
+offset_top = 14.0
+offset_right = 59.0
+offset_bottom = 37.0
+text = "0"
+fit_content = true
+metadata/_edit_use_anchors_ = true
