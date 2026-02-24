@@ -59,18 +59,18 @@ public partial class Gameloop : Node2D
 
         // pd1.SyncRemoveElixer(3);
         // Print("pd1 Elixer after removing 3 " + pd1.Elixer);
-        var TestCard = new CardData(10, "robot", Colour.RED, 100, 10);
-        var CardView = Builder.BuildCard(TestCard);
+        // var TestCard = new CardData(10, "robot", Colour.RED, 100, 10);
+        // var CardView = Builder.BuildCard(TestCard);
 
-        // Board[0][0] = new Card();
-        // Board[0][0].InitializeCard(CardView);
-        // AddChild(Board[0][0]);
-        CardManager = new();
-        AddChild(CardManager);
-        var CardScene = GD.Load<PackedScene>("res://scenes/Card.tscn");
-        var CardTemp = CardScene.Instantiate<Card>();
-        CardTemp.InitializeCard(CardView);
-        CardManager.AddChild(CardTemp);
+        // // Board[0][0] = new Card();
+        // // Board[0][0].InitializeCard(CardView);
+        // // AddChild(Board[0][0]);
+        // CardManager = new();
+        // AddChild(CardManager);
+        // var CardScene = GD.Load<PackedScene>("res://scenes/Card.tscn");
+        // var CardTemp = CardScene.Instantiate<Card>();
+        // CardTemp.InitializeCard(CardView);
+        // CardManager.AddChild(CardTemp);
         // GD.Print("Successfullt created the initial card view");
 
     }

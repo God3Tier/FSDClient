@@ -1,6 +1,36 @@
-[gd_scene format=3 uid="uid://bln7quiudsln"]
+[gd_scene format=3 uid="uid://dtv8fm1py5wlt"]
 
-[ext_resource type="Script" uid="uid://c1yx10hsdaqrr" path="res://scenes/states/Card.cs" id="1_4dx8l"]
+[ext_resource type="Script" uid="uid://c1yx10hsdaqrr" path="res://card/display/Card.cs" id="1_4dx8l"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_yiag5"]
+size = Vector2(6, 8)
 
 [node name="Card" type="Sprite2D" unique_id=465922005]
 script = ExtResource("1_4dx8l")
+
+[node name="Area2D" type="Area2D" parent="." unique_id=1151635762]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=1033959502]
+position = Vector2(3, 4)
+shape = SubResource("RectangleShape2D_yiag5")
+
+[node name="CardView" type="Control" parent="." unique_id=442193986]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 6.0
+offset_bottom = 8.0
+
+[node name="BaseCard" type="TextureRect" parent="CardView" unique_id=1061397678]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 0.15
+anchor_bottom = 0.17500001
+offset_right = 5.1
+offset_bottom = 6.6
+
+[node name="Icon" type="TextureRect" parent="CardView" unique_id=65808510]
+layout_mode = 0
+offset_left = 1.0
+offset_top = 1.0
+offset_right = 5.0
+offset_bottom = 6.0
