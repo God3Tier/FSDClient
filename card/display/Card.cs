@@ -102,6 +102,14 @@ public partial class Card : Node2D
 		}
 	}
 
+	public void EnterDamageMode()
+	{
+		var ElixirCost = (RichTextLabel)FindChild("ElixirCost");
+		ElixirCost.Text = "";
+		
+		// var 
+	}
+
 	public void OnMouseEntered()
 	{
 		EmitSignal(SignalName.Hovered, this);

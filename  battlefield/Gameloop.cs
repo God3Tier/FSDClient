@@ -1,6 +1,7 @@
 using FSDClient.builder;
 using Godot;
 using FSDClient.player;
+using FSDClient.player.display;
 using FSDClient.card.display;
 using FSDClient.card;
 using FSDClient.battlefield.handManagement;
@@ -11,16 +12,29 @@ namespace FSDClient.battlefield;
 public partial class Gameloop : Node2D
 {
 
+    private static readonly double MAX_ELIXER = 8;
+    // Placeholder
+    private static readonly double ROUND_TIMER = 10;
+
+
     public NetworkManager NetworkManager { get; set; }
     // Unsure to keep this as the state manager or make it it's own individual player data. TBD on a later date
     public PlayerStateManager MainPlayer { get; set; }
     // This info, leave majority null, the info is not needed so extensively
     // TODO: Get rid of some fields and move the PlayerStateManager as that is what needs to
+    // Get rid of this can be read elsewhere 
     public PlayerData IncomingPlayer { get; set; }
-    private int RoundNumber { get; set; }
-    // Haha funny math
+    
+    // Deal with card placement and card movement 
     private Card[][] Board { get; set; } = new Card[4][];
     private CardManager CardManager;
+    
+    // Parameters for game state to be managed
+    private int Elixir { get; set; }
+    private int RoundNumber { get; set; }
+    private double GameTimer { get; set; } = 0;
+    private double RegenInterval { get; set; } = 1;
+    private int TurnRound = 1;
 
     public void StartGameLoop()
     {
@@ -35,7 +49,8 @@ public partial class Gameloop : Node2D
 
     }
 
-    // I am of the assumption that this is what is being called by the
+    // I am of the assumption that this is what is being called by the 
+    // We put this in gameloop later
     public override void _Ready()
     {
 
@@ -48,17 +63,7 @@ public partial class Gameloop : Node2D
         // TODO: Figure out how network protocol is set up then replace data with incoming information from
         //       network
         IncomingPlayer = new PlayerData("Placeholder", "Placeholder", [], false);
-
-        // This is just for me to test out my threading implementation of the program
-        // List<CardData> cardDatas = [new(10, "Hello"), new(15, "Goodbye")];
-        // PlayerData pd1 = new("John", "Gay icon", cardDatas);
-
-        // Thread.Sleep(8000);
-        // Print("pd1 Elixer " + pd1.Elixer);
-        // pd1.EndGame();
-
-        // pd1.SyncRemoveElixer(3);
-        // Print("pd1 Elixer after removing 3 " + pd1.Elixer);
+        
         var TestCard = new CardData(10, "robot", Colour.RED, 100, 10);
         var CardTexture = Builder.BuildCard(TestCard);
 
@@ -73,14 +78,53 @@ public partial class Gameloop : Node2D
         var CardTemp = CardScene.Instantiate<Card>();
         CardTemp.LoadDataTexture(CardTexture);
         CardManager.AddChild(CardTemp);
+
+        // This is just to test whether it would load
+
+        var PlayerTextureView = Builder.BuildPlayer();
+        var PlayerIcon = (PlayerView)FindChild("PlayerIcon");
+        PlayerIcon.LoadDataTexture(PlayerTextureView);
+        PlayerIcon.Scale = new Vector2(0.35f, 0.35f);
+        AddChild(PlayerIcon);
+
         // GD.Print("Successfullt created the initial card view");
 
     }
-    // TODO: This I assume is how rendering + input control is supposed to take place. I am in the process of loading all the necessary
-    //       component to this script's .tscn. This is a lower priority since console debugging is for sure more efficient right :-)
+    // This is how to generate Elixir. Since client only ever knows about 1 player's resource
+    // i can do it within the gameplay loop itself
     public override void _Process(double delta)
     {
+        if (Elixir >= MAX_ELIXER)
+            return;
 
+        RegenInterval += delta;
+
+        if (RegenInterval >= 1f)
+        {
+            Elixir++;
+            RegenInterval = 0f;
+        }
+
+        if (GameTimer > ROUND_TIMER * TurnRound)
+        {
+            TurnRound += 1;
+            // TODO: Trigger secondary draw card event
+            
+        }
+        GameTimer += delta;
+
+    }
+
+    public bool PlaceCardCheck(int Cost)
+    {
+        if (Elixir < Cost)
+        {
+            return false;
+        }
+
+        Elixir -= Cost;
+
+        return true;
     }
 
     /*

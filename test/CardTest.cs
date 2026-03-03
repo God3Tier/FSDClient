@@ -29,8 +29,8 @@ public partial class CardTest : Node2D
 		// await ToSignal(GetTree().CreateTimer(1.0), "timeout");
 		// CardView.OnFieldMode();
 
-		var playerView = Builder.BuildPlayer();
-		AddChild(playerView);
+		// var playerView = Builder.BuildPlayer();
+		// AddChild(playerView);
 
 	}
 

@@ -7,6 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://rswv3dvbgt2r" path="res://assets/battlefield/battlefield_battle.png" id="5_vtlph"]
 [ext_resource type="PackedScene" uid="uid://dtv8fm1py5wlt" path="res://scenes/Card.tscn" id="6_vtlph"]
 [ext_resource type="Script" uid="uid://dn8g5j3fg63ie" path="res:// battlefield/handManagement/CardManager.cs" id="7_4igqj"]
+[ext_resource type="PackedScene" uid="uid://cd2tgmq07dh5a" path="res://scenes/PlayerIcon.tscn" id="8_4igqj"]
 
 [node name="Gameplay" type="Node2D" unique_id=419605887]
 script = ExtResource("2_iwad7")
@@ -99,3 +100,7 @@ position = Vector2(248, 236)
 [node name="Card" parent="CardManager" unique_id=465922005 instance=ExtResource("6_vtlph")]
 visible = false
 position = Vector2(462, 233)
+
+[node name="PlayerIcon" parent="." unique_id=1797598009 instance=ExtResource("8_4igqj")]
+position = Vector2(505, 559)
+scale = Vector2(0.25, 0.25)
