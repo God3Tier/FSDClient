@@ -3,6 +3,9 @@ using FSDClient.player;
 using FSDClient.card;
 using Godot;
 
+using FSDClient.player;
+using FSDClient.card;
+
 
 /*
     Upon Client being opened, it is expected to have all user data instantly, hence it is an autoloaded class. 

@@ -1,0 +1,51 @@
+[gd_scene format=3 uid="uid://cd2tgmq07dh5a"]
+
+[ext_resource type="Script" uid="uid://xvmkcnns0gqe" path="res://player/display/PlayerView.cs" id="1_32va2"]
+
+[node name="PlayerIcon" type="Node2D" unique_id=187404406]
+script = ExtResource("1_32va2")
+
+[node name="Border" type="TextureRect" parent="." unique_id=1086588277]
+offset_top = 1.0
+offset_right = 551.0
+offset_bottom = 351.0
+
+[node name="Portrait" type="TextureRect" parent="." unique_id=1773216971]
+offset_left = 182.0
+offset_top = 53.0
+offset_right = 252.0
+offset_bottom = 97.0
+
+[node name="CounterAttackIcon" type="TextureRect" parent="." unique_id=1665928303]
+offset_left = 31.0
+offset_top = 297.0
+offset_right = 51.0
+offset_bottom = 308.0
+
+[node name="DefenceIcon" type="TextureRect" parent="." unique_id=352370094]
+offset_left = 387.0
+offset_top = 293.0
+offset_right = 407.0
+offset_bottom = 310.0
+
+[node name="DefenceValue" type="RichTextLabel" parent="." unique_id=1052396748]
+modulate = Color(0, 0, 0, 1)
+offset_left = 476.0
+offset_top = 307.0
+offset_right = 622.0
+offset_bottom = 347.0
+size_flags_horizontal = 4
+theme_override_font_sizes/normal_font_size = 28
+text = "0"
+fit_content = true
+
+[node name="AttackValue" type="RichTextLabel" parent="." unique_id=615829853]
+modulate = Color(0, 0, 0, 1)
+offset_left = 117.0
+offset_top = 310.0
+offset_right = 274.0
+offset_bottom = 391.0
+size_flags_horizontal = 4
+theme_override_font_sizes/normal_font_size = 28
+text = "0"
+fit_content = true

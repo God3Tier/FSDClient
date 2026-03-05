@@ -8,24 +8,22 @@ using FSDClient.player.display;
     This is a static class that contains the 2 builder methods to construct the control (NOT NODE) of the card. 
     This is to be used within the scene to create the card / player icon onto the screen. 
 */
+// This class is to be depricated
 public class Builder
 {
     // This constructs the card from the CardData class 
-    public static CardView BuildCard(CardData CardData)
+    public static CardViewTextures BuildCard(CardData CardData)
     {
         var data = new CardViewData(CardData.Color.ToString().ToLower(), CardData.Name, CardData.Cost, CardData.Health, CardData.Attack);
-        var CardViewTextures = new CardViewTextures(data);
-        var CardDisplay = new CardView(CardViewTextures);
-        return CardDisplay;
+        return new CardViewTextures(data);
     }
 
     // Have not figured out how I wish to parse data to it. Will use placeholders for the time being 
     // TODO: Look up 
-    public static PlayerView BuildPlayer()
+    public static PlayerViewTextures BuildPlayer()
     {
-        var data = new PlayerViewData("purple","purple", 100, 5);
+        var data = new PlayerViewData("purple", "purple", 100, 5);
         var PlayerViewTextures = new PlayerViewTextures(data);
-        var PlayerDisplay = new PlayerView(PlayerViewTextures);
-        return PlayerDisplay;
+        return PlayerViewTextures;
     }
 }

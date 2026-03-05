@@ -1,12 +1,13 @@
 [gd_scene format=3 uid="uid://5a3jodh803v5"]
 
 [ext_resource type="Texture2D" uid="uid://bc8twhgpbhyxn" path="res://assets/battlefield/background/background_test_box.png" id="1_i81dy"]
-[ext_resource type="Script" uid="uid://juxgwh0vufqt" path="res://scenesScripts/gameplay/Gameloop.cs" id="2_iwad7"]
+[ext_resource type="Script" uid="uid://juxgwh0vufqt" path="res:// battlefield/Gameloop.cs" id="2_iwad7"]
 [ext_resource type="Texture2D" uid="uid://b3asc25yhdbs7" path="res://assets/battlefield/battlefield_square.png" id="3_uugvl"]
 [ext_resource type="Texture2D" uid="uid://dykma1bmow6ut" path="res://assets/battlefield/battlefield_turn_timer_empty.png" id="4_sggww"]
 [ext_resource type="Texture2D" uid="uid://rswv3dvbgt2r" path="res://assets/battlefield/battlefield_battle.png" id="5_vtlph"]
-[ext_resource type="PackedScene" uid="uid://bln7quiudsln" path="res://scenes/Card.tscn" id="6_vtlph"]
-[ext_resource type="Script" uid="uid://dn8g5j3fg63ie" path="res://scenes/states/CardManager.cs" id="7_4igqj"]
+[ext_resource type="PackedScene" uid="uid://dtv8fm1py5wlt" path="res://scenes/Card.tscn" id="6_vtlph"]
+[ext_resource type="Script" uid="uid://dn8g5j3fg63ie" path="res:// battlefield/handManagement/CardManager.cs" id="7_4igqj"]
+[ext_resource type="PackedScene" uid="uid://cd2tgmq07dh5a" path="res://scenes/PlayerIcon.tscn" id="8_4igqj"]
 
 [node name="Gameplay" type="Node2D" unique_id=419605887]
 script = ExtResource("2_iwad7")
@@ -89,11 +90,17 @@ position = Vector2(666, -961)
 scale = Vector2(1.271172, 1.2548656)
 texture = ExtResource("3_uugvl")
 
-[node name="Card" parent="." unique_id=465922005 instance=ExtResource("6_vtlph")]
-position = Vector2(462, 233)
-
-[node name="Card2" parent="." unique_id=1416912940 instance=ExtResource("6_vtlph")]
-position = Vector2(248, 236)
-
 [node name="CardManager" type="Node2D" parent="." unique_id=30739936]
 script = ExtResource("7_4igqj")
+
+[node name="Card2" parent="CardManager" unique_id=1416912940 instance=ExtResource("6_vtlph")]
+visible = false
+position = Vector2(248, 236)
+
+[node name="Card" parent="CardManager" unique_id=465922005 instance=ExtResource("6_vtlph")]
+visible = false
+position = Vector2(462, 233)
+
+[node name="PlayerIcon" parent="." unique_id=1797598009 instance=ExtResource("8_4igqj")]
+position = Vector2(505, 559)
+scale = Vector2(0.25, 0.25)
