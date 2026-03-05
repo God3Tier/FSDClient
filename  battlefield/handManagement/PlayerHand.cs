@@ -18,17 +18,17 @@ public partial class PlayerHand : Node2D
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
-        centerScreenX = GetWindow().Size.X / 2;
-        var cardScene = GD.Load<PackedScene>(CARD_SCENE_PATH);
-        var cardManager = GetNode<Node2D>("../CardManager");
-        for (int i = 0; i < 4; i++)
-        {
-            var newCard = cardScene.Instantiate<Card>();
-            if (newCard == null) { GD.PrintErr("Failed to instantiate Card!"); continue; }
-            cardManager.AddChild(newCard);
-            newCard.Name = "Card";
-            AddCardToHand(newCard);
-        }
+        // centerScreenX = GetWindow().Size.X / 2;
+        // var cardScene = GD.Load<PackedScene>(CARD_SCENE_PATH);
+        // var cardManager = GetNode<Node2D>("../CardManager");
+        // for (int i = 0; i < 4; i++)
+        // {
+        //     var newCard = cardScene.Instantiate<Card>();
+        //     if (newCard == null) { GD.PrintErr("Failed to instantiate Card!"); continue; }
+        //     cardManager.AddChild(newCard);
+        //     newCard.Name = "Card";
+        //     AddCardToHand(newCard);
+        // }
     }
 
     public void AddCardToHand(Card card)
