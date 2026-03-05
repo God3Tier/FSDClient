@@ -12,9 +12,10 @@ namespace FSDClient.battlefield;
 public partial class Gameloop : Node2D
 {
 
-    private static readonly double MAX_ELIXER = 8;
-    // Placeholder
-    private static readonly double ROUND_TIMER = 10;
+    public static readonly double MAX_ELIXER = 8;
+    public static readonly double ROUND_TIMER = 30;
+    public static readonly double SECONDS_PER_ELIXIR = 5f;
+    public static readonly int BASE_ELIXIR = 5;
 
 
     public NetworkManager NetworkManager { get; set; }
@@ -36,18 +37,18 @@ public partial class Gameloop : Node2D
     private double RegenInterval { get; set; } = 1;
     private int TurnRound = 1;
 
-    public void StartGameLoop()
-    {
-        // TODO: Should be obvious
-        while (true)
-        {
+    // public void StartGameLoop()
+    // {
+    //     // TODO: Should be obvious
+    //     while (true)
+    //     {
 
-            break;
-        }
+    //         break;
+    //     }
 
-        ReturnToHomeScreen();
+    //     ReturnToHomeScreen();
 
-    }
+    // }
 
     // I am of the assumption that this is what is being called by the 
     // We put this in gameloop later
@@ -94,12 +95,12 @@ public partial class Gameloop : Node2D
     // i can do it within the gameplay loop itself
     public override void _Process(double delta)
     {
-        if (Elixir >= MAX_ELIXER)
+        if (Elixir >= MAX_ELIXER && Elixir > TurnRound + BASE_ELIXIR)
             return;
 
         RegenInterval += delta;
 
-        if (RegenInterval >= 1f)
+        if (RegenInterval >= SECONDS_PER_ELIXIR)
         {
             Elixir++;
             RegenInterval = 0f;
