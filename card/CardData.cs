@@ -1,4 +1,4 @@
-namespace FSDClient.data;
+namespace FSDClient.card;
 
 using Godot;
 

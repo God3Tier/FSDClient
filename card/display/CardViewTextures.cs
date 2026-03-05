@@ -1,4 +1,4 @@
-namespace FSDClient.data;
+namespace FSDClient.card.display;
 
 using Godot;
 
@@ -18,9 +18,9 @@ public class CardViewTextures
     public Texture2D LabelTexture { get; set; }
     public Texture2D AttackTexture { get; set; }
     public Texture2D DefenceTexture { get; set; }
-    public Label AttackValue { get; set; }
-    public Label ElixirCost { get; set; }
-    public Label CurrentHealth { get; set; }
+    public string AttackValue { get; set; }
+    public string ElixirCost { get; set; }
+    public string CurrentHealth { get; set; }
 
     public CardViewTextures(CardViewData CardViewData)
     {
@@ -37,14 +37,11 @@ public class CardViewTextures
 
         DefenceTexture = GD.Load<Texture2D>(DEFENCE_LABEL);
         
-        AttackValue = new Label();
-        AttackValue.Text = CardViewData.Attack.ToString();
+        AttackValue = CardViewData.Attack.ToString();
         
-        ElixirCost = new Label();
-        ElixirCost.Text = CardViewData.Cost.ToString();
+        ElixirCost = CardViewData.Cost.ToString();
         
-        CurrentHealth = new Label();
-        CurrentHealth.Text = CardViewData.Health.ToString();
+        CurrentHealth = CardViewData.Health.ToString();
 
     }
 }

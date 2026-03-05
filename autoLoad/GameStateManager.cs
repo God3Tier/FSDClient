@@ -44,7 +44,7 @@ public partial class GameStateManager : Node
 		{
 			case GameState.HOMESCREEN:
 				{
-					ChangeScene("res://scenes/states/home.tscn");
+					// ChangeScene("res://scenes/states/home.tscn");
 					break;
 				}
 			case GameState.DECKSELECTION:

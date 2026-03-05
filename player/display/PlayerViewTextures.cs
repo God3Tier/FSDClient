@@ -1,4 +1,4 @@
-namespace FSDClient.data;
+namespace FSDClient.player.display;
 
 using Godot;
 
@@ -16,8 +16,8 @@ public class PlayerViewTextures
     public Texture2D IconTexture { get; set; }
     public Texture2D CounterAttackTexture { get; set; }
     public Texture2D DefenceSymbolTexture { get; set; }
-    public Label AttackValue { get; set; }
-    public Label HealthValue { get; set; }
+    public string AttackValue { get; set; }
+    public string HealthValue { get; set; }
 
     public PlayerViewTextures(PlayerViewData playerViewData)
     {
@@ -40,15 +40,13 @@ public class PlayerViewTextures
             GD.Print("Error unable to load texture\n");
         }
 
-        AttackValue = new Label();
-        AttackValue.Text = playerViewData.Attack.ToString();
+        AttackValue = playerViewData.Attack.ToString();
         if (AttackValue == null)
         {
             GD.Print("Error unable to load texture\n");
         }
 
-        HealthValue = new Label();
-        HealthValue.Text = playerViewData.Health.ToString();
+        HealthValue = playerViewData.Health.ToString();
         if (IconTexture == null)
         {
             GD.Print("Error unable to load texture\n");

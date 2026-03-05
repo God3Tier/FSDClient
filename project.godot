@@ -23,13 +23,10 @@ NetworkManager="*uid://bbwqfw7nmkams"
 
 [display]
 
-window/size/viewport_width=320
-window/size/viewport_height=568
-window/size/window_width_override=640
-window/size/window_height_override=1136
-window/stretch/mode="canvas_items"
+window/size/viewport_width=1920
+window/size/viewport_height=1080
+window/stretch/mode="viewport"
 window/stretch/aspect="expand"
-window/handheld/orientation=1
 
 [dotnet]
 

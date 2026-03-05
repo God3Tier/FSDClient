@@ -1,7 +1,9 @@
 namespace FSDClient.test;
 
 using Godot;
-using FSDClient.data;
+using FSDClient.player;
+using FSDClient.card.display;
+using FSDClient.card;
 using FSDClient.builder;
 
 /*
@@ -27,8 +29,8 @@ public partial class CardTest : Node2D
 		// await ToSignal(GetTree().CreateTimer(1.0), "timeout");
 		// CardView.OnFieldMode();
 
-		var playerView = Builder.BuildPlayer();
-		AddChild(playerView);
+		// var playerView = Builder.BuildPlayer();
+		// AddChild(playerView);
 
 	}
 
