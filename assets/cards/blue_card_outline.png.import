@@ -3,15 +3,11 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dvy6js7wm0j5i"
-path="res://.godot/imported/blue_card_outline.png-b54b9faf1c027ae1e37df47b1de9cec4.ctex"
-metadata={
-"vram_texture": false
-}
+valid=false
 
 [deps]
 
 source_file="res://assets/cards/blue_card_outline.png"
-dest_files=["res://.godot/imported/blue_card_outline.png-b54b9faf1c027ae1e37df47b1de9cec4.ctex"]
 
 [params]
 

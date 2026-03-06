@@ -2,12 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dkd7oy230fd2p"
-valid=false
+uid="uid://dohcctmajbnu3"
+path="res://.godot/imported/background_card_draw.jpg-594c2b1ab0e008aa1a3dddf852b45864.ctex"
+metadata={
+"vram_texture": false
+}
 
 [deps]
 
-source_file="res://assets/number_values/cyan/3_cyan.png"
+source_file="res://assets/battlefield/background/background_card_draw.jpg"
+dest_files=["res://.godot/imported/background_card_draw.jpg-594c2b1ab0e008aa1a3dddf852b45864.ctex"]
 
 [params]
 

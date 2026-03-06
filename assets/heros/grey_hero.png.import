@@ -3,15 +3,11 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bw77ugcghk103"
-path="res://.godot/imported/grey_hero.png-88209a691a2e0d8e027049d83a9e4059.ctex"
-metadata={
-"vram_texture": false
-}
+valid=false
 
 [deps]
 
 source_file="res://assets/heros/grey_hero.png"
-dest_files=["res://.godot/imported/grey_hero.png-88209a691a2e0d8e027049d83a9e4059.ctex"]
 
 [params]
 

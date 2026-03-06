@@ -3,15 +3,11 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bq2bjmvpo1it7"
-path="res://.godot/imported/7_red_green.png-d93349cdd57c73a20d7fd7eba4265214.ctex"
-metadata={
-"vram_texture": false
-}
+valid=false
 
 [deps]
 
 source_file="res://assets/number_values/red_green/7_red_green.png"
-dest_files=["res://.godot/imported/7_red_green.png-d93349cdd57c73a20d7fd7eba4265214.ctex"]
 
 [params]
 

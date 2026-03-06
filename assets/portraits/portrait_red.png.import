@@ -3,15 +3,11 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cml6rrdounbxv"
-path="res://.godot/imported/portrait_red.png-a6d8d6abeed0cf83b6db5cc4c519999e.ctex"
-metadata={
-"vram_texture": false
-}
+valid=false
 
 [deps]
 
 source_file="res://assets/portraits/portrait_red.png"
-dest_files=["res://.godot/imported/portrait_red.png-a6d8d6abeed0cf83b6db5cc4c519999e.ctex"]
 
 [params]
 

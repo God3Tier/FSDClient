@@ -26,3 +26,5 @@ Since I have made the interesting decision of doing this in C#, I recommend usin
 not bad) while explicitely writing your code and the Godot Engine when trying to attach UI to the thing
 
 Good luck guys
+
+Joseph code is corrupted

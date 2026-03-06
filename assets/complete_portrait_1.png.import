@@ -3,15 +3,11 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bug6nefm2ha1x"
-path="res://.godot/imported/complete_portrait_1.png-ed9ed0179b92ad4bf699bbc2b7ddd9aa.ctex"
-metadata={
-"vram_texture": false
-}
+valid=false
 
 [deps]
 
 source_file="res://assets/complete_portrait_1.png"
-dest_files=["res://.godot/imported/complete_portrait_1.png-ed9ed0179b92ad4bf699bbc2b7ddd9aa.ctex"]
 
 [params]
 

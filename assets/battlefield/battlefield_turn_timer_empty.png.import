@@ -3,15 +3,11 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dykma1bmow6ut"
-path="res://.godot/imported/battlefield_turn_timer_empty.png-9d9628e84765f5ca25c6a6794d72f63e.ctex"
-metadata={
-"vram_texture": false
-}
+valid=false
 
 [deps]
 
 source_file="res://assets/battlefield/battlefield_turn_timer_empty.png"
-dest_files=["res://.godot/imported/battlefield_turn_timer_empty.png-9d9628e84765f5ca25c6a6794d72f63e.ctex"]
 
 [params]
 

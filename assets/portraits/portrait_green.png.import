@@ -3,15 +3,11 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://duil2yhyvu186"
-path="res://.godot/imported/portrait_green.png-f7099482502543bd401fa25d5cb6b6f1.ctex"
-metadata={
-"vram_texture": false
-}
+valid=false
 
 [deps]
 
 source_file="res://assets/portraits/portrait_green.png"
-dest_files=["res://.godot/imported/portrait_green.png-f7099482502543bd401fa25d5cb6b6f1.ctex"]
 
 [params]
 
