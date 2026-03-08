@@ -57,22 +57,15 @@ public partial class Card : Node2D
 	}
 
 	public void LoadDataTexture(CardViewTextures cardViewTextures)
-	{
-		var BorderTexture = (TextureRect)FindChild("Border", true);
+    {
+        GD.Print("Creating card");
+		var BorderTexture = (Sprite2D)FindChild("Border", true);
 		BorderTexture.Texture = cardViewTextures.BorderTexture;
 		BorderTexture.Scale = new Vector2(0.55f, 0.55f);
 		
-		var IconTexture = (TextureRect)FindChild("Icon", true);
+		var IconTexture = (Sprite2D)FindChild("Icon", true);
 		IconTexture.Texture = cardViewTextures.IconTexture;
 		IconTexture.Scale = new Vector2(0.55f, 0.55f);
-
-		var AttackIcon = (TextureRect)FindChild("AttackIcon", true);
-		AttackIcon.Texture = cardViewTextures.AttackTexture;
-		AttackIcon.Scale = new Vector2(0.35f, 0.35f);
-
-		var HealthIcon = (TextureRect)FindChild("HealthIcon", true);
-		HealthIcon.Texture = cardViewTextures.DefenceTexture;
-		HealthIcon.Scale = new Vector2(0.35f, 0.35f);
 
 		var AttackValue = (RichTextLabel)FindChild("Attack", true);
 		AttackValue.Text = cardViewTextures.AttackValue;
@@ -85,7 +78,9 @@ public partial class Card : Node2D
 		}
 
 		var ElixirCost = (RichTextLabel)FindChild("ElixirCost", true);
-		ElixirCost.Text = cardViewTextures.ElixirCost;
+        ElixirCost.Text = cardViewTextures.ElixirCost;
+
+        GD.Print("Able to create card");
 	}
 
 	public void UpdateHealth(int damageTaken)

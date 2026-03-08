@@ -9,6 +9,7 @@ public partial class Elixir : Node2D
     private static readonly string NO_ELIXIR_URL = "res://assets/symbols/no_energy.png";
     private static readonly string ELIXIR_URL = "res://assets/symbols/energy.png";
     private int RoundNumber { get; set; }
+    private int CurrElixir { get; set; }
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
@@ -25,7 +26,7 @@ public partial class Elixir : Node2D
     // Called every frame. 'delta' is the elapsed time since the previous frame.
     public override void _Process(double delta)
     {
-        
+
     }
 
     // Havent decided whether to set this at 0
@@ -40,8 +41,10 @@ public partial class Elixir : Node2D
         Elixir.Texture = GD.Load<Texture2D>(NO_ELIXIR_URL);
     }
 
-    public void UpdateElixir()
+    public void UpdateElixir(int Elixir)
     {
-
+        CurrElixir = Elixir;
+        var ElixirTexture = (Sprite2D)FindChild("NullEnergy" + CurrElixir);
+        ElixirTexture.Texture = GD.Load<Texture2D>(ELIXIR_URL);
     }
 }

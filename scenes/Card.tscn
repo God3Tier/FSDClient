@@ -2,6 +2,10 @@
 
 [ext_resource type="Script" uid="uid://c1yx10hsdaqrr" path="res://card/display/Card.cs" id="1_4dx8l"]
 [ext_resource type="Texture2D" uid="uid://1loqoe55ae6" path="res://assets/complete_unit.png" id="2_tgmmg"]
+[ext_resource type="Texture2D" uid="uid://dvy6js7wm0j5i" path="res://assets/cards/blue_card_outline.png" id="3_5273u"]
+[ext_resource type="Texture2D" uid="uid://cqm56ctdrdrj" path="res://assets/symbols/attack_symbol.png" id="4_qbjcq"]
+[ext_resource type="Texture2D" uid="uid://cj06juvcs5qf1" path="res://assets/symbols/defence_symbol.png" id="5_dqwud"]
+[ext_resource type="Texture2D" uid="uid://bsnnj0lt2cyse" path="res://assets/characters/robot.png" id="6_hddve"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_4dx8l"]
 size = Vector2(194, 227)
@@ -22,38 +26,17 @@ texture = ExtResource("2_tgmmg")
 position = Vector2(97, 113.5)
 shape = SubResource("RectangleShape2D_4dx8l")
 
-[node name="Border" type="TextureRect" parent="." unique_id=1002218825]
-offset_right = 176.0
-offset_bottom = 201.0
-metadata/_edit_use_anchors_ = true
-
-[node name="Icon" type="TextureRect" parent="." unique_id=900111894]
-offset_left = 26.0
-offset_top = 9.0
-offset_right = 151.0
-offset_bottom = 170.0
-metadata/_edit_use_anchors_ = true
-
-[node name="AttackIcon" type="TextureRect" parent="." unique_id=1904314102]
-offset_left = 18.0
-offset_top = 200.0
-offset_right = 30.0
-offset_bottom = 210.0
-metadata/_edit_use_anchors_ = true
-
-[node name="HealthIcon" type="TextureRect" parent="." unique_id=216936153]
-offset_left = 133.0
-offset_top = 200.0
-offset_right = 145.0
-offset_bottom = 210.0
-metadata/_edit_use_anchors_ = true
+[node name="Border" type="Sprite2D" parent="." unique_id=1572352740]
+position = Vector2(96, 114)
+scale = Vector2(0.55491334, 0.5430622)
+texture = ExtResource("3_5273u")
 
 [node name="Health" type="RichTextLabel" parent="." unique_id=133566933]
 modulate = Color(0, 0, 0, 1)
-offset_left = 147.0
-offset_top = 200.0
-offset_right = 178.0
-offset_bottom = 223.0
+offset_left = 150.0
+offset_top = 191.0
+offset_right = 181.0
+offset_bottom = 214.0
 text = "0"
 fit_content = true
 metadata/_edit_use_anchors_ = true
@@ -61,9 +44,9 @@ metadata/_edit_use_anchors_ = true
 [node name="Attack" type="RichTextLabel" parent="." unique_id=1321693604]
 modulate = Color(0, 0, 0, 1)
 offset_left = 42.0
-offset_top = 197.0
+offset_top = 191.0
 offset_right = 81.0
-offset_bottom = 220.0
+offset_bottom = 214.0
 text = "0"
 fit_content = true
 metadata/_edit_use_anchors_ = true
@@ -77,3 +60,18 @@ offset_bottom = 37.0
 text = "0"
 fit_content = true
 metadata/_edit_use_anchors_ = true
+
+[node name="AttackIcon" type="Sprite2D" parent="." unique_id=1226578192]
+position = Vector2(28.000015, 203.00003)
+scale = Vector2(0.36567163, 0.3852459)
+texture = ExtResource("4_qbjcq")
+
+[node name="HealthIcon" type="Sprite2D" parent="." unique_id=1171870406]
+position = Vector2(134.99998, 203)
+scale = Vector2(0.4196427, 0.4)
+texture = ExtResource("5_dqwud")
+
+[node name="Icon" type="Sprite2D" parent="." unique_id=1673931013]
+position = Vector2(97.5, 110.12503)
+scale = Vector2(0.468, 0.42270175)
+texture = ExtResource("6_hddve")

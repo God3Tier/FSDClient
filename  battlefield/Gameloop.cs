@@ -5,7 +5,7 @@ using FSDClient.player.display;
 using FSDClient.card.display;
 using FSDClient.card;
 using FSDClient.battlefield.handManagement;
-
+using System;
 
 namespace FSDClient.battlefield;
 
@@ -73,23 +73,31 @@ public partial class Gameloop : Node2D
         // // Board[0][0].InitializeCard(CardView);
         // // AddChild(Board[0][0]);
 
-        var CardManager = (CardManager)FindChild("CardManager", true);
-
-
-        var CardScene = GD.Load<PackedScene>("res://scenes/Card.tscn");
-        var CardTemp = CardScene.Instantiate<Card>();
-        CardTemp.LoadDataTexture(CardTexture);
-        CardManager.AddChild(CardTemp);
+        // This is a valid example of how to load a new card
+        // var CardManager = (CardManager)FindChild("CardManager", true);
+        // var CardScene = GD.Load<PackedScene>("res://scenes/Card.tscn");
+        // var CardTemp = CardScene.Instantiate<Card>();
+        // CardTemp.LoadDataTexture(CardTexture);
+        // CardManager.AddChild(CardTemp);
 
         // This is just to test whether it would load
+        // SINCE THIS IS NOT TO BE CONSTANTLY DESTROYED AND RECREATED, THIS IS A POC TO TEST IF THE 
+        // THING WILL LOAD (sorry Jared)
+        GD.Print("Attempting to create the initial player view");
+        try {
+            var PlayerTextureView = Builder.BuildPlayer();
+            // var PlayerIcon = (PlayerView)FindChild("PlayerIcon");
+            var PlayerTrial = GD.Load<PackedScene>("res://scenes/PlayerIcon.tscn");
+            var PlayerIcon = PlayerTrial.Instantiate<PlayerView>();
+            PlayerIcon.LoadDataTexture(PlayerTextureView);
+            PlayerIcon.Scale = new Vector2(0.35f, 0.35f);
+            AddChild(PlayerIcon);
+            
+        } catch (Exception e) {
+            GD.PrintErr("Exception: ", e);
+        }
 
-        var PlayerTextureView = Builder.BuildPlayer();
-        var PlayerIcon = (PlayerView)FindChild("PlayerIcon");
-        PlayerIcon.LoadDataTexture(PlayerTextureView);
-        PlayerIcon.Scale = new Vector2(0.35f, 0.35f);
-        AddChild(PlayerIcon);
-
-        // GD.Print("Successfullt created the initial card view");
+        GD.Print("Successfully created the initial player view");
 
     }
     // This is how to generate Elixir. Since client only ever knows about 1 player's resource
