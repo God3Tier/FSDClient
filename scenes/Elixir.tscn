@@ -1,0 +1,48 @@
+[gd_scene format=3 uid="uid://ca1aeqga504up"]
+
+[ext_resource type="Texture2D" uid="uid://dnw8re7ws7g0p" path="res://assets/symbols/null_energy.png" id="1_3n0na"]
+[ext_resource type="Script" uid="uid://8r401ixhk5i0" path="res:// battlefield/Elixir.cs" id="1_6mcbq"]
+
+[node name="Elixir" type="Node2D" unique_id=205885167]
+script = ExtResource("1_6mcbq")
+
+[node name="NullEnergy8" type="Sprite2D" parent="." unique_id=366754568]
+position = Vector2(841, 54)
+texture = ExtResource("1_3n0na")
+
+[node name="NullEnergy7" type="Sprite2D" parent="." unique_id=694963938]
+position = Vector2(740, 53)
+texture = ExtResource("1_3n0na")
+
+[node name="NullEnergy6" type="Sprite2D" parent="." unique_id=1444156897]
+position = Vector2(643, 52)
+texture = ExtResource("1_3n0na")
+
+[node name="NullEnergy5" type="Sprite2D" parent="." unique_id=295294950]
+position = Vector2(542, 52)
+texture = ExtResource("1_3n0na")
+
+[node name="NullEnergy4" type="Sprite2D" parent="." unique_id=1521053675]
+position = Vector2(442, 52)
+texture = ExtResource("1_3n0na")
+
+[node name="NullEnergy3" type="Sprite2D" parent="." unique_id=1560073294]
+position = Vector2(342, 52)
+texture = ExtResource("1_3n0na")
+
+[node name="NullEnergy2" type="Sprite2D" parent="." unique_id=758065535]
+position = Vector2(241, 51)
+texture = ExtResource("1_3n0na")
+
+[node name="NullEnergy1" type="Sprite2D" parent="." unique_id=732479573]
+position = Vector2(140, 51)
+texture = ExtResource("1_3n0na")
+
+[node name="RichTextLabel" type="RichTextLabel" parent="." unique_id=500726548]
+modulate = Color(0.21960784, 0.8509804, 0.6627451, 1)
+offset_left = 2.0
+offset_top = 8.0
+offset_right = 89.0
+offset_bottom = 91.0
+theme_override_font_sizes/normal_font_size = 52
+text = "3/5"
