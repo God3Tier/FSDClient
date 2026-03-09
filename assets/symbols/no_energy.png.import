@@ -3,15 +3,11 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://qpysvljmb33j"
-path="res://.godot/imported/no_energy.png-c295fc4c4a39b58fe6fa40a8f5b9f3e6.ctex"
-metadata={
-"vram_texture": false
-}
+valid=false
 
 [deps]
 
 source_file="res://assets/symbols/no_energy.png"
-dest_files=["res://.godot/imported/no_energy.png-c295fc4c4a39b58fe6fa40a8f5b9f3e6.ctex"]
 
 [params]
 

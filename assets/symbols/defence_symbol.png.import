@@ -3,15 +3,11 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cj06juvcs5qf1"
-path="res://.godot/imported/defence_symbol.png-60e6a122a4542de4f4473fad56e9e2bd.ctex"
-metadata={
-"vram_texture": false
-}
+valid=false
 
 [deps]
 
 source_file="res://assets/symbols/defence_symbol.png"
-dest_files=["res://.godot/imported/defence_symbol.png-60e6a122a4542de4f4473fad56e9e2bd.ctex"]
 
 [params]
 

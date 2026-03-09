@@ -3,15 +3,11 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://lovgpbtqjkpe"
-path="res://.godot/imported/turn_7.png-a6f7b5d1b184b3eae12795a22420c58a.ctex"
-metadata={
-"vram_texture": false
-}
+valid=false
 
 [deps]
 
 source_file="res://assets/battlefield/turn/turn_7.png"
-dest_files=["res://.godot/imported/turn_7.png-a6f7b5d1b184b3eae12795a22420c58a.ctex"]
 
 [params]
 

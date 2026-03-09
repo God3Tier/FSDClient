@@ -3,15 +3,11 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cex466falbfkf"
-path="res://.godot/imported/empty_hand_slot.png-0d8d9e5b472e35483a28becf7d0296d3.ctex"
-metadata={
-"vram_texture": false
-}
+valid=false
 
 [deps]
 
 source_file="res://assets/battlefield/empty_hand_slot.png"
-dest_files=["res://.godot/imported/empty_hand_slot.png-0d8d9e5b472e35483a28becf7d0296d3.ctex"]
 
 [params]
 

@@ -3,15 +3,11 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://d0lmgfvgbbn23"
-path="res://.godot/imported/green_card_cost.png-4d7a7f76ff8bb3afecaa1676a11d0e94.ctex"
-metadata={
-"vram_texture": false
-}
+valid=false
 
 [deps]
 
 source_file="res://assets/cost/green_card_cost.png"
-dest_files=["res://.godot/imported/green_card_cost.png-4d7a7f76ff8bb3afecaa1676a11d0e94.ctex"]
 
 [params]
 

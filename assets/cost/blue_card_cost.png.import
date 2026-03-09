@@ -3,15 +3,11 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://8n1ncdlqjdqp"
-path="res://.godot/imported/blue_card_cost.png-f5c41be0e71fe73a5cc1fd619aca4410.ctex"
-metadata={
-"vram_texture": false
-}
+valid=false
 
 [deps]
 
 source_file="res://assets/cost/blue_card_cost.png"
-dest_files=["res://.godot/imported/blue_card_cost.png-f5c41be0e71fe73a5cc1fd619aca4410.ctex"]
 
 [params]
 

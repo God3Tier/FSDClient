@@ -3,15 +3,11 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://0gbxinv4upci"
-path="res://.godot/imported/yellow_card_cost.png-bbe2538b721e2f503d223d66c090ba31.ctex"
-metadata={
-"vram_texture": false
-}
+valid=false
 
 [deps]
 
 source_file="res://assets/cost/yellow_card_cost.png"
-dest_files=["res://.godot/imported/yellow_card_cost.png-bbe2538b721e2f503d223d66c090ba31.ctex"]
 
 [params]
 
