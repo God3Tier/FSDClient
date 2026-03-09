@@ -112,8 +112,9 @@ public partial class Gameloop : Node2D
 	public override void _Process(double delta)
 	{
 		// GD.Print("Called");
-		if (Elixir >= MAX_ELIXER || Elixir > TurnRound + BASE_ELIXIR)
+		if (Elixir <= MAX_ELIXER || Elixir > TurnRound + BASE_ELIXIR) {
 			return;
+		}
 
 		RegenInterval += delta;
 
