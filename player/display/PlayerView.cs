@@ -19,18 +19,12 @@ public partial class PlayerView : Node2D
 
     public void LoadDataTexture(PlayerViewTextures PlayerViewTextures)
     {
-        var Background = (TextureRect)FindChild("Border");
+        var Background = (Sprite2D)FindChild("Border");
         Background.Texture = PlayerViewTextures.BorderTexture;
 
-        var Portrait = (TextureRect)FindChild("Portrait");
+        var Portrait = (Sprite2D)FindChild("Portrait");
         Portrait.Texture = PlayerViewTextures.IconTexture;
         Portrait.Scale = new Vector2(0.75f, 0.75f);
-
-        var CounterAttack = (TextureRect)FindChild("CounterAttackIcon");
-        CounterAttack.Texture = PlayerViewTextures.CounterAttackTexture;
-
-        var Defence = (TextureRect)FindChild("DefenceIcon");
-        Defence.Texture = PlayerViewTextures.DefenceSymbolTexture;
 
         var AttackValue = (RichTextLabel)FindChild("AttackValue");
         AttackValue.Text = PlayerViewTextures.AttackValue;

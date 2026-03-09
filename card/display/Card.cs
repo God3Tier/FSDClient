@@ -7,9 +7,12 @@ using FSDClient.battlefield.handManagement;
 public partial class Card : Node2D
 {
 	[Signal] public delegate void HoveredEventHandler(Card card);
-	[Signal] public delegate void HoveredOffEventHandler(Card card);
-	public Vector2 StartingPosition;
+    [Signal] public delegate void HoveredOffEventHandler(Card card);
+	public Vector2 StartingPosition { get; set; }
 	private int Health { get; set; }
+    private bool BattleMode { get; set; } = false;
+    private double TimeToAttack { get; set; }
+    private double Timer { get; set; }
 	// hi
 
 	// Called when the node enters the scene tree for the first time.
@@ -53,26 +56,34 @@ public partial class Card : Node2D
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
-	{
+    {
+        if (!BattleMode)
+        {
+            return;
+        }
+
+
+        if (Timer + delta >= TimeToAttack)
+        {
+            Timer = 0;
+            // Send signal that attack has commenced
+            return; 
+        }
+        Timer += delta;
+        var ProgressBar = (ProgressBar)FindChild("ProgressBar");
+        ProgressBar.Value = Timer;
 	}
 
 	public void LoadDataTexture(CardViewTextures cardViewTextures)
-	{
-		var BorderTexture = (TextureRect)FindChild("Border", true);
+    {
+        GD.Print("Creating card");
+		var BorderTexture = (Sprite2D)FindChild("Border", true);
 		BorderTexture.Texture = cardViewTextures.BorderTexture;
-		BorderTexture.Scale = new Vector2(0.55f, 0.55f);
+		BorderTexture.Scale = new Vector2(0.555f, 0.543f);
 		
-		var IconTexture = (TextureRect)FindChild("Icon", true);
+		var IconTexture = (Sprite2D)FindChild("Icon", true);
 		IconTexture.Texture = cardViewTextures.IconTexture;
-		IconTexture.Scale = new Vector2(0.55f, 0.55f);
-
-		var AttackIcon = (TextureRect)FindChild("AttackIcon", true);
-		AttackIcon.Texture = cardViewTextures.AttackTexture;
-		AttackIcon.Scale = new Vector2(0.35f, 0.35f);
-
-		var HealthIcon = (TextureRect)FindChild("HealthIcon", true);
-		HealthIcon.Texture = cardViewTextures.DefenceTexture;
-		HealthIcon.Scale = new Vector2(0.35f, 0.35f);
+		IconTexture.Scale = new Vector2(0.468f, 0.423f);
 
 		var AttackValue = (RichTextLabel)FindChild("Attack", true);
 		AttackValue.Text = cardViewTextures.AttackValue;
@@ -85,7 +96,13 @@ public partial class Card : Node2D
 		}
 
 		var ElixirCost = (RichTextLabel)FindChild("ElixirCost", true);
-		ElixirCost.Text = cardViewTextures.ElixirCost;
+        ElixirCost.Text = cardViewTextures.ElixirCost;
+
+        var ProgressBar = (ProgressBar)FindChild("ProgressBar", true);
+        ProgressBar.MaxValue = cardViewTextures.TimeToAttack;
+        TimeToAttack = cardViewTextures.TimeToAttack;
+        
+        GD.Print("Able to create card");
 	}
 
 	public void UpdateHealth(int damageTaken)
@@ -102,11 +119,11 @@ public partial class Card : Node2D
 		}
 	}
 
-	public void EnterDamageMode()
+	public void EnterBattlefield()
 	{
 		var ElixirCost = (RichTextLabel)FindChild("ElixirCost");
 		ElixirCost.Text = "";
-		
+        BattleMode = true;
 		// var 
 	}
 

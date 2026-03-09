@@ -14,7 +14,7 @@ public class Builder
     // This constructs the card from the CardData class 
     public static CardViewTextures BuildCard(CardData CardData)
     {
-        var data = new CardViewData(CardData.Color.ToString().ToLower(), CardData.Name, CardData.Cost, CardData.Health, CardData.Attack);
+        var data = new CardViewData(CardData.Color.ToString().ToLower(), CardData.Name, CardData.Cost, CardData.Health, CardData.Attack, CardData.TimeToAttack);
         return new CardViewTextures(data);
     }
 

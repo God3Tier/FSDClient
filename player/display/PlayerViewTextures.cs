@@ -13,7 +13,7 @@ public class PlayerViewTextures
     private static readonly string DEFENCE_SYMBOL = "res://assets/symbols/defence_symbol.png";
 
     public Texture2D BorderTexture { get; set; }
-    public Texture2D IconTexture { get; set; }
+    public Texture2D IconTexture { get; set;}
     public Texture2D CounterAttackTexture { get; set; }
     public Texture2D DefenceSymbolTexture { get; set; }
     public string AttackValue { get; set; }
