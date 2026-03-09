@@ -5,11 +5,10 @@ using System;
 
 public partial class Elixir : Node2D
 {
-    private static readonly string NULL_ElIXIR_URL = "res://assets/symbols/null_energy.png";
+    // private static readonly string NULL_ElIXIR_URL = "res://assets/symbols/null_energy.png";
     private static readonly string NO_ELIXIR_URL = "res://assets/symbols/no_energy.png";
     private static readonly string ELIXIR_URL = "res://assets/symbols/energy.png";
     private int RoundNumber { get; set; }
-    private int CurrElixir { get; set; }
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
@@ -26,7 +25,7 @@ public partial class Elixir : Node2D
     // Called every frame. 'delta' is the elapsed time since the previous frame.
     public override void _Process(double delta)
     {
-
+        
     }
 
     // Havent decided whether to set this at 0
@@ -37,14 +36,18 @@ public partial class Elixir : Node2D
             return;
         }
 
-        var Elixir = (Sprite2D)FindChild("NullEnergy" + 5 + RoundValue);
+        var Elixir = (Sprite2D)FindChild("NullEnergy" + 4 + RoundValue);
         Elixir.Texture = GD.Load<Texture2D>(NO_ELIXIR_URL);
     }
 
     public void UpdateElixir(int Elixir)
     {
-        CurrElixir = Elixir;
-        var ElixirTexture = (Sprite2D)FindChild("NullEnergy" + CurrElixir);
+        GD.Print("Updating Elixir");
+        var ElixirTexture = (Sprite2D)FindChild("NullEnergy" + Elixir);
         ElixirTexture.Texture = GD.Load<Texture2D>(ELIXIR_URL);
+
+        var ElixirValue = (RichTextLabel)FindChild("ElixirValue");
+        ElixirValue.Text = "" + Elixir + "/" + (RoundNumber + 4);
+        GD.Print("Successfully Updating Elixir");
     }
 }
