@@ -8,12 +8,12 @@ namespace FSDClient.battlefield.handManagement;
 
 public partial class PlayerHand : Node2D
 {
-	const string CARD_SCENE_PATH = "res://scenes/Card.tscn";
-	private Card[] Hand = new Card[4];
-	private int centerScreenX;
-	private int HAND_COUNT = 0;
-	private int CARD_WIDTH = 300;
-	private int HAND_Y_POSITION = 850;
+    const string CARD_SCENE_PATH = "res://scenes/gameComponents/Card.tscn";
+    private Card[] Hand = new Card[4];
+    private int centerScreenX;
+    private int HAND_COUNT = 0;
+    private int CARD_WIDTH = 300;
+    private int HAND_Y_POSITION = 850;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
