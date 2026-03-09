@@ -14,8 +14,8 @@ public partial class Gameloop : Node2D
 {
 
 	public static readonly double MAX_ELIXER = 8;
-	public static readonly double ROUND_TIMER = 30;
-	public static readonly double SECONDS_PER_ELIXIR = 5f;
+	public static readonly double ROUND_TIMER = 5.0;
+	public static readonly double SECONDS_PER_ELIXIR = 1f;
 	public static readonly int BASE_ELIXIR = 4;
 
 
@@ -114,7 +114,18 @@ public partial class Gameloop : Node2D
 		// GD.Print("Called");
 
 		RegenInterval += delta;
+		GameTimer += delta;
 
+		if (GameTimer >= ROUND_TIMER * TurnRound)
+		{
+			GD.Print("Round updated");
+			TurnRound += 1;
+			var ElixirBar = (Elixir)FindChild("Elixir");
+			ElixirBar.UpdateRound(TurnRound);
+			// TODO: Trigger secondary draw card event
+
+		}
+		
 		if (RegenInterval >= SECONDS_PER_ELIXIR)
 		{
 			if (Elixir >= TurnRound + BASE_ELIXIR || Elixir >= MAX_ELIXER)
@@ -122,20 +133,10 @@ public partial class Gameloop : Node2D
 				return;
 			}
 			Elixir++;
-			RegenInterval = 0f;
+			RegenInterval = 0.0;
 			var ElixirBar = (Elixir)FindChild("Elixir");
 			ElixirBar.UpdateElixir(Elixir);
 		}
-
-		if (GameTimer > ROUND_TIMER * TurnRound)
-		{
-			TurnRound += 1;
-			var ElixirBar = (Elixir)FindChild("Elixir");
-			ElixirBar.UpdateRound(TurnRound);
-			// TODO: Trigger secondary draw card event
-
-		}
-		GameTimer += delta;
 
 	}
 
