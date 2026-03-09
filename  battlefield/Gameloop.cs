@@ -16,62 +16,62 @@ public partial class Gameloop : Node2D
 	public static readonly double MAX_ELIXER = 8;
 	public static readonly double ROUND_TIMER = 30;
 	public static readonly double SECONDS_PER_ELIXIR = 5f;
-	public static readonly int BASE_ELIXIR = 5;
+	public static readonly int BASE_ELIXIR = 4;
 
 
 	public NetworkManager NetworkManager { get; set; }
 	// Unsure to keep this as the state manager or make it it's own individual player data. TBD on a later date
-	public PlayerStateManager MainPlayer { get; set; }
-	// This info, leave majority null, the info is not needed so extensively
-	// TODO: Get rid of some fields and move the PlayerStateManager as that is what needs to
-	// Get rid of this can be read elsewhere 
-	public PlayerData IncomingPlayer { get; set; }
-	
-	// Deal with card placement and card movement 
-	private Card[][] Board { get; set; } = new Card[4][];
-	private CardManager CardManager;
-	
-	// Parameters for game state to be managed
-	private int Elixir { get; set; }
-	private int RoundNumber { get; set; }
-	private double GameTimer { get; set; } = 0;
-	private double RegenInterval { get; set; } = 1;
-	private int TurnRound = 1;
+    public PlayerStateManager MainPlayer { get; set; }
+    // This info, leave majority null, the info is not needed so extensively
+    // TODO: Get rid of some fields and move the PlayerStateManager as that is what needs to
+    // Get rid of this can be read elsewhere
+    public PlayerData IncomingPlayer { get; set; }
 
-	// public void StartGameLoop()
-	// {
-	//     // TODO: Should be obvious
-	//     while (true)
-	//     {
+    // Deal with card placement and card movement
+    private Card[][] Board { get; set; } = new Card[4][];
+    private CardManager CardManager;
 
-	//         break;
-	//     }
+    // Parameters for game state to be managed
+    private int Elixir { get; set; }
+    private int RoundNumber { get; set; }
+    private double GameTimer { get; set; } = 0;
+    private double RegenInterval { get; set; } = 1;
+    private int TurnRound = 1;
 
-	//     ReturnToHomeScreen();
+    // public void StartGameLoop()
+    // {
+    //     // TODO: Should be obvious
+    //     while (true)
+    //     {
 
-	// }
+    //         break;
+    //     }
 
-	// I am of the assumption that this is what is being called by the 
-	// We put this in gameloop later
-	public override void _Ready()
-	{
+    //     ReturnToHomeScreen();
 
-		for (int i = 0; i < 4; i++)
-		{
-			Board[i] = new Card[3];
-		}
+    // }
 
-		MainPlayer = PlayerStateManager.Instance;
-		// TODO: Figure out how network protocol is set up then replace data with incoming information from
-		//       network
-		IncomingPlayer = new PlayerData("Placeholder", "Placeholder", [], false);
-		
-		var TestCard = new CardData(10, "robot", Colour.RED, 100, 10, 5);
-		var CardTexture = Builder.BuildCard(TestCard);
+    // I am of the assumption that this is what is being called by the
+    // We put this in gameloop later
+    public override void _Ready()
+    {
 
-		// // Board[0][0] = new Card();
-		// // Board[0][0].InitializeCard(CardView);
-		// // AddChild(Board[0][0]);
+        for (int i = 0; i < 4; i++)
+        {
+            Board[i] = new Card[3];
+        }
+
+        MainPlayer = PlayerStateManager.Instance;
+        // TODO: Figure out how network protocol is set up then replace data with incoming information from
+        //       network
+        IncomingPlayer = new PlayerData("Placeholder", "Placeholder", [], false);
+
+        var TestCard = new CardData(10, "robot", Colour.RED, 100, 10, 5);
+        var CardTexture = Builder.BuildCard(TestCard);
+
+        // // Board[0][0] = new Card();
+        // // Board[0][0].InitializeCard(CardView);
+        // // AddChild(Board[0][0]);
 
         var CardManager = (CardManager)FindChild("CardManager", true);
 
@@ -84,43 +84,43 @@ public partial class Gameloop : Node2D
 
         // Testing attack phase -> Call this function when you somehow detect a card is played on the field
         CardTemp.EnterBattlefield();
-        
-		// This is just to test whether it would load
-		// SINCE THIS IS NOT TO BE CONSTANTLY DESTROYED AND RECREATED, THIS IS A POC TO TEST IF THE 
-		// THING WILL LOAD (sorry Jared)
-		// GD.Print("Attempting to create the initial player view");
-		// try {
-		// 	var PlayerTextureView = Builder.BuildPlayer();
-		// 	// var PlayerIcon = (PlayerView)FindChild("PlayerIcon");
-		// 	var PlayerTrial = GD.Load<PackedScene>("res://scenes/PlayerIcon.tscn");
-		// 	var PlayerIcon = PlayerTrial.Instantiate<PlayerView>();
-		// 	PlayerIcon.LoadDataTexture(PlayerTextureView);
-		// 	PlayerIcon.Scale = new Vector2(0.35f, 0.35f);
-		// 	AddChild(PlayerIcon);
-			
-		// } catch (Exception e) {
-		// 	GD.PrintErr("Exception: ", e);
-		// }
 
-		// GD.Print("Successfully created the initial player view");
-		
-		// See how to initialise Elixir 
+        // This is just to test whether it would load
+        // SINCE THIS IS NOT TO BE CONSTANTLY DESTROYED AND RECREATED, THIS IS A POC TO TEST IF THE
+        // THING WILL LOAD (sorry Jared)
+        // GD.Print("Attempting to create the initial player view");
+        // try {
+        // 	var PlayerTextureView = Builder.BuildPlayer();
+        // 	// var PlayerIcon = (PlayerView)FindChild("PlayerIcon");
+        // 	var PlayerTrial = GD.Load<PackedScene>("res://scenes/PlayerIcon.tscn");
+        // 	var PlayerIcon = PlayerTrial.Instantiate<PlayerView>();
+        // 	PlayerIcon.LoadDataTexture(PlayerTextureView);
+        // 	PlayerIcon.Scale = new Vector2(0.35f, 0.35f);
+        // 	AddChild(PlayerIcon);
 
-	}
+        // } catch (Exception e) {
+        // 	GD.PrintErr("Exception: ", e);
+        // }
+
+        // GD.Print("Successfully created the initial player view");
+
+        // See how to initialise Elixir
+
+    }
 	// This is how to generate Elixir. Since client only ever knows about 1 player's resource
 	// i can do it within the gameplay loop itself
 	public override void _Process(double delta)
 	{
-        // GD.Print("Called");
-        if ((Elixir > (TurnRound + BASE_ELIXIR)) || (Elixir >= MAX_ELIXER))
-        {
-            return;
-        }
+		// GD.Print("Called");
 
-        RegenInterval += delta;
+		RegenInterval += delta;
 
 		if (RegenInterval >= SECONDS_PER_ELIXIR)
 		{
+			if (Elixir >= TurnRound + BASE_ELIXIR || Elixir >= MAX_ELIXER)
+			{
+				return;
+			}
 			Elixir++;
 			RegenInterval = 0f;
 			var ElixirBar = (Elixir)FindChild("Elixir");
@@ -130,8 +130,10 @@ public partial class Gameloop : Node2D
 		if (GameTimer > ROUND_TIMER * TurnRound)
 		{
 			TurnRound += 1;
+			var ElixirBar = (Elixir)FindChild("Elixir");
+			ElixirBar.UpdateRound(TurnRound);
 			// TODO: Trigger secondary draw card event
-			
+
 		}
 		GameTimer += delta;
 
@@ -174,22 +176,22 @@ public partial class Gameloop : Node2D
 	*      too hard to store
 	*   -> Are we holding client and server timer for card attacks as well?
 	*/
-	public static void listenForServerReaction()
-	{
+    public static void listenForServerReaction()
+    {
 
-	}
+    }
 
-	/*
+    /*
 	* I am going on a whim here but this should be called within the main game loop
 	*/
-	public static void writeToServer()
-	{
+    public static void writeToServer()
+    {
 
-	}
+    }
 
-	private void ReturnToHomeScreen()
-	{
-		GameStateManager.Instance.ChangeGameState(GameState.HOMESCREEN);
-	}
+    private void ReturnToHomeScreen()
+    {
+        GameStateManager.Instance.ChangeGameState(GameState.HOMESCREEN);
+    }
 
 }
