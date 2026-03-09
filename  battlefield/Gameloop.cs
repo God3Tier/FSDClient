@@ -111,12 +111,13 @@ public partial class Gameloop : Node2D
 	// i can do it within the gameplay loop itself
 	public override void _Process(double delta)
 	{
-		// GD.Print("Called");
-		if (Elixir <= MAX_ELIXER || Elixir > TurnRound + BASE_ELIXIR) {
-			return;
-		}
+        // GD.Print("Called");
+        if ((Elixir > (TurnRound + BASE_ELIXIR)) || (Elixir >= MAX_ELIXER))
+        {
+            return;
+        }
 
-		RegenInterval += delta;
+        RegenInterval += delta;
 
 		if (RegenInterval >= SECONDS_PER_ELIXIR)
 		{
