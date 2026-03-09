@@ -5,7 +5,7 @@ using FSDClient.player.display;
 using FSDClient.card.display;
 using FSDClient.card;
 using FSDClient.battlefield.handManagement;
-
+using FSDClient.autoLoad;
 
 namespace FSDClient.battlefield;
 

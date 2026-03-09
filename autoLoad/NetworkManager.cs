@@ -1,4 +1,9 @@
+namespace FSDClient.autoLoad;
+
 using Godot;
+using System.Collections.Generic;
+using static Godot.HttpClient;
+using HttpRequestCompletedHandler = Godot.HttpRequest.RequestCompletedEventHandler;
 
 // I will leave this as static empty methods or will load fake data into here
 // since the server is not up yet
@@ -6,18 +11,72 @@ using Godot;
 public partial class NetworkManager : Node
 {
 
-	public override void _Ready()
-	{
+    private NetworkManager Instance { get; set; }
+    private Queue<HttpRequestData> httpRequestQueue = new();
 
-	}
-	public void ListenForPlayerConnection()
-	{
+    public override void _Ready()
+    {
+        Instance = this;
+    }
 
-	}
+    public override void _Process(double delta)
+    {
+        while (httpRequestQueue.Count > 0)
+        {
+            var request = httpRequestQueue.Dequeue();
+            HttpRequest httpRequest = new();
+            AddChild(httpRequest);
+            httpRequest.RequestCompleted += request.HttpRequestCompletedHandler;
+            httpRequest.RequestCompleted += (
+                long result, long responseCode, string[] headers, byte[] body
+            ) =>
+            {
+                // Process the actual data properly. However, this one is essentially overwritten 
+                // later 
+                httpRequest.QueueFree();
+            };
 
-	public void WriteToServer(string msg)
-	{
+            httpRequest.Request(
+                request.Url,
+                request.Headers,
+                request.Method,
+                request.Json
+            );
 
-	}
+        }
+    }
 
+    public void SendHttpRequest()
+    {
+
+    }
+
+    private void RequestFriendList()
+    {
+
+    }
+
+    private struct HttpRequestData
+    {
+        public string Url;
+        public string[] Headers;
+        public Method Method;
+        public string Json;
+        public HttpRequestCompletedHandler HttpRequestCompletedHandler;
+
+        public HttpRequestData(
+            string url,
+            string[] headers,
+            Method method,
+            string json,
+            HttpRequestCompletedHandler httpRequestCompletedHandler
+        )
+        {
+            Url = url;
+            Headers = headers;
+            Method = method;
+            Json = json;
+            HttpRequestCompletedHandler = httpRequestCompletedHandler;
+        }
+    }
 }
