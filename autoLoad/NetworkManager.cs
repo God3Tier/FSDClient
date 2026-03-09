@@ -12,7 +12,7 @@ public partial class NetworkManager : Node
 {
     public static readonly string BASE_URL = "http://localhost:8000/";
     public static NetworkManager Instance { get; set; }
-    private Queue<HttpRequestData> httpRequestQueue = new();
+    private readonly Queue<HttpRequestData> httpRequestQueue = new();
 
     public override void _Ready()
     

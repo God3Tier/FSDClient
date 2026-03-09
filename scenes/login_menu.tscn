@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://c7leg11ys58mp"]
 
-[ext_resource type="Script" uid="uid://buakyp1fv6vxn" path="res://scenesScripts/login/LoginMenu.cs" id="1_u8sew"]
+[ext_resource type="Script" uid="uid://bppiwtv57cawo" path="res://scenesScripts/login/LoginMenu.cs" id="1_u8sew"]
 
 [node name="Login_menu" type="Control" unique_id=1086706066]
 layout_mode = 3
@@ -36,3 +36,5 @@ offset_top = 190.0
 offset_right = 320.0
 offset_bottom = 206.0
 text = "No account? Click here"
+
+[connection signal="pressed" from="SendInformation" to="." method="_OnInformationReady"]
