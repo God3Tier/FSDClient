@@ -33,45 +33,53 @@ texture = ExtResource("3_5273u")
 
 [node name="Health" type="RichTextLabel" parent="." unique_id=133566933]
 modulate = Color(0, 0, 0, 1)
-offset_left = 150.0
-offset_top = 191.0
-offset_right = 181.0
-offset_bottom = 214.0
+offset_left = 148.0
+offset_top = 179.0
+offset_right = 179.0
+offset_bottom = 202.0
 text = "0"
 fit_content = true
 metadata/_edit_use_anchors_ = true
 
 [node name="Attack" type="RichTextLabel" parent="." unique_id=1321693604]
 modulate = Color(0, 0, 0, 1)
-offset_left = 42.0
-offset_top = 191.0
-offset_right = 81.0
-offset_bottom = 214.0
+offset_left = 40.0
+offset_top = 179.0
+offset_right = 79.0
+offset_bottom = 202.0
 text = "0"
 fit_content = true
 metadata/_edit_use_anchors_ = true
 
 [node name="ElixirCost" type="RichTextLabel" parent="." unique_id=1578044079]
 modulate = Color(0.0035191667, 0.0035191681, 0.0035191672, 1)
-offset_left = 33.0
-offset_top = 14.0
-offset_right = 59.0
-offset_bottom = 37.0
+offset_left = 18.0
+offset_top = 12.0
+offset_right = 44.0
+offset_bottom = 35.0
 text = "0"
 fit_content = true
 metadata/_edit_use_anchors_ = true
 
 [node name="AttackIcon" type="Sprite2D" parent="." unique_id=1226578192]
-position = Vector2(28.000015, 203.00003)
+position = Vector2(26, 191.00002)
 scale = Vector2(0.36567163, 0.3852459)
 texture = ExtResource("4_qbjcq")
 
 [node name="HealthIcon" type="Sprite2D" parent="." unique_id=1171870406]
-position = Vector2(134.99998, 203)
+position = Vector2(133.99998, 192)
 scale = Vector2(0.4196427, 0.4)
 texture = ExtResource("5_dqwud")
 
 [node name="Icon" type="Sprite2D" parent="." unique_id=1673931013]
-position = Vector2(97.5, 110.12503)
+position = Vector2(92, 104.00001)
 scale = Vector2(0.468, 0.42270175)
 texture = ExtResource("6_hddve")
+
+[node name="ProgressBar" type="ProgressBar" parent="." unique_id=1867261053]
+offset_left = 18.0
+offset_top = 204.0
+offset_right = 402.99997
+offset_bottom = 231.0
+scale = Vector2(0.4, 0.4)
+show_percentage = false

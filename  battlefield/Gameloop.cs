@@ -66,40 +66,43 @@ public partial class Gameloop : Node2D
 		//       network
 		IncomingPlayer = new PlayerData("Placeholder", "Placeholder", [], false);
 		
-		var TestCard = new CardData(10, "robot", Colour.RED, 100, 10);
+		var TestCard = new CardData(10, "robot", Colour.RED, 100, 10, 5);
 		var CardTexture = Builder.BuildCard(TestCard);
 
 		// // Board[0][0] = new Card();
 		// // Board[0][0].InitializeCard(CardView);
 		// // AddChild(Board[0][0]);
 
-		// This is a valid example of how to load a new card
-		// var CardManager = (CardManager)FindChild("CardManager", true);
-		// var CardScene = GD.Load<PackedScene>("res://scenes/Card.tscn");
-		// var CardTemp = CardScene.Instantiate<Card>();
-		// CardTemp.LoadDataTexture(CardTexture);
-		// CardManager.AddChild(CardTemp);
+		var CardManager = (CardManager)FindChild("CardManager", true);
+		var CardScene = GD.Load<PackedScene>("res://scenes/Card.tscn");
+		var CardTemp = CardScene.Instantiate<Card>();
+		CardTemp.LoadDataTexture(CardTexture);
+        CardManager.AddChild(CardTemp);
 
+
+        // Testing attack phase -> Call this function when you somehow detect a card is played on the field
+        CardTemp.EnterBattlefield();
+        
 		// This is just to test whether it would load
 		// SINCE THIS IS NOT TO BE CONSTANTLY DESTROYED AND RECREATED, THIS IS A POC TO TEST IF THE 
 		// THING WILL LOAD (sorry Jared)
-		GD.Print("Attempting to create the initial player view");
-		try {
-			var PlayerTextureView = Builder.BuildPlayer();
-			// var PlayerIcon = (PlayerView)FindChild("PlayerIcon");
-			var PlayerTrial = GD.Load<PackedScene>("res://scenes/PlayerIcon.tscn");
-			var PlayerIcon = PlayerTrial.Instantiate<PlayerView>();
-			PlayerIcon.LoadDataTexture(PlayerTextureView);
-			PlayerIcon.Scale = new Vector2(0.35f, 0.35f);
-			AddChild(PlayerIcon);
+		// GD.Print("Attempting to create the initial player view");
+		// try {
+		// 	var PlayerTextureView = Builder.BuildPlayer();
+		// 	// var PlayerIcon = (PlayerView)FindChild("PlayerIcon");
+		// 	var PlayerTrial = GD.Load<PackedScene>("res://scenes/PlayerIcon.tscn");
+		// 	var PlayerIcon = PlayerTrial.Instantiate<PlayerView>();
+		// 	PlayerIcon.LoadDataTexture(PlayerTextureView);
+		// 	PlayerIcon.Scale = new Vector2(0.35f, 0.35f);
+		// 	AddChild(PlayerIcon);
 			
-		} catch (Exception e) {
-			GD.PrintErr("Exception: ", e);
-		}
+		// } catch (Exception e) {
+		// 	GD.PrintErr("Exception: ", e);
+		// }
 
-        GD.Print("Successfully created the initial player view");
+		// GD.Print("Successfully created the initial player view");
 		
-        // See how to initialise Elixir 
+		// See how to initialise Elixir 
 
 	}
 	// This is how to generate Elixir. Since client only ever knows about 1 player's resource
