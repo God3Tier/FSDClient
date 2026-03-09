@@ -9,5 +9,5 @@
 Tester*
 .DS_Store
 .editorconfig
-assets/*
+/assets/*
 .env
