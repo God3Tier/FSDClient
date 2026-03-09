@@ -3,11 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bafexwmexied8"
-valid=false
+path="res://.godot/imported/purple_hero.png-7b122bf726377b9dd4986852a8c904e9.ctex"
+metadata={
+"vram_texture": false
+}
 
 [deps]
 
 source_file="res://assets/heros/purple_hero.png"
+dest_files=["res://.godot/imported/purple_hero.png-7b122bf726377b9dd4986852a8c904e9.ctex"]
 
 [params]
 

@@ -3,11 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://exis5mnwxf7e"
-valid=false
+path="res://.godot/imported/portrait_grey.png-1df9ab8f2b4f99e9c74067db0cb65597.ctex"
+metadata={
+"vram_texture": false
+}
 
 [deps]
 
 source_file="res://assets/portraits/portrait_grey.png"
+dest_files=["res://.godot/imported/portrait_grey.png-1df9ab8f2b4f99e9c74067db0cb65597.ctex"]
 
 [params]
 

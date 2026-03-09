@@ -18,7 +18,8 @@ public partial class PlayerStateManager : Node
     public static PlayerStateManager Instance { get; private set; }
     public PlayerData PlayerData { get; private set; }
     private List<CardData> DeckCardDatas { get; set; }
-
+    public string token { get; set; } = null;
+    
     public override void _Ready()
     {
         // Note this is a placeholder until I know what protocol we will use to load player data into the network

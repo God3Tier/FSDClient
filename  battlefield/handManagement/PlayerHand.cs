@@ -8,7 +8,7 @@ namespace FSDClient.battlefield.handManagement;
 
 public partial class PlayerHand : Node2D
 {
-    const string CARD_SCENE_PATH = "res://scenes/Card.tscn";
+    const string CARD_SCENE_PATH = "res://scenes/gameComponents/Card.tscn";
     private Card[] Hand = new Card[4];
     private int centerScreenX;
     private int HAND_COUNT = 0;

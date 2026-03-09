@@ -3,11 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cxpvej83lph1g"
-valid=false
+path="res://.godot/imported/4_cyan.png-25e5000d322d7c50bdfa6de62e005d10.ctex"
+metadata={
+"vram_texture": false
+}
 
 [deps]
 
 source_file="res://assets/number_values/cyan/4_cyan.png"
+dest_files=["res://.godot/imported/4_cyan.png-25e5000d322d7c50bdfa6de62e005d10.ctex"]
 
 [params]
 

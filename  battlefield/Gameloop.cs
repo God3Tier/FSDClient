@@ -75,8 +75,8 @@ public partial class Gameloop : Node2D
 
         var CardManager = (CardManager)FindChild("CardManager", true);
 
-
-        var CardScene = GD.Load<PackedScene>("res://scenes/Card.tscn");
+        
+        var CardScene = GD.Load<PackedScene>("res://scenes/gameComponents/Card.tscn");
         var CardTemp = CardScene.Instantiate<Card>();
         CardTemp.LoadDataTexture(CardTexture);
         CardManager.AddChild(CardTemp);
