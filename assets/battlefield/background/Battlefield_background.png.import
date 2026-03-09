@@ -3,15 +3,11 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://07difjkgj3x6"
-path="res://.godot/imported/Battlefield_background.png-953b50738b53b4e45190a940acb4e87e.ctex"
-metadata={
-"vram_texture": false
-}
+valid=false
 
 [deps]
 
 source_file="res://assets/battlefield/background/Battlefield_background.png"
-dest_files=["res://.godot/imported/Battlefield_background.png-953b50738b53b4e45190a940acb4e87e.ctex"]
 
 [params]
 

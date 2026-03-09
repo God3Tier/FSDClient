@@ -3,11 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://vejegv42a4l1"
-valid=false
+path="res://.godot/imported/counterattack_symbol.png-c68816be2d93879230a621303201b8d7.ctex"
+metadata={
+"vram_texture": false
+}
 
 [deps]
 
 source_file="res://assets/symbols/counterattack_symbol.png"
+dest_files=["res://.godot/imported/counterattack_symbol.png-c68816be2d93879230a621303201b8d7.ctex"]
 
 [params]
 

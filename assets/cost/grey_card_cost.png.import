@@ -3,11 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dn3rme3caet7h"
-valid=false
+path="res://.godot/imported/grey_card_cost.png-55020e7def714834c978e16d9d37a21d.ctex"
+metadata={
+"vram_texture": false
+}
 
 [deps]
 
 source_file="res://assets/cost/grey_card_cost.png"
+dest_files=["res://.godot/imported/grey_card_cost.png-55020e7def714834c978e16d9d37a21d.ctex"]
 
 [params]
 

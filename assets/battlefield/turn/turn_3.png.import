@@ -3,11 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://b8ar8dg2ybhj4"
-valid=false
+path="res://.godot/imported/turn_3.png-5277f23152a60be853d190a9798d0a3b.ctex"
+metadata={
+"vram_texture": false
+}
 
 [deps]
 
 source_file="res://assets/battlefield/turn/turn_3.png"
+dest_files=["res://.godot/imported/turn_3.png-5277f23152a60be853d190a9798d0a3b.ctex"]
 
 [params]
 

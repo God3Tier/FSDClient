@@ -3,11 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://b3asc25yhdbs7"
-valid=false
+path="res://.godot/imported/battlefield_square.png-e84381e3a6dc56858269fa28efc9f9d5.ctex"
+metadata={
+"vram_texture": false
+}
 
 [deps]
 
 source_file="res://assets/battlefield/battlefield_square.png"
+dest_files=["res://.godot/imported/battlefield_square.png-e84381e3a6dc56858269fa28efc9f9d5.ctex"]
 
 [params]
 

@@ -3,11 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dplkat0b0fcdu"
-valid=false
+path="res://.godot/imported/7_blue.png-2c0be3b1bd84c967bf0ea6f3aeb27bf9.ctex"
+metadata={
+"vram_texture": false
+}
 
 [deps]
 
 source_file="res://assets/number_values/blue/7_blue.png"
+dest_files=["res://.godot/imported/7_blue.png-2c0be3b1bd84c967bf0ea6f3aeb27bf9.ctex"]
 
 [params]
 

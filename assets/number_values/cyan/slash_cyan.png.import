@@ -3,11 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://oa66hahcgwki"
-valid=false
+path="res://.godot/imported/slash_cyan.png-a2185c40f74c37b0636235f7b32c2a8c.ctex"
+metadata={
+"vram_texture": false
+}
 
 [deps]
 
 source_file="res://assets/number_values/cyan/slash_cyan.png"
+dest_files=["res://.godot/imported/slash_cyan.png-a2185c40f74c37b0636235f7b32c2a8c.ctex"]
 
 [params]
 

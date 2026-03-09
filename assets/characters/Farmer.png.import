@@ -3,15 +3,11 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://de1xve7wh1kwa"
-path="res://.godot/imported/Farmer.png-c1531908d5686dd935e39a94e5da3a74.ctex"
-metadata={
-"vram_texture": false
-}
+valid=false
 
 [deps]
 
 source_file="res://assets/characters/Farmer.png"
-dest_files=["res://.godot/imported/Farmer.png-c1531908d5686dd935e39a94e5da3a74.ctex"]
 
 [params]
 
