@@ -10,15 +10,17 @@ using HttpRequestCompletedHandler = Godot.HttpRequest.RequestCompletedEventHandl
 // Also I do not want to learn network code yet so....
 public partial class NetworkManager : Node
 {
-
-    private NetworkManager Instance { get; set; }
+    public static readonly string BASE_URL = "http://localhost:8000/";
+    public static NetworkManager Instance { get; set; }
     private Queue<HttpRequestData> httpRequestQueue = new();
 
     public override void _Ready()
+    
     {
+
         Instance = this;
     }
-
+    
     public override void _Process(double delta)
     {
         while (httpRequestQueue.Count > 0)
@@ -31,8 +33,8 @@ public partial class NetworkManager : Node
                 long result, long responseCode, string[] headers, byte[] body
             ) =>
             {
-                // Process the actual data properly. However, this one is essentially overwritten 
-                // later 
+                // Process the actual data properly. However, this one is essentially overwritten
+                // later
                 httpRequest.QueueFree();
             };
 
@@ -46,15 +48,27 @@ public partial class NetworkManager : Node
         }
     }
 
-    public void SendHttpRequest()
+    public void SendRequest(
+        string url,
+        Method method,
+        string json,
+        HttpRequestCompletedHandler httpRequestCompletedHandler,
+        string[] headers = null
+    )
     {
-
+        httpRequestQueue.Enqueue(new HttpRequestData(
+            url,
+            headers,
+            method,
+            json,
+            httpRequestCompletedHandler
+        ));
     }
 
-    private void RequestFriendList()
-    {
+    // private void RequestFriendList()
+    // {
 
-    }
+    // }
 
     private struct HttpRequestData
     {

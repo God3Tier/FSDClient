@@ -2,21 +2,22 @@ using Godot;
 using System.Collections.Generic;
 
 /*
-	This is an autoloaded Manager that has a static instance that is a reference to the class. It is to be instantiated 
-	at the start of the client being open. This manages at which scene the main node will be running and is to be called 
+	This is an autoloaded Manager that has a static instance that is a reference to the class. It is to be instantiated
+	at the start of the client being open. This manages at which scene the main node will be running and is to be called
 	to switch between scenes
 */
 
 	/*
 	These are the different Gamestates that can exist for the application. The player is always either in
 	one of these scenes
-	
+
 	Need to also update the dictionary from the class to map it to paths
 */
 public enum GameState
 {
 	HOMESCREEN,
-	INGAMEMODE
+	INGAMEMODE,
+	LOGIN
 }
 
 public partial class GameStateManager : Node
@@ -25,7 +26,7 @@ public partial class GameStateManager : Node
 	private Node CurrentScene { get; set; }
 	private Node SceneContainer { get; set; }
 	public GameState CurrentGameState { get; private set; }
-	
+
 	public static GameStateManager Instance { get; private set; }
 
 	/*
@@ -35,10 +36,11 @@ public partial class GameStateManager : Node
 	private readonly Dictionary<GameState, string> _stateToScene = new()
 	{
 		{ GameState.HOMESCREEN, "res://scenes/states/home.tscn" },
-		{ GameState.INGAMEMODE, "res://scenes/states/gameplay.tscn" }
+		{ GameState.INGAMEMODE, "res://scenes/gameplay.tscn" },
+		{ GameState.LOGIN, "res://scenes/login_menu.tscn"}
 	};
 
-	// Here, we initialize the gamestate 
+	// Here, we initialize the gamestate
 	public override void _Ready()
 	{
 		//var sceneContainer = GetNode<Node>("SceneContainer");
@@ -46,15 +48,15 @@ public partial class GameStateManager : Node
 		//ChangeGameState(GameState.HOMESCREEN);
 //
 		//Instance = this;
-		
+
 		Viewport root = GetTree().Root;
 		// Using a negative index counts from the end, so this gets the last child node of `root`.
 		CurrentScene = root.GetChild(-1);
 	}
 
 	// When switching gamestate, use the enum and they are suppose to change
-	// to the appropriate scene. After that, nuke everything. Currently I havent added 
-	// anything cause I want to merge to main when I create the dummy nodes. 
+	// to the appropriate scene. After that, nuke everything. Currently I havent added
+	// anything cause I want to merge to main when I create the dummy nodes.
 	public void ChangeGameState(GameState gameState)
 	{
 		CurrentGameState = gameState;
@@ -65,7 +67,7 @@ public partial class GameStateManager : Node
 		}
 	}
 
-   
+
 	private void GotoScene(string path)
 	{
 		CallDeferred(MethodName.DeferredGotoScene, path);
