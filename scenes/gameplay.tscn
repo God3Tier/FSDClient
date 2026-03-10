@@ -15,35 +15,32 @@ script = ExtResource("1_din8e")
 script = ExtResource("6_bhmdk")
 
 [node name="CardSlot" parent="." unique_id=1553162117 instance=ExtResource("7_s5y6v")]
-position = Vector2(713, 569)
+position = Vector2(729, 682)
 script = ExtResource("8_407ns")
 
 [node name="CardSlot2" parent="." unique_id=1454064906 instance=ExtResource("7_s5y6v")]
-position = Vector2(941, 566)
+position = Vector2(950, 681)
 script = ExtResource("8_407ns")
 
 [node name="CardSlot3" parent="." unique_id=1033699585 instance=ExtResource("7_s5y6v")]
-position = Vector2(710, 358)
+position = Vector2(728, 511)
 script = ExtResource("8_407ns")
 
 [node name="CardSlot4" parent="." unique_id=2119496540 instance=ExtResource("7_s5y6v")]
-position = Vector2(938, 355)
+position = Vector2(950, 506)
 script = ExtResource("8_407ns")
 
 [node name="CardSlot5" parent="." unique_id=725847297 instance=ExtResource("7_s5y6v")]
-position = Vector2(1171, 564)
+position = Vector2(1172, 688)
 script = ExtResource("8_407ns")
 
 [node name="CardSlot6" parent="." unique_id=658250543 instance=ExtResource("7_s5y6v")]
-position = Vector2(1168, 353)
+position = Vector2(1170, 511)
 script = ExtResource("8_407ns")
 
 [node name="PlayerHand" type="Node2D" parent="." unique_id=1397496898]
 script = ExtResource("9_w3w6i")
 
-[node name="Battlefield" type="Node2D" parent="." unique_id=2051723885]
-
-[node name="Background" type="Sprite2D" parent="Battlefield" unique_id=207332656]
-position = Vector2(960, 542)
-scale = Vector2(1.6597222, 1.6666666)
-texture = ExtResource("6_din8e")
+[node name="Elixir" parent="." unique_id=205885167 instance=ExtResource("7_4bh5q")]
+position = Vector2(1367, 496)
+scale = Vector2(0.6, 0.6)

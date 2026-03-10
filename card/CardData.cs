@@ -21,15 +21,17 @@ public class CardData
     public Colour Color { get; set; }
     public int Health { get; private set; }
     public int Attack { get; }
+    public double TimeToAttack { get; }
 
 
-    public CardData(int cost, string name, Colour colour, int health, int attack)
+    public CardData(int cost, string name, Colour colour, int health, int attack, double timeToAttack)
     {
         Cost = cost;
         Name = name.ToLower();
         Color = colour;
         Health = health;
         Attack = attack;
+        TimeToAttack = timeToAttack;
         // Set url of this later
     }
 
