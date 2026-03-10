@@ -47,8 +47,8 @@ texture = ExtResource("1_48th5")
 expand_mode = 1
 
 [node name="PurpleHero" type="Sprite2D" parent="." unique_id=1030394544]
-position = Vector2(649.53125, 139)
-scale = Vector2(0.8647908, 0.45411813)
+position = Vector2(669, 138)
+scale = Vector2(0.61331284, 0.48444936)
 texture = ExtResource("7_s07j5")
 
 [node name="Header" type="VBoxContainer" parent="." unique_id=1997196954]
@@ -290,7 +290,7 @@ grow_vertical = 2
 theme_override_constants/separation = 50
 
 [node name="BattleButton" type="Button" parent="VBoxContainer" unique_id=2063392197]
-custom_minimum_size = Vector2(500, 150)
+custom_minimum_size = Vector2(600, 150)
 layout_mode = 2
 mouse_default_cursor_shape = 2
 theme_override_colors/font_color = Color(0, 0, 0, 1)
