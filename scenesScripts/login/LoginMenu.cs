@@ -102,7 +102,15 @@ public partial class LoginMenu : Control
 	private void LoginResponse(long result, long responseCode, string[] headers, byte[] body)
 	{
 		if (result != (long)HttpRequest.Result.Success && responseCode != 200)
-        { 
+        {
+            // Temporarily until I have designed the frame to provide bad request
+            if (responseCode == 400) {
+                GD.Print("Bad request");
+            } else if (responseCode == 401) {
+                GD.Print("User does not exists or password is wrong. Try logging in "); 
+            } else {
+                GD.Print("Unable to reach server");
+            }
 			// TODO: Put some label that prevents them for conitnueing and ask them to try again
 			return;
 		}

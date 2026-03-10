@@ -35,6 +35,7 @@ public partial class NetworkManager : Node
             {
                 // Process the actual data properly. However, this one is essentially overwritten
                 // later
+                GD.Print("Request has been sent");
                 httpRequest.QueueFree();
             };
 
@@ -44,7 +45,7 @@ public partial class NetworkManager : Node
                 request.Method,
                 request.Json
             );
-
+            GD.Print("Request has been sent");
         }
     }
 
