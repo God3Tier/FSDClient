@@ -18,4 +18,10 @@ public partial class Home : Control
 		var GameStateManager = GetNode<GameStateManager>("/root/GameStateManager");
 		GameStateManager.ChangeGameState(GameState.INGAMEMODE);
 	}
+	
+	public void _on_card_button_pressed()
+	{
+		var GameStateManager = GetNode<GameStateManager>("/root/GameStateManager");
+		GameStateManager.ChangeGameState(GameState.CARDSCREEN);
+	}
 }

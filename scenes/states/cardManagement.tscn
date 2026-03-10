@@ -1,0 +1,264 @@
+[gd_scene format=3 uid="uid://ck8usyw1ifv1r"]
+
+[ext_resource type="Texture2D" uid="uid://dgjjaj7pbhqff" path="res://assets/battlefield/background/background_test_box.png" id="1_u4l5w"]
+[ext_resource type="Texture2D" uid="uid://bif2ng1aadtnc" path="res://assets/heros/purple_hero.png" id="2_dtc84"]
+[ext_resource type="Texture2D" uid="uid://tl43u2wwetbq" path="res://assets/header/banner.png" id="3_c7st2"]
+[ext_resource type="Texture2D" uid="uid://pu52dbw7egqc" path="res://assets/header/crystal_colored.png" id="4_yc314"]
+[ext_resource type="Texture2D" uid="uid://nkdqwj6g8mqc" path="res://assets/header/gold_Colored.png" id="5_60kyj"]
+[ext_resource type="Texture2D" uid="uid://cnboeuly7ue15" path="res://assets/header/rank.png" id="6_sun8c"]
+[ext_resource type="StyleBox" uid="uid://buvt2gu2jbmvx" path="res://styles/tab_unselected.tres" id="7_yc314"]
+[ext_resource type="StyleBox" uid="uid://fanmcmx62hlp" path="res://styles/tab_selected.tres" id="8_60kyj"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yc314"]
+bg_color = Color(1, 1, 1, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dtc84"]
+bg_color = Color(1, 1, 1, 1)
+
+[node name="CardManagement" type="Control" unique_id=1513454057]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 1920.0
+offset_bottom = 1080.0
+
+[node name="Background" type="TextureRect" parent="." unique_id=1106124455]
+layout_mode = 0
+offset_right = 1920.0
+offset_bottom = 1080.0
+texture = ExtResource("1_u4l5w")
+expand_mode = 1
+
+[node name="PurpleHero" type="Sprite2D" parent="." unique_id=669859827]
+position = Vector2(669, 138)
+scale = Vector2(0.61331284, 0.48444936)
+texture = ExtResource("2_dtc84")
+
+[node name="Header" type="VBoxContainer" parent="." unique_id=2011892842]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 761.53125
+offset_top = 62.0
+offset_right = -550.46875
+offset_bottom = 216.0
+grow_horizontal = 2
+theme_override_constants/separation = 4
+
+[node name="Row 1" type="HBoxContainer" parent="Header" unique_id=740889126]
+custom_minimum_size = Vector2(100, 75)
+layout_mode = 2
+alignment = 1
+
+[node name="XP" type="ColorRect" parent="Header/Row 1" unique_id=652607707]
+custom_minimum_size = Vector2(200, 30)
+layout_mode = 2
+
+[node name="Banner" type="TextureRect" parent="Header/Row 1/XP" unique_id=843191322]
+layout_mode = 0
+offset_right = 118.0
+offset_bottom = 75.0
+texture = ExtResource("3_c7st2")
+expand_mode = 2
+stretch_mode = 4
+
+[node name="Level" type="Label" parent="Header/Row 1/XP/Banner" unique_id=1213918925]
+layout_mode = 0
+offset_left = 1.0
+offset_right = 71.0
+offset_bottom = 76.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 40
+text = "1"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="EXP" type="Label" parent="Header/Row 1/XP" unique_id=1668305595]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 81.0
+offset_top = 1.0
+offset_right = -2.0
+offset_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 40
+text = "2/10"
+vertical_alignment = 1
+
+[node name="Crystal" type="ColorRect" parent="Header/Row 1" unique_id=1575892907]
+custom_minimum_size = Vector2(200, 30)
+layout_mode = 2
+
+[node name="Crystal" type="TextureRect" parent="Header/Row 1/Crystal" unique_id=1941232122]
+layout_mode = 0
+offset_right = 30.0
+offset_bottom = 75.0
+texture = ExtResource("4_yc314")
+expand_mode = 2
+stretch_mode = 4
+
+[node name="Label" type="Label" parent="Header/Row 1/Crystal" unique_id=919124847]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 78.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 40
+text = "3,810"
+vertical_alignment = 1
+
+[node name="Gold" type="ColorRect" parent="Header/Row 1" unique_id=1111243495]
+custom_minimum_size = Vector2(200, 30)
+layout_mode = 2
+
+[node name="Gold" type="TextureRect" parent="Header/Row 1/Gold" unique_id=475440069]
+layout_mode = 0
+offset_right = 30.0
+offset_bottom = 75.0
+texture = ExtResource("5_60kyj")
+expand_mode = 2
+stretch_mode = 4
+
+[node name="Label" type="Label" parent="Header/Row 1/Gold" unique_id=96351867]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 85.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 40
+text = "4,009"
+vertical_alignment = 1
+
+[node name="Row 2" type="HBoxContainer" parent="Header" unique_id=314646862]
+custom_minimum_size = Vector2(0, 75)
+layout_mode = 2
+alignment = 1
+
+[node name="Name" type="ColorRect" parent="Header/Row 2" unique_id=1274963100]
+custom_minimum_size = Vector2(350, 30)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Header/Row 2/Name" unique_id=2141871375]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 40
+text = "John Doe"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Leaderboard" type="ColorRect" parent="Header/Row 2" unique_id=1102491864]
+custom_minimum_size = Vector2(250, 30)
+layout_mode = 2
+
+[node name="Rank" type="TextureRect" parent="Header/Row 2/Leaderboard" unique_id=1194021488]
+layout_mode = 0
+offset_right = 30.0
+offset_bottom = 75.0
+texture = ExtResource("6_sun8c")
+expand_mode = 2
+stretch_mode = 4
+
+[node name="Label" type="Label" parent="Header/Row 2/Leaderboard" unique_id=1320915585]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 92.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 40
+text = "1"
+vertical_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=582091809]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -776.0
+offset_bottom = -35.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/separation = 100
+alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer" unique_id=1914447869]
+custom_minimum_size = Vector2(1050, 0)
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="CollectionHeaderText" type="PanelContainer" parent="HBoxContainer/VBoxContainer" unique_id=1323952768]
+layout_mode = 2
+size_flags_horizontal = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_yc314")
+
+[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer/VBoxContainer/CollectionHeaderText" unique_id=547490778]
+layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_right = 5
+
+[node name="Label" type="Label" parent="HBoxContainer/VBoxContainer/CollectionHeaderText/MarginContainer" unique_id=1513024568]
+layout_mode = 2
+size_flags_horizontal = 0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 30
+text = "Collection"
+
+[node name="CollectionColorContainer" type="Panel" parent="HBoxContainer/VBoxContainer" unique_id=24539546]
+custom_minimum_size = Vector2(1050, 700)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_dtc84")
+
+[node name="CollectionContainer" type="VFlowContainer" parent="HBoxContainer/VBoxContainer/CollectionColorContainer" unique_id=1877992925]
+custom_minimum_size = Vector2(1050, 700)
+layout_mode = 0
+offset_right = 1050.0
+offset_bottom = 699.0
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="HBoxContainer" unique_id=1838329570]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="TabBar" type="TabBar" parent="HBoxContainer/VBoxContainer2" unique_id=1880105284]
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_colors/font_selected_color = Color(0, 0, 0, 1)
+theme_override_colors/font_unselected_color = Color(0.25808161, 0.25808161, 0.25808161, 1)
+theme_override_constants/tab_separation = 3
+theme_override_font_sizes/font_size = 30
+theme_override_styles/tab_unselected = ExtResource("7_yc314")
+theme_override_styles/tab_selected = ExtResource("8_60kyj")
+current_tab = 0
+clip_tabs = false
+tab_count = 3
+tab_0/title = "Deck 1"
+tab_1/title = "Deck 2"
+tab_2/title = "Deck 3"
+
+[node name="DeckColorContainer" type="Panel" parent="HBoxContainer/VBoxContainer2" unique_id=2134822323]
+custom_minimum_size = Vector2(650, 700)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_dtc84")
+
+[node name="DeckContainer" type="VFlowContainer" parent="HBoxContainer/VBoxContainer2/DeckColorContainer" unique_id=1624856666]
+custom_minimum_size = Vector2(700, 0)
+layout_mode = 0
+offset_left = 2300.0
+offset_right = 3000.0
+offset_bottom = 700.0
