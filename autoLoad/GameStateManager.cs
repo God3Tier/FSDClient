@@ -37,7 +37,7 @@ public partial class GameStateManager : Node
 	{
 		{ GameState.HOMESCREEN, "res://scenes/states/home.tscn" },
 		{ GameState.CARDSCREEN, "res://scenes/states/cardManagement.tscn"},
-		{ GameState.INGAMEMODE, "res://scenes/states/gameplay.tscn" }
+		{ GameState.INGAMEMODE, "res://scenes/gameplay.tscn" }
 	};
 
 	// Here, we initialize the gamestate 
