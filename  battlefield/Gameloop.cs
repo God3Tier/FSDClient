@@ -81,6 +81,13 @@ public partial class Gameloop : Node2D
         CardTemp.LoadDataTexture(CardTexture);
         CardManager.AddChild(CardTemp);
 
+        // Making a second card doesn't work too well
+        // TestCard = new CardData(10, "farmer", Colour.BLUE, 100, 10, 5);
+        // CardTexture = Builder.BuildCard(TestCard);
+        // CardScene = GD.Load<PackedScene>("res://scenes/gameComponents/Card.tscn");
+        // var CardTemp = CardScene.Instantiate<Card>();
+        // CardTemp.LoadDataTexture(CardTexture);
+        // CardManager.AddChild(CardTemp);
 
         // Testing attack phase -> Call this function when you somehow detect a card is played on the field
         CardTemp.EnterBattlefield();
