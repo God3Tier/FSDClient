@@ -12,8 +12,8 @@ public partial class PlayerHand : Node2D
     private Card[] Hand = new Card[4];
     private int centerScreenX;
     private int HAND_COUNT = 0;
-    private int CARD_WIDTH = 300;
-    private int HAND_Y_POSITION = 850;
+    private int CARD_WIDTH = 120;
+    private int HAND_Y_POSITION = 820;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()

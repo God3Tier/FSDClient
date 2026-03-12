@@ -66,7 +66,7 @@ public partial class Gameloop : Node2D
         //       network
         IncomingPlayer = new PlayerData("Placeholder", "Placeholder", [], false);
 
-        var TestCard = new CardData(10, "robot", Colour.RED, 100, 10, 5);
+        var TestCard = new CardData(10, "farmer", Colour.RED, 100, 10, 5);
         var CardTexture = Builder.BuildCard(TestCard);
 
         // // Board[0][0] = new Card();
