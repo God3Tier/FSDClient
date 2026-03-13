@@ -15,7 +15,8 @@ public partial class Gameloop : Node2D
 
 	public static readonly double MAX_ELIXER = 8;
 	public static readonly double ROUND_TIMER = 5.0;
-	public static readonly double SECONDS_PER_ELIXIR = 1f;
+	public static readonly double PAUSE_TIMER = 5.0;
+	public static readonly double SECONDS_PER_ELIXIR = 3f;
 	public static readonly int BASE_ELIXIR = 4;
 
 
@@ -30,12 +31,15 @@ public partial class Gameloop : Node2D
     // Deal with card placement and card movement
     private Card[][] Board { get; set; } = new Card[4][];
     private CardManager CardManager;
+    private HandArea HandArea;
 
     // Parameters for game state to be managed
     private int Elixir { get; set; }
     private int RoundNumber { get; set; }
     private double GameTimer { get; set; } = 0;
     private double RegenInterval { get; set; } = 1;
+    private bool TurnPause { get; set; } = false;
+    private double PauseTimer { get; set; } = 0;
     private int TurnRound = 1;
 
     // public void StartGameLoop()
@@ -88,6 +92,10 @@ public partial class Gameloop : Node2D
         // var CardTemp = CardScene.Instantiate<Card>();
         // CardTemp.LoadDataTexture(CardTexture);
         // CardManager.AddChild(CardTemp);
+        
+        // Testing the HandArea
+        HandArea = GetNode<HandArea>("HandArea");
+        GD.Print(HandArea);
 
         // Testing attack phase -> Call this function when you somehow detect a card is played on the field
         CardTemp.EnterBattlefield();
@@ -119,18 +127,30 @@ public partial class Gameloop : Node2D
 	public override void _Process(double delta)
 	{
 		// GD.Print("Called");
-
-		RegenInterval += delta;
-		GameTimer += delta;
-
-		if (GameTimer >= ROUND_TIMER * TurnRound)
-		{
-			GD.Print("Round updated");
+		if (TurnPause) {
+			PauseTimer += delta;
+		} else {
+			RegenInterval += delta;
+			GameTimer += delta;
+		}
+		if (PauseTimer >= PAUSE_TIMER) {
+			GD.Print("Pause Ended");
+			HandArea.LowerDeck();
+			TurnPause = false;
+			PauseTimer = 0;
 			TurnRound += 1;
 			var ElixirBar = (Elixir)FindChild("Elixir");
 			ElixirBar.UpdateRound(TurnRound);
-			// TODO: Trigger secondary draw card event
+			return;
+		}
 
+		if (GameTimer >= ROUND_TIMER * TurnRound && !TurnPause)
+		{
+			GD.Print("Round updated");
+			
+			// TODO: Trigger secondary draw card event
+			TurnPause = true;
+			HandArea.RaiseDeck();
 		}
 		
 		if (RegenInterval >= SECONDS_PER_ELIXIR)
