@@ -16,8 +16,8 @@ using System.Collections.Generic;
 public enum GameState
 {
 	HOMESCREEN,
-	INGAMEMODE,
-	LOGIN
+	CARDSCREEN,
+	INGAMEMODE
 }
 
 public partial class GameStateManager : Node
@@ -36,8 +36,8 @@ public partial class GameStateManager : Node
 	private readonly Dictionary<GameState, string> _stateToScene = new()
 	{
 		{ GameState.HOMESCREEN, "res://scenes/states/home.tscn" },
-		{ GameState.INGAMEMODE, "res://scenes/gameplay.tscn" },
-		{ GameState.LOGIN, "res://scenes/login_menu.tscn"}
+		{ GameState.CARDSCREEN, "res://scenes/states/cardManagement.tscn"},
+		{ GameState.INGAMEMODE, "res://scenes/gameplay.tscn" }
 	};
 
 	// Here, we initialize the gamestate
