@@ -50,12 +50,15 @@ public partial class CardManager : Node2D
 
 	private void StopDrag()
 	{
-		cardBeingDragged.Scale = new Vector2(1.05f, 1.05f);
-		var cardSlotFound = _raycastCheckForCardSlot();
-		if (cardSlotFound != null && !cardSlotFound.CardInSlot)
+		cardBeingDragged.Scale = new Vector2(1.005f, 1.005f);
+		var battleSlotFound = _raycastCheckForBattleSlot();
+		if (battleSlotFound != null && !battleSlotFound.CardInSlot)
 		{
-			cardBeingDragged.Position = cardSlotFound.Position;
-			cardSlotFound.CardInSlot = true;
+			cardBeingDragged.Position = battleSlotFound.Position;
+			GD.Print(battleSlotFound.Position);
+			GD.Print(cardBeingDragged.Position);
+			GD.Print(dragOffset);
+			battleSlotFound.CardInSlot = true;
 			var collisionShape = cardBeingDragged.GetNode<CollisionShape2D>("Area2D/CollisionShape2D");
 			collisionShape.Disabled = true;
 		}
@@ -136,7 +139,7 @@ public partial class CardManager : Node2D
 	}
 
 	// To return what is under our cursor when clicking
-	public CardSlot? _raycastCheckForCardSlot()
+	public BattleSlot? _raycastCheckForBattleSlot()
 	{
 		var spaceState = GetWorld2D().DirectSpaceState;
 		var parameters = new PhysicsPointQueryParameters2D
@@ -150,7 +153,7 @@ public partial class CardManager : Node2D
 		if (result.Count > 0)
 		{
 			var collider = (Area2D)result[0]["collider"];
-			var cardParent = collider.GetParent<CardSlot>();
+			var cardParent = collider.GetParent<BattleSlot>();
 			return cardParent;
 		}
 		return null;

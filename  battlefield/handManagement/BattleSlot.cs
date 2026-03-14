@@ -3,7 +3,7 @@ using System;
 
 namespace FSDClient.battlefield.handManagement;
 
-public partial class CardSlot : Node2D
+public partial class BattleSlot : Node2D
 {
 	public bool CardInSlot = false;
 	// Called when the node enters the scene tree for the first time.

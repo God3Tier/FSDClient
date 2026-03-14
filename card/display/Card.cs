@@ -67,7 +67,7 @@ public partial class Card : Node2D
         {
             Timer = 0;
             // Send signal that attack has commenced
-            return; 
+            return;
         }
         Timer += delta;
         var ProgressBar = (ProgressBar)FindChild("ProgressBar");
@@ -79,11 +79,11 @@ public partial class Card : Node2D
         GD.Print("Creating card");
 		var BorderTexture = (Sprite2D)FindChild("Border", true);
 		BorderTexture.Texture = cardViewTextures.BorderTexture;
-		BorderTexture.Scale = new Vector2(0.555f, 0.543f);
-		
+		BorderTexture.Scale = new Vector2(0.500f, 0.500f);
+
 		var IconTexture = (Sprite2D)FindChild("Icon", true);
 		IconTexture.Texture = cardViewTextures.IconTexture;
-		IconTexture.Scale = new Vector2(0.468f, 0.423f);
+		// IconTexture.Scale = new Vector2(0.468f, 0.423f);
 
 		var AttackValue = (RichTextLabel)FindChild("Attack", true);
 		AttackValue.Text = cardViewTextures.AttackValue;
@@ -101,7 +101,7 @@ public partial class Card : Node2D
         var ProgressBar = (ProgressBar)FindChild("ProgressBar", true);
         ProgressBar.MaxValue = cardViewTextures.TimeToAttack;
         TimeToAttack = cardViewTextures.TimeToAttack;
-        
+
         GD.Print("Able to create card");
 	}
 
@@ -124,7 +124,7 @@ public partial class Card : Node2D
 		var ElixirCost = (RichTextLabel)FindChild("ElixirCost");
 		ElixirCost.Text = "";
         BattleMode = true;
-		// var 
+		// var
 	}
 
 	public void OnMouseEntered()

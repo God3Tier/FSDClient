@@ -1,0 +1,22 @@
+[gd_scene format=3 uid="uid://dp2kyvllo3ish"]
+
+[ext_resource type="Texture2D" uid="uid://bnpaihueo2hbn" path="res://assets/battlefield/battlefield_square.png" id="1_mxh2e"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_nqaf0"]
+size = Vector2(166, 168.5)
+
+[node name="CardSlot" type="Node2D" unique_id=1553162117]
+
+[node name="CardSlotImage" type="Sprite2D" parent="." unique_id=437682159]
+position = Vector2(0.50000006, -1.6093254e-06)
+scale = Vector2(0.38274336, 0.3893805)
+texture = ExtResource("1_mxh2e")
+
+[node name="Area2D" type="Area2D" parent="." unique_id=1885567360]
+visibility_layer = 3
+collision_layer = 2
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=1611106046]
+position = Vector2(-3.8146973e-06, -0.25)
+shape = SubResource("RectangleShape2D_nqaf0")

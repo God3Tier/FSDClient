@@ -1,19 +1,18 @@
-[gd_scene format=3 uid="uid://b823yg0wlvck2"]
+[gd_scene format=3 uid="uid://dm6qn8g7e0lbi"]
 
-[ext_resource type="Texture2D" uid="uid://ccx5r7bg8b7yr" path="res://assets/battlefield/empty_hand_slot.png" id="1_f6t2c"]
+[ext_resource type="Texture2D" uid="uid://ccx5r7bg8b7yr" path="res://assets/battlefield/empty_hand_slot.png" id="1_0thip"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_e124b"]
 size = Vector2(160, 199)
 
-[node name="CardSlot" type="Node2D" unique_id=1762486259]
+[node name="HandSlot" type="Node2D" unique_id=1762486259]
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1368923255]
-position = Vector2(3, -2.0000038)
-scale = Vector2(0.4651163, 0.4663461)
-texture = ExtResource("1_f6t2c")
+position = Vector2(0.4999962, 0.5)
+scale = Vector2(0.45639533, 0.47836542)
+texture = ExtResource("1_0thip")
 
 [node name="Area2D" type="Area2D" parent="." unique_id=127411684]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=1367809298]
-position = Vector2(2, -2)
 shape = SubResource("RectangleShape2D_e124b")
