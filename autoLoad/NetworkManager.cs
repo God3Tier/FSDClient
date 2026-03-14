@@ -15,12 +15,12 @@ public partial class NetworkManager : Node
     private readonly Queue<HttpRequestData> httpRequestQueue = new();
 
     public override void _Ready()
-    
+
     {
 
         Instance = this;
     }
-    
+
     public override void _Process(double delta)
     {
         while (httpRequestQueue.Count > 0)
@@ -35,6 +35,15 @@ public partial class NetworkManager : Node
             {
                 // Process the actual data properly. However, this one is essentially overwritten
                 // later
+                if (result == (long)HttpRequest.Result.Timeout)
+                {
+                    GD.PrintErr($"Request timed out: {request.Url}");
+                    // handle timeout — retry, notify user, etc.
+                }
+                else if (result != (long)HttpRequest.Result.Success)
+                {
+                    GD.PrintErr($"Request failed with result: {(HttpRequest.Result)result}, URL: {request.Url}");
+                }
                 httpRequest.QueueFree();
             };
 

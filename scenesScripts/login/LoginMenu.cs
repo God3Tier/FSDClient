@@ -70,7 +70,7 @@ public partial class LoginMenu : Control
 		var jsonString = JsonSerializer.Serialize(jsonObj);
 
 		// Temporarily hardcoded DO NOT PUSH TS until I find out how to properly send the data
-		networkManager.SendRequest(String.Format(NetworkManager.BASE_URL + "auth/login"), Godot.HttpClient.Method.Post, jsonString, LoginResponse);
+		networkManager.SendRequest(String.Format(NetworkManager.BASE_URL + "/auth/login"), Godot.HttpClient.Method.Post, jsonString, LoginResponse);
 	}
 
 	private void Register()
@@ -84,13 +84,13 @@ public partial class LoginMenu : Control
 		var jsonString = JsonSerializer.Serialize(jsonObj);
 
 		// Temporarily hardcoded DO NOT PUSH TS until I find out how to properly send the data
-		networkManager.SendRequest("http://localhost:8000/auth/register", Godot.HttpClient.Method.Post, jsonString, RegisterResponse);
+		networkManager.SendRequest(NetworkManager.BASE_URL + "/auth/register", Godot.HttpClient.Method.Post, jsonString, RegisterResponse);
 	}
 
 	private void RegisterResponse(long result, long responseCode, string[] headers, byte[] body)
 	{
 		if (result != 201 || responseCode != 201)
-		{
+        {
 			// This one would be some sort of server fail or some sort of conluding error 
 			return;
 		}
@@ -102,7 +102,7 @@ public partial class LoginMenu : Control
 	private void LoginResponse(long result, long responseCode, string[] headers, byte[] body)
 	{
 		if (result != (long)HttpRequest.Result.Success && responseCode != 200)
-        { 
+        {
 			// TODO: Put some label that prevents them for conitnueing and ask them to try again
 			return;
 		}
