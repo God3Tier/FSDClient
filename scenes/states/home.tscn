@@ -8,24 +8,12 @@
 [ext_resource type="Texture2D" uid="uid://nkdqwj6g8mqc" path="res://assets/header/gold_Colored.png" id="6_6n0se"]
 [ext_resource type="Texture2D" uid="uid://cnboeuly7ue15" path="res://assets/header/rank.png" id="7_6fqk1"]
 [ext_resource type="Texture2D" uid="uid://bif2ng1aadtnc" path="res://assets/heros/purple_hero.png" id="7_s07j5"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_s07j5"]
-bg_color = Color(0.80784315, 0.85490197, 0.85490197, 1)
-border_width_left = 4
-border_width_top = 4
-border_width_right = 4
-border_width_bottom = 4
-shadow_size = 10
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vfej2"]
-bg_color = Color(0.47058824, 0.54901963, 0.54901963, 1)
+[ext_resource type="StyleBox" uid="uid://bikhijk3kb8s0" path="res://styles/button.tres" id="9_vfej2"]
+[ext_resource type="StyleBox" uid="uid://bkiusl8wj1xvr" path="res://styles/button_hover.tres" id="10_46c81"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_g7oq7"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_4u8u5"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pl3n4"]
-bg_color = Color(0.47058824, 0.54901963, 0.54901963, 1)
 
 [node name="Home" type="Control" unique_id=413107585]
 layout_mode = 3
@@ -295,8 +283,8 @@ layout_mode = 2
 mouse_default_cursor_shape = 2
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 80
-theme_override_styles/normal = SubResource("StyleBoxFlat_s07j5")
-theme_override_styles/hover = SubResource("StyleBoxFlat_vfej2")
+theme_override_styles/normal = ExtResource("9_vfej2")
+theme_override_styles/hover = ExtResource("10_46c81")
 theme_override_styles/disabled = SubResource("StyleBoxEmpty_g7oq7")
 theme_override_styles/focus = SubResource("StyleBoxEmpty_4u8u5")
 text = "Battle"
@@ -307,8 +295,8 @@ layout_mode = 2
 mouse_default_cursor_shape = 2
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 80
-theme_override_styles/normal = SubResource("StyleBoxFlat_s07j5")
-theme_override_styles/hover = SubResource("StyleBoxFlat_pl3n4")
+theme_override_styles/normal = ExtResource("9_vfej2")
+theme_override_styles/hover = ExtResource("10_46c81")
 theme_override_styles/disabled = SubResource("StyleBoxEmpty_g7oq7")
 theme_override_styles/focus = SubResource("StyleBoxEmpty_4u8u5")
 text = "Card
@@ -316,3 +304,4 @@ text = "Card
 "
 
 [connection signal="pressed" from="VBoxContainer/BattleButton" to="." method="_on_battle_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/CardButton" to="." method="_on_card_button_pressed"]

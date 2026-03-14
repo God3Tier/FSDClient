@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public partial class Home : Control
+public partial class CardManagement : Control
 {
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -13,15 +13,9 @@ public partial class Home : Control
 	{
 	}
 	
-	public void _on_battle_button_pressed()
+		public void _on_back_button_pressed()
 	{
 		var GameStateManager = GetNode<GameStateManager>("/root/GameStateManager");
-		GameStateManager.ChangeGameState(GameState.INGAMEMODE);
-	}
-	
-	public void _on_card_button_pressed()
-	{
-		var GameStateManager = GetNode<GameStateManager>("/root/GameStateManager");
-		GameStateManager.ChangeGameState(GameState.CARDSCREEN);
+		GameStateManager.ChangeGameState(GameState.HOMESCREEN);
 	}
 }

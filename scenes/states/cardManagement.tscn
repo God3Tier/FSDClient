@@ -1,0 +1,475 @@
+[gd_scene format=3 uid="uid://ck8usyw1ifv1r"]
+
+[ext_resource type="Script" uid="uid://dycxchsg3tpk4" path="res://scenesScripts/CardManagement/CardManagement.cs" id="1_ljblh"]
+[ext_resource type="Texture2D" uid="uid://dgjjaj7pbhqff" path="res://assets/battlefield/background/background_test_box.png" id="1_u4l5w"]
+[ext_resource type="Texture2D" uid="uid://tl43u2wwetbq" path="res://assets/header/banner.png" id="3_c7st2"]
+[ext_resource type="Texture2D" uid="uid://pu52dbw7egqc" path="res://assets/header/crystal_colored.png" id="4_yc314"]
+[ext_resource type="Texture2D" uid="uid://nkdqwj6g8mqc" path="res://assets/header/gold_Colored.png" id="5_60kyj"]
+[ext_resource type="PackedScene" uid="uid://dtv8fm1py5wlt" path="res://scenes/gameComponents/Card.tscn" id="7_60kyj"]
+[ext_resource type="StyleBox" uid="uid://buvt2gu2jbmvx" path="res://styles/tab_unselected.tres" id="7_yc314"]
+[ext_resource type="StyleBox" uid="uid://fanmcmx62hlp" path="res://styles/tab_selected.tres" id="8_60kyj"]
+[ext_resource type="Texture2D" uid="uid://b8f6kdmi27juf" path="res://assets/header/arrow-left-solid.png" id="11_av7v1"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yc314"]
+bg_color = Color(1, 1, 1, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dtc84"]
+bg_color = Color(1, 1, 1, 1)
+
+[node name="CardManagement" type="Control" unique_id=1513454057]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 1920.0
+offset_bottom = 1080.0
+script = ExtResource("1_ljblh")
+
+[node name="Background" type="TextureRect" parent="." unique_id=1106124455]
+layout_mode = 0
+offset_right = 1920.0
+offset_bottom = 1080.0
+texture = ExtResource("1_u4l5w")
+expand_mode = 1
+
+[node name="BackButton" type="TextureButton" parent="." unique_id=1706242711]
+layout_mode = 0
+offset_left = 73.0
+offset_top = 28.0
+offset_right = 181.0
+offset_bottom = 136.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("11_av7v1")
+ignore_texture_size = true
+stretch_mode = 4
+
+[node name="Header" type="VBoxContainer" parent="." unique_id=2011892842]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -304.0
+offset_top = 50.0
+offset_right = 304.0
+offset_bottom = 127.0
+grow_horizontal = 2
+theme_override_constants/separation = 4
+
+[node name="Row 1" type="HBoxContainer" parent="Header" unique_id=740889126]
+custom_minimum_size = Vector2(100, 75)
+layout_mode = 2
+alignment = 1
+
+[node name="XP" type="ColorRect" parent="Header/Row 1" unique_id=652607707]
+custom_minimum_size = Vector2(200, 30)
+layout_mode = 2
+
+[node name="Banner" type="TextureRect" parent="Header/Row 1/XP" unique_id=843191322]
+layout_mode = 0
+offset_right = 118.0
+offset_bottom = 75.0
+texture = ExtResource("3_c7st2")
+expand_mode = 2
+stretch_mode = 4
+
+[node name="Level" type="Label" parent="Header/Row 1/XP/Banner" unique_id=1213918925]
+layout_mode = 0
+offset_left = 1.0
+offset_right = 71.0
+offset_bottom = 76.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 40
+text = "1"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="EXP" type="Label" parent="Header/Row 1/XP" unique_id=1668305595]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 81.0
+offset_top = 1.0
+offset_right = -2.0
+offset_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 40
+text = "2/10"
+vertical_alignment = 1
+
+[node name="Crystal" type="ColorRect" parent="Header/Row 1" unique_id=1575892907]
+custom_minimum_size = Vector2(200, 30)
+layout_mode = 2
+
+[node name="Crystal" type="TextureRect" parent="Header/Row 1/Crystal" unique_id=1941232122]
+layout_mode = 0
+offset_right = 30.0
+offset_bottom = 75.0
+texture = ExtResource("4_yc314")
+expand_mode = 2
+stretch_mode = 4
+
+[node name="Label" type="Label" parent="Header/Row 1/Crystal" unique_id=919124847]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 78.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 40
+text = "3,810"
+vertical_alignment = 1
+
+[node name="Gold" type="ColorRect" parent="Header/Row 1" unique_id=1111243495]
+custom_minimum_size = Vector2(200, 30)
+layout_mode = 2
+
+[node name="Gold" type="TextureRect" parent="Header/Row 1/Gold" unique_id=475440069]
+layout_mode = 0
+offset_right = 30.0
+offset_bottom = 75.0
+texture = ExtResource("5_60kyj")
+expand_mode = 2
+stretch_mode = 4
+
+[node name="Label" type="Label" parent="Header/Row 1/Gold" unique_id=96351867]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 85.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 40
+text = "4,009"
+vertical_alignment = 1
+
+[node name="MainCardContainer" type="HBoxContainer" parent="." unique_id=582091809]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -931.0
+offset_bottom = -35.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/separation = 100
+alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MainCardContainer" unique_id=1914447869]
+custom_minimum_size = Vector2(1050, 0)
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="CollectionHeaderText" type="PanelContainer" parent="MainCardContainer/VBoxContainer" unique_id=1323952768]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+size_flags_horizontal = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_yc314")
+
+[node name="MarginContainer" type="MarginContainer" parent="MainCardContainer/VBoxContainer/CollectionHeaderText" unique_id=547490778]
+layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_right = 5
+
+[node name="Label" type="Label" parent="MainCardContainer/VBoxContainer/CollectionHeaderText/MarginContainer" unique_id=1513024568]
+layout_mode = 2
+size_flags_horizontal = 0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 30
+text = "Collection"
+
+[node name="CollectionColorContainer" type="Panel" parent="MainCardContainer/VBoxContainer" unique_id=24539546]
+custom_minimum_size = Vector2(1050, 850)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_dtc84")
+
+[node name="ScrollContainer" type="ScrollContainer" parent="MainCardContainer/VBoxContainer/CollectionColorContainer" unique_id=2130200003]
+layout_mode = 0
+offset_left = 25.0
+offset_top = 25.0
+offset_right = 1025.0
+offset_bottom = 825.0
+
+[node name="CollectionContainer" type="HFlowContainer" parent="MainCardContainer/VBoxContainer/CollectionColorContainer/ScrollContainer" unique_id=200672664]
+clip_contents = true
+custom_minimum_size = Vector2(1000, 650)
+layout_mode = 2
+theme_override_constants/h_separation = 60
+theme_override_constants/v_separation = 15
+
+[node name="CardContianer" type="VBoxContainer" parent="MainCardContainer/VBoxContainer/CollectionColorContainer/ScrollContainer/CollectionContainer" unique_id=1055512345]
+layout_mode = 2
+
+[node name="CardControl" type="Control" parent="MainCardContainer/VBoxContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer" unique_id=224306224]
+custom_minimum_size = Vector2(200, 230)
+layout_mode = 2
+
+[node name="Card" parent="MainCardContainer/VBoxContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer/CardControl" unique_id=1192453098 instance=ExtResource("7_60kyj")]
+
+[node name="CardCount" type="Label" parent="MainCardContainer/VBoxContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer" unique_id=1375808819]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 23
+text = "X1"
+horizontal_alignment = 1
+
+[node name="CardContianer2" type="VBoxContainer" parent="MainCardContainer/VBoxContainer/CollectionColorContainer/ScrollContainer/CollectionContainer" unique_id=862161411]
+layout_mode = 2
+
+[node name="CardControl" type="Control" parent="MainCardContainer/VBoxContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer2" unique_id=1840534651]
+custom_minimum_size = Vector2(200, 230)
+layout_mode = 2
+
+[node name="Card" parent="MainCardContainer/VBoxContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer2/CardControl" unique_id=1352798954 instance=ExtResource("7_60kyj")]
+
+[node name="CardCount" type="Label" parent="MainCardContainer/VBoxContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer2" unique_id=1364921403]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 23
+text = "X1"
+horizontal_alignment = 1
+
+[node name="CardContianer3" type="VBoxContainer" parent="MainCardContainer/VBoxContainer/CollectionColorContainer/ScrollContainer/CollectionContainer" unique_id=1979184731]
+layout_mode = 2
+
+[node name="CardControl" type="Control" parent="MainCardContainer/VBoxContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer3" unique_id=851649961]
+custom_minimum_size = Vector2(200, 230)
+layout_mode = 2
+
+[node name="Card" parent="MainCardContainer/VBoxContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer3/CardControl" unique_id=2111624638 instance=ExtResource("7_60kyj")]
+
+[node name="CardCount" type="Label" parent="MainCardContainer/VBoxContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer3" unique_id=274647449]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 23
+text = "X1"
+horizontal_alignment = 1
+
+[node name="CardContianer4" type="VBoxContainer" parent="MainCardContainer/VBoxContainer/CollectionColorContainer/ScrollContainer/CollectionContainer" unique_id=1105821287]
+layout_mode = 2
+
+[node name="CardControl" type="Control" parent="MainCardContainer/VBoxContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer4" unique_id=205740781]
+custom_minimum_size = Vector2(200, 230)
+layout_mode = 2
+
+[node name="Card" parent="MainCardContainer/VBoxContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer4/CardControl" unique_id=611259292 instance=ExtResource("7_60kyj")]
+
+[node name="CardCount" type="Label" parent="MainCardContainer/VBoxContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer4" unique_id=1938471482]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 23
+text = "X1"
+horizontal_alignment = 1
+
+[node name="CardContianer5" type="VBoxContainer" parent="MainCardContainer/VBoxContainer/CollectionColorContainer/ScrollContainer/CollectionContainer" unique_id=1884647911]
+layout_mode = 2
+
+[node name="CardControl" type="Control" parent="MainCardContainer/VBoxContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer5" unique_id=1790102052]
+custom_minimum_size = Vector2(200, 230)
+layout_mode = 2
+
+[node name="Card" parent="MainCardContainer/VBoxContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer5/CardControl" unique_id=799544580 instance=ExtResource("7_60kyj")]
+
+[node name="CardCount" type="Label" parent="MainCardContainer/VBoxContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer5" unique_id=611888614]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 23
+text = "X1"
+horizontal_alignment = 1
+
+[node name="CardContianer6" type="VBoxContainer" parent="MainCardContainer/VBoxContainer/CollectionColorContainer/ScrollContainer/CollectionContainer" unique_id=41037193]
+layout_mode = 2
+
+[node name="CardControl" type="Control" parent="MainCardContainer/VBoxContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer6" unique_id=374412955]
+custom_minimum_size = Vector2(200, 230)
+layout_mode = 2
+
+[node name="Card" parent="MainCardContainer/VBoxContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer6/CardControl" unique_id=811392689 instance=ExtResource("7_60kyj")]
+
+[node name="CardCount" type="Label" parent="MainCardContainer/VBoxContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer6" unique_id=577022755]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 23
+text = "X1"
+horizontal_alignment = 1
+
+[node name="CardContianer7" type="VBoxContainer" parent="MainCardContainer/VBoxContainer/CollectionColorContainer/ScrollContainer/CollectionContainer" unique_id=244422806]
+layout_mode = 2
+
+[node name="CardControl" type="Control" parent="MainCardContainer/VBoxContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer7" unique_id=181834658]
+custom_minimum_size = Vector2(200, 230)
+layout_mode = 2
+
+[node name="Card" parent="MainCardContainer/VBoxContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer7/CardControl" unique_id=1612098508 instance=ExtResource("7_60kyj")]
+
+[node name="CardCount" type="Label" parent="MainCardContainer/VBoxContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer7" unique_id=1160212246]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 23
+text = "X1"
+horizontal_alignment = 1
+
+[node name="CardContianer8" type="VBoxContainer" parent="MainCardContainer/VBoxContainer/CollectionColorContainer/ScrollContainer/CollectionContainer" unique_id=656682885]
+layout_mode = 2
+
+[node name="CardControl" type="Control" parent="MainCardContainer/VBoxContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer8" unique_id=314759499]
+custom_minimum_size = Vector2(200, 230)
+layout_mode = 2
+
+[node name="Card" parent="MainCardContainer/VBoxContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer8/CardControl" unique_id=127048701 instance=ExtResource("7_60kyj")]
+
+[node name="CardCount" type="Label" parent="MainCardContainer/VBoxContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer8" unique_id=53236006]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 23
+text = "X1"
+horizontal_alignment = 1
+
+[node name="CardContianer9" type="VBoxContainer" parent="MainCardContainer/VBoxContainer/CollectionColorContainer/ScrollContainer/CollectionContainer" unique_id=192156410]
+layout_mode = 2
+
+[node name="CardControl" type="Control" parent="MainCardContainer/VBoxContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer9" unique_id=1525017417]
+custom_minimum_size = Vector2(200, 230)
+layout_mode = 2
+
+[node name="Card" parent="MainCardContainer/VBoxContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer9/CardControl" unique_id=969602035 instance=ExtResource("7_60kyj")]
+
+[node name="CardCount" type="Label" parent="MainCardContainer/VBoxContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer9" unique_id=884919460]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 23
+text = "X1"
+horizontal_alignment = 1
+
+[node name="CardContianer10" type="VBoxContainer" parent="MainCardContainer/VBoxContainer/CollectionColorContainer/ScrollContainer/CollectionContainer" unique_id=943637665]
+layout_mode = 2
+
+[node name="CardControl" type="Control" parent="MainCardContainer/VBoxContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer10" unique_id=321541642]
+custom_minimum_size = Vector2(200, 230)
+layout_mode = 2
+
+[node name="Card" parent="MainCardContainer/VBoxContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer10/CardControl" unique_id=1377829874 instance=ExtResource("7_60kyj")]
+
+[node name="CardCount" type="Label" parent="MainCardContainer/VBoxContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer10" unique_id=1331972677]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 23
+text = "X1"
+horizontal_alignment = 1
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="MainCardContainer" unique_id=1838329570]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="TabBar" type="TabBar" parent="MainCardContainer/VBoxContainer2" unique_id=1880105284]
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_colors/font_selected_color = Color(0, 0, 0, 1)
+theme_override_colors/font_unselected_color = Color(0.25808161, 0.25808161, 0.25808161, 1)
+theme_override_constants/tab_separation = 3
+theme_override_font_sizes/font_size = 30
+theme_override_styles/tab_unselected = ExtResource("7_yc314")
+theme_override_styles/tab_selected = ExtResource("8_60kyj")
+current_tab = 0
+clip_tabs = false
+tab_count = 3
+tab_0/title = "Deck 1"
+tab_1/title = "Deck 2"
+tab_2/title = "Deck 3"
+
+[node name="DeckColorContainer" type="Panel" parent="MainCardContainer/VBoxContainer2" unique_id=2134822323]
+custom_minimum_size = Vector2(650, 850)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_dtc84")
+
+[node name="ScrollContainer" type="ScrollContainer" parent="MainCardContainer/VBoxContainer2/DeckColorContainer" unique_id=1597182044]
+layout_mode = 0
+offset_left = 15.0
+offset_top = 15.0
+offset_right = 625.0
+offset_bottom = 815.0
+
+[node name="DeckContainer" type="HFlowContainer" parent="MainCardContainer/VBoxContainer2/DeckColorContainer/ScrollContainer" unique_id=1708738154]
+custom_minimum_size = Vector2(610, 660)
+layout_mode = 2
+theme_override_constants/h_separation = 4
+theme_override_constants/v_separation = 4
+
+[node name="CardControl" type="Control" parent="MainCardContainer/VBoxContainer2/DeckColorContainer/ScrollContainer/DeckContainer" unique_id=1485348067]
+custom_minimum_size = Vector2(200, 230)
+layout_mode = 2
+
+[node name="Card" parent="MainCardContainer/VBoxContainer2/DeckColorContainer/ScrollContainer/DeckContainer/CardControl" unique_id=992434383 instance=ExtResource("7_60kyj")]
+
+[node name="CardControl2" type="Control" parent="MainCardContainer/VBoxContainer2/DeckColorContainer/ScrollContainer/DeckContainer" unique_id=1777382925]
+custom_minimum_size = Vector2(200, 230)
+layout_mode = 2
+
+[node name="Card" parent="MainCardContainer/VBoxContainer2/DeckColorContainer/ScrollContainer/DeckContainer/CardControl2" unique_id=1590292443 instance=ExtResource("7_60kyj")]
+
+[node name="CardControl3" type="Control" parent="MainCardContainer/VBoxContainer2/DeckColorContainer/ScrollContainer/DeckContainer" unique_id=1058088960]
+custom_minimum_size = Vector2(200, 230)
+layout_mode = 2
+
+[node name="Card" parent="MainCardContainer/VBoxContainer2/DeckColorContainer/ScrollContainer/DeckContainer/CardControl3" unique_id=1865931704 instance=ExtResource("7_60kyj")]
+
+[node name="CardControl4" type="Control" parent="MainCardContainer/VBoxContainer2/DeckColorContainer/ScrollContainer/DeckContainer" unique_id=1805196666]
+custom_minimum_size = Vector2(200, 230)
+layout_mode = 2
+
+[node name="Card" parent="MainCardContainer/VBoxContainer2/DeckColorContainer/ScrollContainer/DeckContainer/CardControl4" unique_id=544408259 instance=ExtResource("7_60kyj")]
+
+[node name="CardControl5" type="Control" parent="MainCardContainer/VBoxContainer2/DeckColorContainer/ScrollContainer/DeckContainer" unique_id=64871953]
+custom_minimum_size = Vector2(200, 230)
+layout_mode = 2
+
+[node name="Card" parent="MainCardContainer/VBoxContainer2/DeckColorContainer/ScrollContainer/DeckContainer/CardControl5" unique_id=813924805 instance=ExtResource("7_60kyj")]
+
+[node name="CardControl6" type="Control" parent="MainCardContainer/VBoxContainer2/DeckColorContainer/ScrollContainer/DeckContainer" unique_id=1187149119]
+custom_minimum_size = Vector2(200, 230)
+layout_mode = 2
+
+[node name="Card" parent="MainCardContainer/VBoxContainer2/DeckColorContainer/ScrollContainer/DeckContainer/CardControl6" unique_id=2028587417 instance=ExtResource("7_60kyj")]
+
+[node name="CardControl7" type="Control" parent="MainCardContainer/VBoxContainer2/DeckColorContainer/ScrollContainer/DeckContainer" unique_id=1980419464]
+custom_minimum_size = Vector2(200, 230)
+layout_mode = 2
+
+[node name="Card" parent="MainCardContainer/VBoxContainer2/DeckColorContainer/ScrollContainer/DeckContainer/CardControl7" unique_id=133758462 instance=ExtResource("7_60kyj")]
+
+[node name="CardControl8" type="Control" parent="MainCardContainer/VBoxContainer2/DeckColorContainer/ScrollContainer/DeckContainer" unique_id=1200653862]
+custom_minimum_size = Vector2(200, 230)
+layout_mode = 2
+
+[node name="Card" parent="MainCardContainer/VBoxContainer2/DeckColorContainer/ScrollContainer/DeckContainer/CardControl8" unique_id=138311742 instance=ExtResource("7_60kyj")]
+
+[node name="CardControl9" type="Control" parent="MainCardContainer/VBoxContainer2/DeckColorContainer/ScrollContainer/DeckContainer" unique_id=1349640590]
+custom_minimum_size = Vector2(200, 230)
+layout_mode = 2
+
+[node name="Card" parent="MainCardContainer/VBoxContainer2/DeckColorContainer/ScrollContainer/DeckContainer/CardControl9" unique_id=1852104652 instance=ExtResource("7_60kyj")]
+
+[node name="CardControl10" type="Control" parent="MainCardContainer/VBoxContainer2/DeckColorContainer/ScrollContainer/DeckContainer" unique_id=853267410]
+custom_minimum_size = Vector2(200, 230)
+layout_mode = 2
+
+[node name="Card" parent="MainCardContainer/VBoxContainer2/DeckColorContainer/ScrollContainer/DeckContainer/CardControl10" unique_id=327734669 instance=ExtResource("7_60kyj")]
+
+[node name="CardControl11" type="Control" parent="MainCardContainer/VBoxContainer2/DeckColorContainer/ScrollContainer/DeckContainer" unique_id=2079769353]
+custom_minimum_size = Vector2(200, 230)
+layout_mode = 2
+
+[node name="Card" parent="MainCardContainer/VBoxContainer2/DeckColorContainer/ScrollContainer/DeckContainer/CardControl11" unique_id=1692904686 instance=ExtResource("7_60kyj")]
+
+[node name="CardControl12" type="Control" parent="MainCardContainer/VBoxContainer2/DeckColorContainer/ScrollContainer/DeckContainer" unique_id=755128045]
+custom_minimum_size = Vector2(200, 230)
+layout_mode = 2
+
+[node name="Card" parent="MainCardContainer/VBoxContainer2/DeckColorContainer/ScrollContainer/DeckContainer/CardControl12" unique_id=1344899987 instance=ExtResource("7_60kyj")]
+
+[connection signal="pressed" from="BackButton" to="." method="_on_back_button_pressed"]
