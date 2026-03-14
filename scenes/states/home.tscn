@@ -1,42 +1,15 @@
 [gd_scene format=3 uid="uid://bbgm8t1esyy3b"]
 
-[ext_resource type="Texture2D" uid="uid://bc8twhgpbhyxn" path="res://assets/battlefield/background/background_test_box.png" id="1_48th5"]
+[ext_resource type="Texture2D" uid="uid://dgjjaj7pbhqff" path="res://assets/battlefield/background/background_test_box.png" id="1_48th5"]
 [ext_resource type="Script" uid="uid://dm13dy71mnwhb" path="res://scenesScripts/home/Home.cs" id="1_y784y"]
-[ext_resource type="Texture2D" uid="uid://c6dhfdlmxtuc8" path="res://assets/tab/home.png" id="2_f80lo"]
-[ext_resource type="Texture2D" uid="uid://4c5emdt4j6ja" path="res://assets/tab/card.png" id="3_wh6in"]
 [ext_resource type="Texture2D" uid="uid://tl43u2wwetbq" path="res://assets/header/banner.png" id="4_eyscv"]
 [ext_resource type="Texture2D" uid="uid://k3uu1nfrcl6k" path="res://assets/cards/pack.png" id="4_pl3n4"]
-[ext_resource type="Texture2D" uid="uid://bc4bhq6ekhakm" path="res://assets/tab/flag.png" id="4_s07j5"]
-[ext_resource type="Texture2D" uid="uid://kbq3mfbrep06" path="res://assets/tab/gold.png" id="5_pl3n4"]
 [ext_resource type="Texture2D" uid="uid://pu52dbw7egqc" path="res://assets/header/crystal_colored.png" id="5_y784y"]
-[ext_resource type="Texture2D" uid="uid://dwxiivscfager" path="res://assets/header/gold_Colored.png" id="6_6n0se"]
-[ext_resource type="Texture2D" uid="uid://bw77ugcghk103" path="res://assets/heros/grey_hero.png" id="6_wh6in"]
+[ext_resource type="Texture2D" uid="uid://nkdqwj6g8mqc" path="res://assets/header/gold_Colored.png" id="6_6n0se"]
 [ext_resource type="Texture2D" uid="uid://cnboeuly7ue15" path="res://assets/header/rank.png" id="7_6fqk1"]
-[ext_resource type="Texture2D" uid="uid://bafexwmexied8" path="res://assets/heros/purple_hero.png" id="7_s07j5"]
-
-[sub_resource type="ButtonGroup" id="ButtonGroup_48th5"]
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_vfej2"]
-size = Vector2(75, 75)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_s07j5"]
-bg_color = Color(1, 0.54509807, 0, 1)
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_right = 4
-corner_radius_bottom_left = 4
-expand_margin_left = 40.0
-expand_margin_top = 10.0
-expand_margin_right = 40.0
-expand_margin_bottom = 10.0
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pl3n4"]
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_y784y"]
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_6n0se"]
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_6fqk1"]
+[ext_resource type="Texture2D" uid="uid://bif2ng1aadtnc" path="res://assets/heros/purple_hero.png" id="7_s07j5"]
+[ext_resource type="StyleBox" uid="uid://bikhijk3kb8s0" path="res://styles/button.tres" id="9_vfej2"]
+[ext_resource type="StyleBox" uid="uid://bkiusl8wj1xvr" path="res://styles/button_hover.tres" id="10_46c81"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_g7oq7"]
 
@@ -61,47 +34,46 @@ grow_vertical = 2
 texture = ExtResource("1_48th5")
 expand_mode = 1
 
-[node name="GreyHero" type="Sprite2D" parent="." unique_id=21050965]
-position = Vector2(239.00003, 208.00002)
-scale = Vector2(0.78571427, 0.7857143)
-texture = ExtResource("6_wh6in")
-
 [node name="PurpleHero" type="Sprite2D" parent="." unique_id=1030394544]
-position = Vector2(85.99999, 318)
-scale = Vector2(0.5756972, 0.57569724)
+position = Vector2(669, 138)
+scale = Vector2(0.61331284, 0.48444936)
 texture = ExtResource("7_s07j5")
 
 [node name="Header" type="VBoxContainer" parent="." unique_id=1997196954]
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
-offset_top = 15.0
-offset_bottom = 82.0
+offset_left = 761.53125
+offset_top = 62.0
+offset_right = -550.46875
+offset_bottom = 216.0
 grow_horizontal = 2
 theme_override_constants/separation = 4
 
 [node name="Row 1" type="HBoxContainer" parent="Header" unique_id=263068077]
+custom_minimum_size = Vector2(100, 75)
 layout_mode = 2
 alignment = 1
 
 [node name="XP" type="ColorRect" parent="Header/Row 1" unique_id=306432142]
-custom_minimum_size = Vector2(100, 30)
+custom_minimum_size = Vector2(200, 30)
 layout_mode = 2
 
 [node name="Banner" type="TextureRect" parent="Header/Row 1/XP" unique_id=1757761528]
 layout_mode = 0
-offset_right = 30.0
-offset_bottom = 30.0
+offset_right = 118.0
+offset_bottom = 75.0
 texture = ExtResource("4_eyscv")
 expand_mode = 2
 stretch_mode = 4
 
 [node name="Level" type="Label" parent="Header/Row 1/XP/Banner" unique_id=1093041657]
 layout_mode = 0
-offset_left = 7.0
-offset_right = 22.0
-offset_bottom = 23.0
+offset_left = 1.0
+offset_right = 71.0
+offset_bottom = 76.0
 theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 40
 text = "1"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -111,21 +83,25 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 34.0
+offset_left = 81.0
+offset_top = 1.0
+offset_right = -2.0
+offset_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 40
 text = "2/10"
 vertical_alignment = 1
 
 [node name="Crystal" type="ColorRect" parent="Header/Row 1" unique_id=1576728251]
-custom_minimum_size = Vector2(100, 30)
+custom_minimum_size = Vector2(200, 30)
 layout_mode = 2
 
 [node name="Crystal" type="TextureRect" parent="Header/Row 1/Crystal" unique_id=2052757135]
 layout_mode = 0
 offset_right = 30.0
-offset_bottom = 30.0
+offset_bottom = 75.0
 texture = ExtResource("5_y784y")
 expand_mode = 2
 stretch_mode = 4
@@ -135,21 +111,22 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 30.0
+offset_left = 78.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 40
 text = "3,810"
 vertical_alignment = 1
 
 [node name="Gold" type="ColorRect" parent="Header/Row 1" unique_id=677711949]
-custom_minimum_size = Vector2(100, 30)
+custom_minimum_size = Vector2(200, 30)
 layout_mode = 2
 
 [node name="Gold" type="TextureRect" parent="Header/Row 1/Gold" unique_id=1804721799]
 layout_mode = 0
 offset_right = 30.0
-offset_bottom = 30.0
+offset_bottom = 75.0
 texture = ExtResource("6_6n0se")
 expand_mode = 2
 stretch_mode = 4
@@ -159,19 +136,21 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 37.0
+offset_left = 85.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 40
 text = "4,009"
 vertical_alignment = 1
 
 [node name="Row 2" type="HBoxContainer" parent="Header" unique_id=1672282126]
+custom_minimum_size = Vector2(0, 75)
 layout_mode = 2
 alignment = 1
 
 [node name="Name" type="ColorRect" parent="Header/Row 2" unique_id=863394471]
-custom_minimum_size = Vector2(205, 30)
+custom_minimum_size = Vector2(350, 30)
 layout_mode = 2
 
 [node name="Label" type="Label" parent="Header/Row 2/Name" unique_id=615540022]
@@ -182,18 +161,19 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 40
 text = "John Doe"
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Leaderboard" type="ColorRect" parent="Header/Row 2" unique_id=1078582662]
-custom_minimum_size = Vector2(100, 30)
+custom_minimum_size = Vector2(250, 30)
 layout_mode = 2
 
 [node name="Rank" type="TextureRect" parent="Header/Row 2/Leaderboard" unique_id=516834410]
 layout_mode = 0
 offset_right = 30.0
-offset_bottom = 30.0
+offset_bottom = 75.0
 texture = ExtResource("7_6fqk1")
 expand_mode = 2
 stretch_mode = 4
@@ -203,255 +183,125 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 36.0
+offset_left = 92.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 40
 text = "1"
 vertical_alignment = 1
 
-[node name="Packs" type="HBoxContainer" parent="." unique_id=1128346248]
+[node name="Packs" type="HFlowContainer" parent="." unique_id=467389485]
 layout_mode = 1
-anchors_preset = 14
-anchor_top = 0.5
-anchor_right = 1.0
-anchor_bottom = 0.5
-offset_top = 90.5
-offset_bottom = 190.5
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -640.0
+offset_top = -762.0
+offset_right = -179.0
+offset_bottom = -158.0
 grow_horizontal = 2
-grow_vertical = 2
-alignment = 1
+grow_vertical = 0
+theme_override_constants/h_separation = 30
 
 [node name="ColorRect" type="ColorRect" parent="Packs" unique_id=4191471]
-custom_minimum_size = Vector2(70, 100)
+custom_minimum_size = Vector2(210, 300)
 layout_mode = 2
+mouse_default_cursor_shape = 2
 color = Color(0.30200383, 0.30200386, 0.30200377, 0.6666667)
 
 [node name="TextureRect" type="TextureRect" parent="Packs/ColorRect" unique_id=1082623625]
 layout_mode = 0
-offset_left = 16.0
-offset_top = 34.5
-offset_right = 56.0
-offset_bottom = 74.5
+offset_top = 61.0
+offset_right = 211.20001
+offset_bottom = 237.0
 texture = ExtResource("4_pl3n4")
 expand_mode = 3
 
 [node name="ColorRect2" type="ColorRect" parent="Packs" unique_id=1765294642]
-custom_minimum_size = Vector2(70, 100)
+custom_minimum_size = Vector2(210, 300)
 layout_mode = 2
+mouse_default_cursor_shape = 2
 color = Color(0.30200383, 0.30200386, 0.30200377, 0.6666667)
 
-[node name="TextureRect" type="TextureRect" parent="Packs/ColorRect2" unique_id=1456902060]
+[node name="TextureRect" type="TextureRect" parent="Packs/ColorRect2" unique_id=1712244655]
 layout_mode = 0
-offset_left = 16.0
-offset_top = 34.5
-offset_right = 56.0
-offset_bottom = 74.5
+offset_top = 61.0
+offset_right = 211.20001
+offset_bottom = 237.0
 texture = ExtResource("4_pl3n4")
 expand_mode = 3
 
 [node name="ColorRect3" type="ColorRect" parent="Packs" unique_id=1411925447]
-custom_minimum_size = Vector2(70, 100)
+custom_minimum_size = Vector2(210, 300)
 layout_mode = 2
+mouse_default_cursor_shape = 2
 color = Color(0.30200383, 0.30200386, 0.30200377, 0.6666667)
 
-[node name="TextureRect" type="TextureRect" parent="Packs/ColorRect3" unique_id=695204148]
+[node name="TextureRect" type="TextureRect" parent="Packs/ColorRect3" unique_id=765236761]
 layout_mode = 0
-offset_left = 16.0
-offset_top = 34.5
-offset_right = 56.0
-offset_bottom = 74.5
+offset_top = 61.0
+offset_right = 211.20001
+offset_bottom = 237.0
 texture = ExtResource("4_pl3n4")
 expand_mode = 3
 
 [node name="ColorRect4" type="ColorRect" parent="Packs" unique_id=873535625]
-custom_minimum_size = Vector2(70, 100)
+custom_minimum_size = Vector2(210, 300)
 layout_mode = 2
+mouse_default_cursor_shape = 2
 color = Color(0.30200383, 0.30200386, 0.30200377, 0.6666667)
 
-[node name="TextureRect" type="TextureRect" parent="Packs/ColorRect4" unique_id=1369320781]
+[node name="TextureRect" type="TextureRect" parent="Packs/ColorRect4" unique_id=18669302]
 layout_mode = 0
-offset_left = 16.0
-offset_top = 34.5
-offset_right = 56.0
-offset_bottom = 74.5
+offset_top = 61.0
+offset_right = 211.20001
+offset_bottom = 237.0
 texture = ExtResource("4_pl3n4")
 expand_mode = 3
 
-[node name="BottomTab" type="ColorRect" parent="." unique_id=2136411675]
-custom_minimum_size = Vector2(0, 80)
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1570666481]
 layout_mode = 1
-anchors_preset = 12
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = -80.0
-grow_horizontal = 2
-grow_vertical = 0
-
-[node name="HBoxContainer" type="HBoxContainer" parent="BottomTab" unique_id=1334664228]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 1.0
-offset_top = 4.0
-offset_right = 1.0
-offset_bottom = 4.0
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 250.0
+offset_top = -178.0
+offset_right = 750.0
+offset_bottom = 92.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 50
-alignment = 1
 
-[node name="Home" type="TextureButton" parent="BottomTab/HBoxContainer" unique_id=1670427429]
-custom_minimum_size = Vector2(30, 30)
+[node name="BattleButton" type="Button" parent="VBoxContainer" unique_id=2063392197]
+custom_minimum_size = Vector2(600, 150)
 layout_mode = 2
-button_group = SubResource("ButtonGroup_48th5")
-texture_normal = ExtResource("2_f80lo")
-ignore_texture_size = true
-stretch_mode = 4
-
-[node name="Label" type="Label" parent="BottomTab/HBoxContainer/Home" unique_id=1253365013]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -20.0
-offset_top = -11.5
-offset_right = 20.0
-offset_bottom = 11.5
-grow_horizontal = 2
-grow_vertical = 2
+mouse_default_cursor_shape = 2
 theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_font_sizes/font_size = 16
-text = "Home"
-
-[node name="HomeTouch" type="TouchScreenButton" parent="BottomTab/HBoxContainer/Home" unique_id=1829997262 groups=["touch_screen_button"]]
-position = Vector2(14, 35)
-scale = Vector2(1.05, 1.05)
-shape = SubResource("RectangleShape2D_vfej2")
-
-[node name="Cards" type="TextureButton" parent="BottomTab/HBoxContainer" unique_id=884389787]
-custom_minimum_size = Vector2(30, 30)
-layout_mode = 2
-button_group = SubResource("ButtonGroup_48th5")
-texture_normal = ExtResource("3_wh6in")
-ignore_texture_size = true
-stretch_mode = 4
-
-[node name="Label" type="Label" parent="BottomTab/HBoxContainer/Cards" unique_id=353177301]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -20.0
-offset_top = -11.5
-offset_right = 20.0
-offset_bottom = 11.5
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_font_sizes/font_size = 16
-text = "Cards"
-
-[node name="CardsTouch" type="TouchScreenButton" parent="BottomTab/HBoxContainer/Cards" unique_id=349194492 groups=["touch_screen_button"]]
-position = Vector2(14, 35)
-scale = Vector2(1.05, 1.05)
-shape = SubResource("RectangleShape2D_vfej2")
-
-[node name="Union" type="TextureButton" parent="BottomTab/HBoxContainer" unique_id=883684425]
-custom_minimum_size = Vector2(30, 30)
-layout_mode = 2
-button_group = SubResource("ButtonGroup_48th5")
-texture_normal = ExtResource("4_s07j5")
-ignore_texture_size = true
-stretch_mode = 4
-
-[node name="Label" type="Label" parent="BottomTab/HBoxContainer/Union" unique_id=549862661]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -20.0
-offset_top = -11.5
-offset_right = 20.0
-offset_bottom = 11.5
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_font_sizes/font_size = 16
-text = "Union"
-
-[node name="UnionTouch" type="TouchScreenButton" parent="BottomTab/HBoxContainer/Union" unique_id=468989419 groups=["touch_screen_button"]]
-position = Vector2(14, 35)
-scale = Vector2(1.05, 1.05)
-shape = SubResource("RectangleShape2D_vfej2")
-
-[node name="Shop" type="TextureButton" parent="BottomTab/HBoxContainer" unique_id=59740880]
-custom_minimum_size = Vector2(30, 30)
-layout_mode = 2
-button_group = SubResource("ButtonGroup_48th5")
-texture_normal = ExtResource("5_pl3n4")
-ignore_texture_size = true
-stretch_mode = 4
-
-[node name="Label" type="Label" parent="BottomTab/HBoxContainer/Shop" unique_id=360290718]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -20.0
-offset_top = -11.5
-offset_right = 20.0
-offset_bottom = 11.5
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_font_sizes/font_size = 16
-text = "Shop"
-
-[node name="ShopTouch" type="TouchScreenButton" parent="BottomTab/HBoxContainer/Shop" unique_id=647451535 groups=["touch_screen_button"]]
-position = Vector2(14, 35)
-scale = Vector2(1.05, 1.05)
-shape = SubResource("RectangleShape2D_vfej2")
-
-[node name="Battle" type="Label" parent="." unique_id=108063087]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -34.5
-offset_top = 33.0
-offset_right = 34.5
-offset_bottom = 67.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_font_sizes/font_size = 24
-theme_override_styles/normal = SubResource("StyleBoxFlat_s07j5")
-theme_override_styles/focus = SubResource("StyleBoxFlat_pl3n4")
-text = "Battle"
-
-[node name="Button" type="Button" parent="Battle" unique_id=2063392197]
-layout_mode = 0
-offset_left = -41.5
-offset_top = -10.0
-offset_right = 108.5
-offset_bottom = 46.0
-theme_override_styles/normal = SubResource("StyleBoxEmpty_y784y")
-theme_override_styles/pressed = SubResource("StyleBoxEmpty_6n0se")
-theme_override_styles/hover = SubResource("StyleBoxEmpty_6fqk1")
+theme_override_font_sizes/font_size = 80
+theme_override_styles/normal = ExtResource("9_vfej2")
+theme_override_styles/hover = ExtResource("10_46c81")
 theme_override_styles/disabled = SubResource("StyleBoxEmpty_g7oq7")
 theme_override_styles/focus = SubResource("StyleBoxEmpty_4u8u5")
+text = "Battle"
 
-[connection signal="pressed" from="Battle/Button" to="." method="_on_battle_button_pressed"]
+[node name="CardButton" type="Button" parent="VBoxContainer" unique_id=92420378]
+custom_minimum_size = Vector2(600, 150)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 80
+theme_override_styles/normal = ExtResource("9_vfej2")
+theme_override_styles/hover = ExtResource("10_46c81")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_g7oq7")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_4u8u5")
+text = "Card
+
+"
+
+[connection signal="pressed" from="VBoxContainer/BattleButton" to="." method="_on_battle_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/CardButton" to="." method="_on_card_button_pressed"]

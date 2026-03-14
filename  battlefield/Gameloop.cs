@@ -5,7 +5,7 @@ using FSDClient.player.display;
 using FSDClient.card.display;
 using FSDClient.card;
 using FSDClient.battlefield.handManagement;
-using System;
+using FSDClient.autoLoad;
 
 namespace FSDClient.battlefield;
 
@@ -42,28 +42,28 @@ public partial class Gameloop : Node2D
     private double PauseTimer { get; set; } = 0;
     private int TurnRound = 1;
 
-    // public void StartGameLoop()
-    // {
-    //     // TODO: Should be obvious
-    //     while (true)
-    //     {
+	// public void StartGameLoop()
+	// {
+	//     // TODO: Should be obvious
+	//     while (true)
+	//     {
 
-    //         break;
-    //     }
+	//         break;
+	//     }
 
-    //     ReturnToHomeScreen();
+	//     ReturnToHomeScreen();
 
-    // }
+	// }
 
     // I am of the assumption that this is what is being called by the
     // We put this in gameloop later
     public override void _Ready()
     {
 
-        for (int i = 0; i < 4; i++)
-        {
-            Board[i] = new Card[3];
-        }
+		for (int i = 0; i < 4; i++)
+		{
+			Board[i] = new Card[3];
+		}
 
         MainPlayer = PlayerStateManager.Instance;
         // TODO: Figure out how network protocol is set up then replace data with incoming information from
@@ -73,17 +73,19 @@ public partial class Gameloop : Node2D
         var TestCard = new CardData(10, "farmer", Colour.RED, 100, 10, 5);
         var CardTexture = Builder.BuildCard(TestCard);
 
-        // // Board[0][0] = new Card();
-        // // Board[0][0].InitializeCard(CardView);
-        // // AddChild(Board[0][0]);
+		// // Board[0][0] = new Card();
+		// // Board[0][0].InitializeCard(CardView);
+		// // AddChild(Board[0][0]);
 
-        var CardManager = (CardManager)FindChild("CardManager", true);
+		var CardManager = (CardManager)FindChild("CardManager", true);
 
+		
+		var CardScene = GD.Load<PackedScene>("res://scenes/gameComponents/Card.tscn");
+		var CardTemp = CardScene.Instantiate<Card>();
+		CardTemp.LoadDataTexture(CardTexture);
+		CardManager.AddChild(CardTemp);
 
-        var CardScene = GD.Load<PackedScene>("res://scenes/gameComponents/Card.tscn");
-        var CardTemp = CardScene.Instantiate<Card>();
-        CardTemp.LoadDataTexture(CardTexture);
-        CardManager.AddChild(CardTemp);
+		// This is just to test whether it would load
 
         // Making a second card doesn't work too well
         // TestCard = new CardData(10, "farmer", Colour.BLUE, 100, 10, 5);
@@ -204,22 +206,22 @@ public partial class Gameloop : Node2D
 	*      too hard to store
 	*   -> Are we holding client and server timer for card attacks as well?
 	*/
-    public static void listenForServerReaction()
-    {
+	public static void listenForServerReaction()
+	{
 
-    }
+	}
 
-    /*
+	/*
 	* I am going on a whim here but this should be called within the main game loop
 	*/
-    public static void writeToServer()
-    {
+	public static void writeToServer()
+	{
 
-    }
+	}
 
-    private void ReturnToHomeScreen()
-    {
-        GameStateManager.Instance.ChangeGameState(GameState.HOMESCREEN);
-    }
+	private void ReturnToHomeScreen()
+	{
+		GameStateManager.Instance.ChangeGameState(GameState.HOMESCREEN);
+	}
 
 }
