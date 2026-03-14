@@ -29,19 +29,13 @@ offset_right = 321.0
 offset_bottom = 190.0
 text = "Login"
 
-<<<<<<< HEAD
 [node name="StateChanger" type="Button" parent="." unique_id=197976993]
-=======
-[node name="Button2" type="Button" parent="." unique_id=197976993]
->>>>>>> main
+
 layout_mode = 0
 offset_left = -1.0
 offset_top = 190.0
 offset_right = 320.0
 offset_bottom = 206.0
 text = "No account? Click here"
-<<<<<<< HEAD
 
 [connection signal="pressed" from="SendInformation" to="." method="_OnInformationReady"]
-=======
->>>>>>> main
