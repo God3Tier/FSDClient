@@ -87,43 +87,43 @@ public partial class Gameloop : Node2D
 
 		// This is just to test whether it would load
 
-        // Making a second card doesn't work too well
-        // TestCard = new CardData(10, "farmer", Colour.BLUE, 100, 10, 5);
-        // CardTexture = Builder.BuildCard(TestCard);
-        // CardScene = GD.Load<PackedScene>("res://scenes/gameComponents/Card.tscn");
-        // var CardTemp = CardScene.Instantiate<Card>();
-        // CardTemp.LoadDataTexture(CardTexture);
-        // CardManager.AddChild(CardTemp);
-        
-        // Testing the HandArea
-        HandArea = GetNode<HandArea>("HandArea");
-        GD.Print(HandArea);
+		// Making a second card doesn't work too well
+		// TestCard = new CardData(10, "farmer", Colour.BLUE, 100, 10, 5);
+		// CardTexture = Builder.BuildCard(TestCard);
+		// CardScene = GD.Load<PackedScene>("res://scenes/gameComponents/Card.tscn");
+		// var CardTemp = CardScene.Instantiate<Card>();
+		// CardTemp.LoadDataTexture(CardTexture);
+		// CardManager.AddChild(CardTemp);
+		
+		// Testing the HandArea
+		HandArea = GetNode<HandArea>("HandArea");
+		GD.Print(HandArea);
 
-        // Testing attack phase -> Call this function when you somehow detect a card is played on the field
-        CardTemp.EnterBattlefield();
+		// Testing attack phase -> Call this function when you somehow detect a card is played on the field
+		CardTemp.EnterBattlefield();
 
-        // This is just to test whether it would load
-        // SINCE THIS IS NOT TO BE CONSTANTLY DESTROYED AND RECREATED, THIS IS A POC TO TEST IF THE
-        // THING WILL LOAD (sorry Jared)
-        // GD.Print("Attempting to create the initial player view");
-        // try {
-        // 	var PlayerTextureView = Builder.BuildPlayer();
-        // 	// var PlayerIcon = (PlayerView)FindChild("PlayerIcon");
-        // 	var PlayerTrial = GD.Load<PackedScene>("res://scenes/PlayerIcon.tscn");
-        // 	var PlayerIcon = PlayerTrial.Instantiate<PlayerView>();
-        // 	PlayerIcon.LoadDataTexture(PlayerTextureView);
-        // 	PlayerIcon.Scale = new Vector2(0.35f, 0.35f);
-        // 	AddChild(PlayerIcon);
+		// This is just to test whether it would load
+		// SINCE THIS IS NOT TO BE CONSTANTLY DESTROYED AND RECREATED, THIS IS A POC TO TEST IF THE
+		// THING WILL LOAD (sorry Jared)
+		// GD.Print("Attempting to create the initial player view");
+		// try {
+		// 	var PlayerTextureView = Builder.BuildPlayer();
+		// 	// var PlayerIcon = (PlayerView)FindChild("PlayerIcon");
+		// 	var PlayerTrial = GD.Load<PackedScene>("res://scenes/PlayerIcon.tscn");
+		// 	var PlayerIcon = PlayerTrial.Instantiate<PlayerView>();
+		// 	PlayerIcon.LoadDataTexture(PlayerTextureView);
+		// 	PlayerIcon.Scale = new Vector2(0.35f, 0.35f);
+		// 	AddChild(PlayerIcon);
 
-        // } catch (Exception e) {
-        // 	GD.PrintErr("Exception: ", e);
-        // }
+		// } catch (Exception e) {
+		// 	GD.PrintErr("Exception: ", e);
+		// }
 
-        // GD.Print("Successfully created the initial player view");
+		// GD.Print("Successfully created the initial player view");
 
-        // See how to initialise Elixir
+		// See how to initialise Elixir
 
-    }
+	}
 	// This is how to generate Elixir. Since client only ever knows about 1 player's resource
 	// i can do it within the gameplay loop itself
 	public override void _Process(double delta)

@@ -1,3 +1,5 @@
+namespace FSDClient.battlefield;
+
 using Godot;
 using System;
 
