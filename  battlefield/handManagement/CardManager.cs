@@ -10,8 +10,8 @@ public partial class CardManager : Node2D
 
 	[Signal]
 	public delegate void CardDroppedEventHandler(BattleSlot battleSlot);
-	
-	private Node2D cardBeingDragged;
+
+	private Card cardBeingDragged;
 	private Vector2 dragOffset;
 	private Vector2 screenSize;
 	private Boolean highlighting = false;
@@ -31,7 +31,7 @@ public partial class CardManager : Node2D
 
 				if (mouseEvent.IsPressed())
 				{
-					var card = _raycastCheckForCard();
+					Card card = _raycastCheckForCard();
 					if (card != null)
 					{
 						StartDrag(card);
@@ -45,7 +45,7 @@ public partial class CardManager : Node2D
 		}
 	}
 
-	private void StartDrag(Node2D card)
+	private void StartDrag(Card card)
 	{
 		cardBeingDragged = card;
 		dragOffset = cardBeingDragged.GlobalPosition - GetGlobalMousePosition();
@@ -56,15 +56,15 @@ public partial class CardManager : Node2D
 	{
 		cardBeingDragged.Scale = new Vector2(1.005f, 1.005f);
 		var battleSlotFound = _raycastCheckForBattleSlot();
-		
-		// Put the signal here for nonsence in gameloop 
-		// TODO: DO it 
+
+		// Put the signal here for nonsence in gameloop
+		// TODO: DO it
 		if (battleSlotFound != null && !battleSlotFound.CardInSlot)
 		{
 			cardBeingDragged.Position = battleSlotFound.Position;
 			GD.Print(battleSlotFound.Position);
 			GD.Print(cardBeingDragged.Position);
-			
+
 			GD.Print(dragOffset);
 			battleSlotFound.CardInSlot = true;
 			var collisionShape = cardBeingDragged.GetNode<CollisionShape2D>("Area2D/CollisionShape2D");
@@ -129,7 +129,7 @@ public partial class CardManager : Node2D
 	}
 
 	// To return what is under our cursor when clicking
-	public Node2D _raycastCheckForCard()
+	public Card _raycastCheckForCard()
 	{
 		var spaceState = GetWorld2D().DirectSpaceState;
 		var parameters = new PhysicsPointQueryParameters2D
@@ -143,8 +143,11 @@ public partial class CardManager : Node2D
 		if (result.Count > 0)
 		{
 			var cardParent = GetHighestZIndex(result);
-			dragOffset = cardParent.GlobalPosition - GetGlobalMousePosition();
-			return cardParent;
+			if (cardParent is Card) {
+				dragOffset = cardParent.GlobalPosition - GetGlobalMousePosition();
+				return (Card) cardParent;
+			}
+
 		}
 		return null;
 	}
