@@ -19,7 +19,6 @@ public partial class Gameloop : Node2D
 	public static readonly double SECONDS_PER_ELIXIR = 3f;
 	public static readonly int BASE_ELIXIR = 4;
 
-
 	public NetworkManager NetworkManager { get; set; }
 	// Unsure to keep this as the state manager or make it it's own individual player data. TBD on a later date
     public PlayerStateManager MainPlayer { get; set; }
@@ -29,7 +28,8 @@ public partial class Gameloop : Node2D
     public PlayerData IncomingPlayer { get; set; }
 
     // Deal with card placement and card movement
-    private Card[][] Board { get; set; } = new Card[4][];
+    private Card[][] Board { get; set; } = new Card[2][];
+    private Card[][] OpponentBoard { get; set; } = new Card[2][];
     private CardManager CardManager;
     private HandArea HandArea;
 
@@ -42,50 +42,15 @@ public partial class Gameloop : Node2D
     private double PauseTimer { get; set; } = 0;
     private int TurnRound = 1;
 
-	// public void StartGameLoop()
-	// {
-	//     // TODO: Should be obvious
-	//     while (true)
-	//     {
-
-	//         break;
-	//     }
-
-	//     ReturnToHomeScreen();
-
-	// }
-
-    // I am of the assumption that this is what is being called by the
-    // We put this in gameloop later
-    public override void _Ready()
+    public void StartGameLoop()
     {
+        // TODO: Should be obvious
+        while (true)
+        {
 
-		for (int i = 0; i < 4; i++)
-		{
-			Board[i] = new Card[3];
-		}
-
-        MainPlayer = PlayerStateManager.Instance;
-        // TODO: Figure out how network protocol is set up then replace data with incoming information from
-        //       network
-        IncomingPlayer = new PlayerData("Placeholder", "Placeholder", [], false);
-
-        var TestCard = new CardData(10, "farmer", Colour.RED, 100, 10, 5);
-        var CardTexture = Builder.BuildCard(TestCard);
-
-		// // Board[0][0] = new Card();
-		// // Board[0][0].InitializeCard(CardView);
-		// // AddChild(Board[0][0]);
-
-		var CardManager = (CardManager)FindChild("CardManager", true);
-
-		
-		var CardScene = GD.Load<PackedScene>("res://scenes/gameComponents/Card.tscn");
-		var CardTemp = CardScene.Instantiate<Card>();
-		CardTemp.LoadDataTexture(CardTexture);
-		CardManager.AddChild(CardTemp);
-
-		// This is just to test whether it would load
+            break;
+        }
+        // This is just to test whether it would load
 
 		// Making a second card doesn't work too well
 		// TestCard = new CardData(10, "farmer", Colour.BLUE, 100, 10, 5);
@@ -94,13 +59,13 @@ public partial class Gameloop : Node2D
 		// var CardTemp = CardScene.Instantiate<Card>();
 		// CardTemp.LoadDataTexture(CardTexture);
 		// CardManager.AddChild(CardTemp);
-		
+
 		// Testing the HandArea
 		HandArea = GetNode<HandArea>("HandArea");
 		GD.Print(HandArea);
 
 		// Testing attack phase -> Call this function when you somehow detect a card is played on the field
-		CardTemp.EnterBattlefield();
+		// CardTemp.EnterBattlefield();
 
 		// This is just to test whether it would load
 		// SINCE THIS IS NOT TO BE CONSTANTLY DESTROYED AND RECREATED, THIS IS A POC TO TEST IF THE
@@ -123,80 +88,161 @@ public partial class Gameloop : Node2D
 
 		// See how to initialise Elixir
 
+		ReturnToHomeScreen();
+
 	}
-	// This is how to generate Elixir. Since client only ever knows about 1 player's resource
-	// i can do it within the gameplay loop itself
-	public override void _Process(double delta)
+
+	// I am of the assumption that this is what is being called by the
+	// We put this in gameloop later
+	public override void _Ready()
 	{
-		// GD.Print("Called");
-		if (TurnPause) {
-			PauseTimer += delta;
-		} else {
-			RegenInterval += delta;
-			GameTimer += delta;
-		}
-		if (PauseTimer >= PAUSE_TIMER) {
-			GD.Print("Pause Ended");
-			HandArea.LowerDeck();
-			TurnPause = false;
-			PauseTimer = 0;
-			TurnRound += 1;
-			var ElixirBar = (Elixir)FindChild("Elixir");
-			ElixirBar.UpdateRound(TurnRound);
-			return;
+		for (int i = 0; i < 2; i++)
+		{
+			Board[i] = new Card[3];
+			OpponentBoard[i] = new Card[3];
 		}
 
-		if (GameTimer >= ROUND_TIMER * TurnRound && !TurnPause)
+		foreach (Node child in GetChildren())
 		{
-			GD.Print("Round updated");
-			
-			// TODO: Trigger secondary draw card event
-			TurnPause = true;
-			HandArea.RaiseDeck();
-		}
-		
-		if (RegenInterval >= SECONDS_PER_ELIXIR)
-		{
-			if (Elixir >= TurnRound + BASE_ELIXIR || Elixir >= MAX_ELIXER)
+			string childName = child.Name.ToString();
+			if (childName.Contains("BattleSlot"))
 			{
-				return;
+				var BattleSlot = (BattleSlot)child;
+				int lastInt = (int)(childName[^1] - '1');
+
+				BattleSlot.x = lastInt / 3;
+				BattleSlot.y = lastInt % 3;
+				GD.Print(child.Name);
+
 			}
-			Elixir++;
-			RegenInterval = 0.0;
-			var ElixirBar = (Elixir)FindChild("Elixir");
-			ElixirBar.UpdateElixir(Elixir);
+
 		}
 
-	}
+		var opponentsCards = (Control)FindChild("OpponentsCards");
 
-	public bool PlaceCardCheck(int Cost)
-	{
-		if (Elixir < Cost)
+		foreach (Node child in opponentsCards.GetChildren())
 		{
-			return false;
+			if (child is Card c)
+			{
+				GD.Print("Found opponent card removing texture it");
+				c.EmptyTexture();
+				// c.Scale =  -> Set scale 
+			}
 		}
 
-		Elixir -= Cost;
+		MainPlayer = PlayerStateManager.Instance;
+		IncomingPlayer = new PlayerData("Placeholder", "Placeholder", [], false);
+		CardManager = (CardManager)FindChild("CardManager", true);
+		CardManager.CardDropped += OnCardDropped;
 
-		return true;
+		TestCard();
+		GD.Print("Completed everything without a problem");
 	}
 
-	/*
-		TODO: Fix this later
-	*/
-	public void PlaceCardInSlot(CardData cardData, int xPos, int yPos)
+	private void TestCard()
 	{
-
-		if (yPos < 0 || yPos > Board.Length || xPos < 0 || xPos > Board[yPos].Length || Board[yPos][xPos] != null)
-		{
-			// Throw some sort of exception that throws back the card
-			// into the hand visually
-			return;
-		}
-		Board[yPos][xPos] = new();
+		var TestCard = new CardData(10, "farmer", Colour.RED, 100, 10, 5);
+		var CardTexture = Builder.BuildCard(TestCard);
+		var CardScene = GD.Load<PackedScene>("res://scenes/gameComponents/Card.tscn");
+		var CardTemp = CardScene.Instantiate<Card>();
+		CardTemp.LoadDataTexture(CardTexture);
+		CardManager.AddChild(CardTemp);
 	}
 
-	/*
+
+	private void OnAttacked(Card card)
+	{
+		int ActiveY = card.ActiveY;
+		if (OpponentBoard[0][ActiveY] == null && OpponentBoard[0][ActiveY] == null)
+		{
+			// Handle logic for player getting attacked and opponent getting counterAttack
+			GD.Print("Counter attack succesful");
+		}
+		else if (OpponentBoard[0][ActiveY] == null)
+		{
+			OpponentBoard[1][ActiveY].UpdateHealth(card.Attack);
+		}
+		else
+		{
+			OpponentBoard[0][ActiveY].UpdateHealth(card.Attack);
+		}
+	}
+
+	// This function is a proof of concept
+	private void OnCardDropped(BattleSlot battleslot)
+	{
+		// TODO: Write to Server should be implemented once backend decides how to transfer information
+		WriteToServer();
+		GD.Print("Updating Board");
+		Board[battleslot.x][battleslot.y] = battleslot.Card;
+		battleslot.Card.ActiveY = battleslot.y;
+		battleslot.Card.Attacked += OnAttacked;
+		battleslot.Card.EnterBattlefield();
+
+	}
+
+	// This is how to generate Elixir. Since client only ever knows about 1 player's resource
+    // i can do it within the gameplay loop itself
+    public override void _Process(double delta)
+    {
+        // GD.Print("Called");
+        if (TurnPause)
+        {
+            PauseTimer += delta;
+        }
+        else
+        {
+            RegenInterval += delta;
+            GameTimer += delta;
+        }
+        if (PauseTimer >= PAUSE_TIMER)
+        {
+            GD.Print("Pause Ended");
+            HandArea.LowerDeck();
+            TurnPause = false;
+            PauseTimer = 0;
+            TurnRound += 1;
+            var ElixirBar = (Elixir)FindChild("Elixir");
+            ElixirBar.UpdateRound(TurnRound);
+            return;
+        }
+
+        if (GameTimer >= ROUND_TIMER * TurnRound && !TurnPause)
+        {
+            GD.Print("Round updated");
+
+            // TODO: Trigger secondary draw card event
+            TurnPause = true;
+            HandArea.RaiseDeck();
+        }
+
+        if (RegenInterval >= SECONDS_PER_ELIXIR)
+        {
+            if (Elixir >= TurnRound + BASE_ELIXIR || Elixir >= MAX_ELIXER)
+            {
+                return;
+            }
+            Elixir++;
+            RegenInterval = 0.0;
+            var ElixirBar = (Elixir)FindChild("Elixir");
+            ElixirBar.UpdateElixir(Elixir);
+        }
+
+    }
+
+    public bool PlaceCardCheck(int Cost)
+    {
+        if (Elixir < Cost)
+        {
+            return false;
+        }
+
+        Elixir -= Cost;
+
+        return true;
+    }
+
+    /*
 	* This function is to explicitely listen to server's response from the network
 	* Assuming how we wish to implement the Elixer tracking, we can do via
 	*   -> Player attempts to play card. One check on clientside and one check
@@ -206,7 +252,7 @@ public partial class Gameloop : Node2D
 	*      too hard to store
 	*   -> Are we holding client and server timer for card attacks as well?
 	*/
-	public static void listenForServerReaction()
+	async public void ListenForServerReaction()
 	{
 
 	}
@@ -214,7 +260,7 @@ public partial class Gameloop : Node2D
 	/*
 	* I am going on a whim here but this should be called within the main game loop
 	*/
-	public static void writeToServer()
+	public static void WriteToServer()
 	{
 
 	}

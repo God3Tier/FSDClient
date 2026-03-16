@@ -7,6 +7,10 @@ using FSDClient.card.display;
 
 public partial class CardManager : Node2D
 {
+
+	[Signal]
+	public delegate void CardDroppedEventHandler(BattleSlot battleSlot);
+	
 	private Node2D cardBeingDragged;
 	private Vector2 dragOffset;
 	private Vector2 screenSize;
@@ -52,15 +56,22 @@ public partial class CardManager : Node2D
 	{
 		cardBeingDragged.Scale = new Vector2(1.005f, 1.005f);
 		var battleSlotFound = _raycastCheckForBattleSlot();
+		
+		// Put the signal here for nonsence in gameloop 
+		// TODO: DO it 
 		if (battleSlotFound != null && !battleSlotFound.CardInSlot)
 		{
 			cardBeingDragged.Position = battleSlotFound.Position;
 			GD.Print(battleSlotFound.Position);
 			GD.Print(cardBeingDragged.Position);
+			
 			GD.Print(dragOffset);
 			battleSlotFound.CardInSlot = true;
 			var collisionShape = cardBeingDragged.GetNode<CollisionShape2D>("Area2D/CollisionShape2D");
 			collisionShape.Disabled = true;
+			battleSlotFound.Card = (Card)cardBeingDragged;
+
+			EmitSignal(SignalName.CardDropped, battleSlotFound);
 		}
 		else
 		{

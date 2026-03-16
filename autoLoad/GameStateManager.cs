@@ -54,19 +54,19 @@ public partial class GameStateManager : Node
 		CurrentScene = root.GetChild(-1);
 	}
 
-	// When switching gamestate, use the enum and they are suppose to change
-	// to the appropriate scene. After that, nuke everything. Currently I havent added
-	// anything cause I want to merge to main when I create the dummy nodes.
-	public void ChangeGameState(GameState gameState)
-	{
-		CurrentGameState = gameState;
+    // When switching gamestate, use the enum and they are suppose to change
+    // to the appropriate scene. After that, nuke everything. Currently I havent added
+    // anything cause I want to merge to main when I create the dummy nodes.
+    public void ChangeGameState(GameState gameState)
+    {
+        CurrentGameState = gameState;
 
-		if (_stateToScene.TryGetValue(gameState, out var path))
-		{
-			GotoScene(path);
-		}
-	}
-
+        if (_stateToScene.TryGetValue(gameState, out var path))
+        {
+            GotoScene(path);
+        }
+    }
+	
 
 	private void GotoScene(string path)
 	{
