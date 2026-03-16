@@ -2,7 +2,7 @@ namespace FSDClient.player.display;
 
 using Godot;
 
-public record PlayerViewData(string IconName, string Color, int Health, int Attack);
+public record PlayerViewData(string Username, string IconName, string Color, int Health, int Attack);
 
 public class PlayerViewTextures
 {
@@ -18,7 +18,8 @@ public class PlayerViewTextures
     public Texture2D DefenceSymbolTexture { get; set; }
     public string AttackValue { get; set; }
     public string HealthValue { get; set; }
-
+    public string Username { get; set; }
+    
     public PlayerViewTextures(PlayerViewData playerViewData)
     {
         BorderTexture = GD.Load<Texture2D>(BACKGROUND_BASE.Replace("PLACEHOLDER", playerViewData.Color));
@@ -51,6 +52,8 @@ public class PlayerViewTextures
         {
             GD.Print("Error unable to load texture\n");
         }
+
+        Username = playerViewData.Username;
     }
 
 }

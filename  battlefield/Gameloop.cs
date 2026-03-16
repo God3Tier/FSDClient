@@ -89,7 +89,6 @@ public partial class Gameloop : Node2D
 		// See how to initialise Elixir
 
 		ReturnToHomeScreen();
-
 	}
 
 	// I am of the assumption that this is what is being called by the
@@ -120,17 +119,19 @@ public partial class Gameloop : Node2D
 
 		var opponentsCards = (Control)FindChild("OpponentsCards");
 
-		foreach (Node child in opponentsCards.GetChildren())
-		{
-			if (child is Card c)
-			{
-				GD.Print("Found opponent card removing texture it");
-				c.EmptyTexture();
-				// c.Scale =  -> Set scale 
-			}
-		}
+        foreach (Node child in opponentsCards.GetChildren())
+        {
+            if (child is Card c)
+            {
+                GD.Print("Found opponent card removing texture it");
+                c.EmptyTexture();
+                // c.Scale =  -> Set scale 
+            }
+        }
 
-		MainPlayer = PlayerStateManager.Instance;
+		//TODO: Add the logic to load the nonsence so I can start using the stuff for damage numbers 
+		// and whatnot 
+        MainPlayer = PlayerStateManager.Instance; 
 		IncomingPlayer = new PlayerData("Placeholder", "Placeholder", [], false);
 		CardManager = (CardManager)FindChild("CardManager", true);
 		CardManager.CardDropped += OnCardDropped;
