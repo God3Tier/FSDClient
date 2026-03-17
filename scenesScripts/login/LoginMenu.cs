@@ -4,13 +4,23 @@ using Godot;
 using System;
 using System.Text.Json;
 using FSDClient.autoLoad;
+using System.Collections.Generic;
+using FSDClient.card;
 
-class LoginResponse
+public class LoginResponse
 {
 	public string Token { get; set; }
 	public long UserID { get; set; }
 	public string Username { get; set; }
-	public string Email { get; set; }
+	public string IconName { get; set; }
+    public string BorderColour { get; set; }
+    public int GoldCurrency { get; set; }
+    public int DiamondCurrency { get; set; }
+    // This one I will set later 
+    public List<CardData> CurrentDeck { get; set; }
+    public int Level { get; set; }
+    // TODO: Settle how the levels will be done 
+    // TODO: Also settle whatever to do with the bottom one 
 	public DateTime ExpiresAt { get; set; }
 }
 
@@ -110,7 +120,7 @@ public partial class LoginMenu : Control
 		string json = System.Text.Encoding.UTF8.GetString(body);
 		// Do other things with the data Ig
 		var data = JsonSerializer.Deserialize<LoginResponse>(json);
-		PlayerStateManager.Instance.Token = data.Token;
+        PlayerStateManager.Instance.SetPlayerData(data);
 
 	}
 }

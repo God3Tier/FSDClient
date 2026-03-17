@@ -7,52 +7,54 @@ using System.Collections.Generic;
 	to switch between scenes
 */
 
-	/*
-	These are the different Gamestates that can exist for the application. The player is always either in
-	one of these scenes
+/*
+These are the different Gamestates that can exist for the application. The player is always either in
+one of these scenes
 
-	Need to also update the dictionary from the class to map it to paths
+Need to also update the dictionary from the class to map it to paths
 */
 public enum GameState
 {
-	HOMESCREEN,
-	CARDSCREEN,
-	INGAMEMODE
+    HOMESCREEN,
+    CARDSCREEN,
+    INGAMEMODE,
+    LOGIN
 }
 
 public partial class GameStateManager : Node
 {
 
-	private Node CurrentScene { get; set; }
-	private Node SceneContainer { get; set; }
-	public GameState CurrentGameState { get; private set; }
+    private Node CurrentScene { get; set; }
+    private Node SceneContainer { get; set; }
+    public GameState CurrentGameState { get; private set; }
 
-	public static GameStateManager Instance { get; private set; }
+    public static GameStateManager Instance { get; private set; }
 
-	/*
+    /*
 	Update the dictionary mapping here
 */
 
-	private readonly Dictionary<GameState, string> _stateToScene = new()
-	{
-		{ GameState.HOMESCREEN, "res://scenes/states/home.tscn" },
-		{ GameState.CARDSCREEN, "res://scenes/states/cardManagement.tscn"},
-		{ GameState.INGAMEMODE, "res://scenes/gameplay.tscn" }
-	};
+    private readonly Dictionary<GameState, string> _stateToScene = new()
+    {
+        { GameState.HOMESCREEN, "res://scenes/states/home.tscn" },
+        { GameState.CARDSCREEN, "res://scenes/states/cardManagement.tscn"},
+        { GameState.INGAMEMODE, "res://scenes/gameplay.tscn" },
+        { GameState.LOGIN, "res://scenes/login_menu.tscn"}
+    };
 
-	// Here, we initialize the gamestate
-	public override void _Ready()
-	{
-		//var sceneContainer = GetNode<Node>("SceneContainer");
-		//SceneContainer = sceneContainer;
-		//ChangeGameState(GameState.HOMESCREEN);
-//
-		//Instance = this;
+    // Here, we initialize the gamestate
+    public override void _Ready()
+    {
+        //var sceneContainer = GetNode<Node>("SceneContainer");
+        //SceneContainer = sceneContainer;
+        //ChangeGameState(GameState.HOMESCREEN);
+        //
+        //Instance = this;
 
-		Viewport root = GetTree().Root;
-		// Using a negative index counts from the end, so this gets the last child node of `root`.
-		CurrentScene = root.GetChild(-1);
-	}
+        Viewport root = GetTree().Root;
+        // Using a negative index counts from the end, so this gets the last child node of `root`.
+        CurrentScene = root.GetChild(-1);
+    }
 
     // When switching gamestate, use the enum and they are suppose to change
     // to the appropriate scene. After that, nuke everything. Currently I havent added
@@ -66,29 +68,29 @@ public partial class GameStateManager : Node
             GotoScene(path);
         }
     }
-	
 
-	private void GotoScene(string path)
-	{
-		CallDeferred(MethodName.DeferredGotoScene, path);
-	}
 
-	public void DeferredGotoScene(string path)
-	{
-		// It is now safe to remove the current scene.
-		CurrentScene.Free();
+    private void GotoScene(string path)
+    {
+        CallDeferred(MethodName.DeferredGotoScene, path);
+    }
 
-		// Load a new scene.
-		var nextScene = GD.Load<PackedScene>(path);
+    public void DeferredGotoScene(string path)
+    {
+        // It is now safe to remove the current scene.
+        CurrentScene.Free();
 
-		// Instance the new scene.
-		CurrentScene = nextScene.Instantiate();
+        // Load a new scene.
+        var nextScene = GD.Load<PackedScene>(path);
 
-		// Add it to the active scene, as child of root.
-		GetTree().Root.AddChild(CurrentScene);
+        // Instance the new scene.
+        CurrentScene = nextScene.Instantiate();
 
-		// Optionally, to make it compatible with the SceneTree.change_scene_to_file() API.
-		GetTree().CurrentScene = CurrentScene;
-	}
+        // Add it to the active scene, as child of root.
+        GetTree().Root.AddChild(CurrentScene);
+
+        // Optionally, to make it compatible with the SceneTree.change_scene_to_file() API.
+        GetTree().CurrentScene = CurrentScene;
+    }
 
 }

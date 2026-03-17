@@ -5,6 +5,10 @@
 [node name="Login_menu" type="Control" unique_id=1086706066]
 layout_mode = 3
 anchors_preset = 0
+offset_left = 128.0
+offset_top = 67.0
+offset_right = 128.0
+offset_bottom = 67.0
 script = ExtResource("1_u8sew")
 
 [node name="Username" type="TextEdit" parent="." unique_id=1515806500]
@@ -30,7 +34,6 @@ offset_bottom = 190.0
 text = "Login"
 
 [node name="StateChanger" type="Button" parent="." unique_id=197976993]
-
 layout_mode = 0
 offset_left = -1.0
 offset_top = 190.0

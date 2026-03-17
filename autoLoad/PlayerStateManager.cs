@@ -4,10 +4,7 @@ using System.Collections.Generic;
 using FSDClient.player;
 using FSDClient.card;
 using Godot;
-
-using FSDClient.player;
-using FSDClient.card;
-
+using FSDClient.sceneScripts.login;
 
 /*
     Upon Client being opened, it is expected to have all user data instantly, hence it is an autoloaded class. 
@@ -18,7 +15,7 @@ using FSDClient.card;
 public partial class PlayerStateManager : Node
 {
     public static PlayerStateManager Instance { get; private set; }
-    public PlayerData PlayerData { get; private set; }
+    public PlayerData PlayerData { get; private set; } = null;
     private List<CardData> DeckCardDatas { get; set; }
     public string Token { get; set; } = null;
     
@@ -27,13 +24,15 @@ public partial class PlayerStateManager : Node
         // Note this is a placeholder until I know what protocol we will use to load player data into the network
         // DeckCardDatas = new();
         // PlayerData = new PlayerData("Placeholder", "Placeholder", DeckCardDatas, true);
-        // Instance = this;
+        Instance = this;
     }
 
     // Here, we should request however the server stores the data of the user
-    public void LoadIntoData()
+    public void SetPlayerData(LoginResponse loginResponse)
     {
-
+        Token = loginResponse.Token;
+        PlayerData = new(loginResponse.Username, loginResponse.IconName, loginResponse.BorderColour, loginResponse.CurrentDeck, true);
+        DeckCardDatas = loginResponse.CurrentDeck;
     }
 
 

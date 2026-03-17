@@ -6,6 +6,7 @@ using FSDClient.card.display;
 using FSDClient.card;
 using FSDClient.battlefield.handManagement;
 using FSDClient.autoLoad;
+using System.Threading;
 
 namespace FSDClient.battlefield;
 
@@ -21,36 +22,33 @@ public partial class Gameloop : Node2D
 
 	public NetworkManager NetworkManager { get; set; }
 	// Unsure to keep this as the state manager or make it it's own individual player data. TBD on a later date
-    public PlayerStateManager MainPlayer { get; set; }
-    // This info, leave majority null, the info is not needed so extensively
-    // TODO: Get rid of some fields and move the PlayerStateManager as that is what needs to
-    // Get rid of this can be read elsewhere
-    public PlayerData IncomingPlayer { get; set; }
+	public PlayerStateManager MainPlayer { get; set; }
+	public PlayerData IncomingPlayer { get; set; }
 
-    // Deal with card placement and card movement
-    private Card[][] Board { get; set; } = new Card[2][];
-    private Card[][] OpponentBoard { get; set; } = new Card[2][];
-    private CardManager CardManager;
-    private HandArea HandArea;
+	// Deal with card placement and card movement
+	private Card[][] Board { get; set; } = new Card[2][];
+	private Card[][] OpponentBoard { get; set; } = new Card[2][];
+	private CardManager CardManager;
+	private HandArea HandArea;
 
-    // Parameters for game state to be managed
-    private int Elixir { get; set; }
-    private int RoundNumber { get; set; }
-    private double GameTimer { get; set; } = 0;
-    private double RegenInterval { get; set; } = 1;
-    private bool TurnPause { get; set; } = true;
-    private double PauseTimer { get; set; } = 0;
-    private int TurnRound = 1;
+	// Parameters for game state to be managed
+	private int Elixir { get; set; }
+	private int RoundNumber { get; set; }
+	private double GameTimer { get; set; } = 0;
+	private double RegenInterval { get; set; } = 1;
+	private bool TurnPause { get; set; } = false;
+	private double PauseTimer { get; set; } = 0;
+	private int TurnRound = 1;
 
-    public void StartGameLoop()
-    {
-        // TODO: Should be obvious
-        while (true)
-        {
+	public void StartGameLoop()
+	{
+		// TODO: Should be obvious
+		while (true)
+		{
 
-            break;
-        }
-        // This is just to test whether it would load
+			break;
+		}
+		// This is just to test whether it would load
 
 		// Making a second card doesn't work too well
 		// TestCard = new CardData(10, "farmer", Colour.BLUE, 100, 10, 5);
@@ -181,6 +179,8 @@ public partial class Gameloop : Node2D
 	{
 		// TODO: Write to Server should be implemented once backend decides how to transfer information
 		WriteToServer();
+		// Simulate delay of card 
+		Thread.Sleep(1);
 		GD.Print("Updating Board");
 		Board[battleslot.x][battleslot.y] = battleslot.Card;
 		battleslot.Card.ActiveY = battleslot.y;
@@ -190,67 +190,67 @@ public partial class Gameloop : Node2D
 	}
 
 	// This is how to generate Elixir. Since client only ever knows about 1 player's resource
-    // i can do it within the gameplay loop itself
-    public override void _Process(double delta)
-    {
-        // GD.Print("Called");
-        if (TurnPause)
-        {
-            PauseTimer += delta;
-        }
-        else
-        {
-            RegenInterval += delta;
-            GameTimer += delta;
-        }
-        if (PauseTimer >= PAUSE_TIMER)
-        {
-            GD.Print("Pause Ended");
-            HandArea.LowerDeck();
-            TurnPause = false;
-            PauseTimer = 0;
-            TurnRound += 1;
-            var ElixirBar = (Elixir)FindChild("Elixir");
-            ElixirBar.UpdateRound(TurnRound);
-            return;
-        }
+	// i can do it within the gameplay loop itself
+	public override void _Process(double delta)
+	{
+		// GD.Print("Called");
+		if (TurnPause)
+		{
+			PauseTimer += delta;
+		}
+		else
+		{
+			RegenInterval += delta;
+			GameTimer += delta;
+		}
+		if (PauseTimer >= PAUSE_TIMER)
+		{
+			GD.Print("Pause Ended");
+			HandArea.LowerDeck();
+			TurnPause = false;
+			PauseTimer = 0;
+			TurnRound += 1;
+			var ElixirBar = (Elixir)FindChild("Elixir");
+			ElixirBar.UpdateRound(TurnRound);
+			return;
+		}
 
-        if (GameTimer >= ROUND_TIMER * TurnRound && !TurnPause)
-        {
-            GD.Print("Round updated");
+		if (GameTimer >= ROUND_TIMER * TurnRound && !TurnPause)
+		{
+			GD.Print("Round updated");
 
-            // TODO: Trigger secondary draw card event
-            TurnPause = true;
-            HandArea.RaiseDeck();
-        }
+			// TODO: Trigger secondary draw card event
+			TurnPause = true;
+			HandArea.RaiseDeck();
+		}
 
-        if (RegenInterval >= SECONDS_PER_ELIXIR)
-        {
-            if (Elixir >= TurnRound + BASE_ELIXIR || Elixir >= MAX_ELIXER)
-            {
-                return;
-            }
-            Elixir++;
-            RegenInterval = 0.0;
-            var ElixirBar = (Elixir)FindChild("Elixir");
-            ElixirBar.UpdateElixir(Elixir);
-        }
+		if (RegenInterval >= SECONDS_PER_ELIXIR)
+		{
+			if (Elixir >= TurnRound + BASE_ELIXIR || Elixir >= MAX_ELIXER)
+			{
+				return;
+			}
+			Elixir++;
+			RegenInterval = 0.0;
+			var ElixirBar = (Elixir)FindChild("Elixir");
+			ElixirBar.UpdateElixir(Elixir);
+		}
 
-    }
+	}
 
-    public bool PlaceCardCheck(int Cost)
-    {
-        if (Elixir < Cost)
-        {
-            return false;
-        }
+	public bool PlaceCardCheck(int Cost)
+	{
+		if (Elixir < Cost)
+		{
+			return false;
+		}
 
-        Elixir -= Cost;
+		Elixir -= Cost;
 
-        return true;
-    }
+		return true;
+	}
 
-    /*
+	/*
 	* This function is to explicitely listen to server's response from the network
 	* Assuming how we wish to implement the Elixer tracking, we can do via
 	*   -> Player attempts to play card. One check on clientside and one check
@@ -262,7 +262,7 @@ public partial class Gameloop : Node2D
 	*/
 	async public void ListenForServerReaction()
 	{
-
+		
 	}
 
 	/*

@@ -23,7 +23,8 @@ public class Builder
     // TODO: Look up 
     public static PlayerViewTextures BuildPlayer(PlayerData RawPlayerData)
     {
-        var data = new PlayerViewData("temp", "purple", "purple", 100, 5);
+        var data = new PlayerViewData(RawPlayerData.Username, RawPlayerData.IconName, RawPlayerData.BorderColour, 100, 5);
+        // var data = new PlayerViewData("temp", "purple", "purple", 100, 5);
         var PlayerViewTextures = new PlayerViewTextures(data);
         return PlayerViewTextures;
     }

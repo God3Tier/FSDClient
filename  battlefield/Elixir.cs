@@ -37,7 +37,6 @@ public partial class Elixir : Node2D
         }
 
         RoundNumber = RoundValue;
-
 		var Elixir = (Sprite2D)FindChild("NullEnergy" + 4 + RoundValue);
 		Elixir.Texture = GD.Load<Texture2D>(NO_ELIXIR_URL);
 	}
