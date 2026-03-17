@@ -133,7 +133,7 @@ public partial class Gameloop : Node2D
 		//TODO: Add the logic to load the nonsence so I can start using the stuff for damage numbers
 		// and whatnot
         MainPlayer = PlayerStateManager.Instance;
-		IncomingPlayer = new PlayerData("Placeholder", "Placeholder", [], false);
+		// IncomingPlayer = new PlayerData("Placeholder", "Placeholder", [], false);
 		CardManager = (CardManager)FindChild("CardManager", true);
 		CardManager._playerHand = GetNode<PlayerHand>("HandArea/PlayerHand");
 		CardManager._deck =  GetNode<Control>("HandArea/Deck");
