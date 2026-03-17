@@ -47,39 +47,12 @@ grow_vertical = 2
 texture = ExtResource("2_hhelq")
 expand_mode = 1
 
-[node name="Control" type="Control" parent="." unique_id=1220826053]
+[node name="LeftPanel" type="Control" parent="." unique_id=1220826053]
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="LeftCharacter" type="TextureRect" parent="Control" unique_id=1810746276]
-layout_mode = 0
-offset_left = 64.0
-offset_top = 299.0
-offset_right = 447.0
-offset_bottom = 796.44214
-texture = ExtResource("3_twuvq")
-
-[node name="VS" type="Label" parent="Control" unique_id=1034517684]
-layout_mode = 0
-offset_left = 543.0
-offset_top = 524.0
-offset_right = 618.0
-offset_bottom = 607.0
-theme_override_colors/font_color = Color(0.3764706, 0.44313726, 0.44313726, 1)
-theme_override_fonts/font = SubResource("FontVariation_728b3")
-theme_override_font_sizes/font_size = 60
-text = "VS"
-
-[node name="RightCharacter" type="TextureRect" parent="Control" unique_id=530079176]
-layout_mode = 0
-offset_left = 701.0
-offset_top = 296.0
-offset_right = 1084.0
-offset_bottom = 793.44214
-texture = ExtResource("4_4hsiq")
-
-[node name="Header" type="Label" parent="Control" unique_id=466476320]
+[node name="Header" type="Label" parent="LeftPanel" unique_id=466476320]
 layout_mode = 0
 offset_top = 93.0
 offset_right = 1120.0
@@ -90,14 +63,41 @@ theme_override_font_sizes/font_size = 60
 text = "READY TO WIN?"
 horizontal_alignment = 1
 
-[node name="ColorRect" type="ColorRect" parent="." unique_id=1711109228]
+[node name="LeftCharacter" type="TextureRect" parent="LeftPanel" unique_id=1810746276]
+layout_mode = 0
+offset_left = 64.0
+offset_top = 299.0
+offset_right = 447.0
+offset_bottom = 796.44214
+texture = ExtResource("3_twuvq")
+
+[node name="VS" type="Label" parent="LeftPanel" unique_id=1034517684]
+layout_mode = 0
+offset_left = 543.0
+offset_top = 524.0
+offset_right = 618.0
+offset_bottom = 607.0
+theme_override_colors/font_color = Color(0.3764706, 0.44313726, 0.44313726, 1)
+theme_override_fonts/font = SubResource("FontVariation_728b3")
+theme_override_font_sizes/font_size = 60
+text = "VS"
+
+[node name="RightCharacter" type="TextureRect" parent="LeftPanel" unique_id=530079176]
+layout_mode = 0
+offset_left = 701.0
+offset_top = 296.0
+offset_right = 1084.0
+offset_bottom = 793.44214
+texture = ExtResource("4_4hsiq")
+
+[node name="RightPanel" type="ColorRect" parent="." unique_id=1711109228]
 layout_mode = 0
 offset_left = 1120.0
 offset_right = 1920.0
 offset_bottom = 1080.0
 color = Color(0.47058824, 0.54901963, 0.54901963, 1)
 
-[node name="Header" type="Label" parent="ColorRect" unique_id=2045533370]
+[node name="Header" type="Label" parent="RightPanel" unique_id=2045533370]
 layout_mode = 0
 offset_left = 225.0
 offset_top = 272.0
@@ -107,7 +107,7 @@ theme_override_fonts/font = SubResource("FontFile_x2epc")
 theme_override_font_sizes/font_size = 50
 text = "Welcome back"
 
-[node name="UsernameInput" type="TextEdit" parent="ColorRect" unique_id=1515806500]
+[node name="UsernameInput" type="TextEdit" parent="RightPanel" unique_id=1515806500]
 layout_mode = 0
 offset_left = 229.0
 offset_top = 374.0
@@ -118,7 +118,7 @@ theme_override_styles/normal = ExtResource("4_x2epc")
 placeholder_text = "Username"
 tab_input_mode = false
 
-[node name="PasswordInput" type="TextEdit" parent="ColorRect" unique_id=1662331780]
+[node name="PasswordInput" type="TextEdit" parent="RightPanel" unique_id=1662331780]
 layout_mode = 0
 offset_left = 229.0
 offset_top = 461.0
@@ -129,7 +129,7 @@ theme_override_styles/normal = ExtResource("4_x2epc")
 placeholder_text = "Password"
 tab_input_mode = false
 
-[node name="SendInformation" type="Button" parent="ColorRect" unique_id=1486221930]
+[node name="SendInformation" type="Button" parent="RightPanel" unique_id=1486221930]
 layout_mode = 0
 offset_left = 239.0
 offset_top = 638.0
@@ -140,7 +140,7 @@ theme_override_font_sizes/font_size = 20
 theme_override_styles/normal = ExtResource("5_4hsiq")
 text = "Login"
 
-[node name="StateChanger" type="Button" parent="ColorRect" unique_id=197976993]
+[node name="StateChanger" type="Button" parent="RightPanel" unique_id=197976993]
 layout_mode = 0
 offset_left = 239.0
 offset_top = 588.0
@@ -151,4 +151,4 @@ theme_override_font_sizes/font_size = 20
 theme_override_styles/normal = ExtResource("5_4hsiq")
 text = "No account? Click here"
 
-[connection signal="pressed" from="ColorRect/SendInformation" to="." method="_OnInformationReady"]
+[connection signal="pressed" from="RightPanel/SendInformation" to="." method="_OnInformationReady"]
