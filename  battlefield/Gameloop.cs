@@ -270,7 +270,7 @@ public partial class Gameloop : Node2D
 	*/
 	public static void WriteToServer()
 	{
-
+		
 	}
 
 	private void ReturnToHomeScreen()
