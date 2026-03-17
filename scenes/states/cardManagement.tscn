@@ -8,6 +8,8 @@
 [ext_resource type="PackedScene" uid="uid://csm0ojou5aa2g" path="res://scenes/gameComponents/Card.tscn" id="7_60kyj"]
 [ext_resource type="StyleBox" uid="uid://buvt2gu2jbmvx" path="res://styles/tab_unselected.tres" id="7_yc314"]
 [ext_resource type="StyleBox" uid="uid://fanmcmx62hlp" path="res://styles/tab_selected.tres" id="8_60kyj"]
+[ext_resource type="StyleBox" uid="uid://bikhijk3kb8s0" path="res://styles/button.tres" id="8_ljblh"]
+[ext_resource type="StyleBox" uid="uid://bkiusl8wj1xvr" path="res://styles/button_hover.tres" id="9_av7v1"]
 [ext_resource type="Texture2D" uid="uid://b8f6kdmi27juf" path="res://assets/header/arrow-left-solid.png" id="11_av7v1"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yc314"]
@@ -15,6 +17,10 @@ bg_color = Color(1, 1, 1, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dtc84"]
 bg_color = Color(1, 1, 1, 1)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_brgpe"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_v80jo"]
 
 [node name="CardManagement" type="Control" unique_id=1513454057]
 layout_mode = 3
@@ -371,6 +377,21 @@ theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 23
 text = "X1"
 horizontal_alignment = 1
+
+[node name="BattleButton" type="Button" parent="MainCardContainer/VBoxContainer/CollectionColorContainer" unique_id=5481639]
+layout_mode = 0
+offset_left = 556.0
+offset_top = 778.0
+offset_right = 986.0
+offset_bottom = 828.0
+mouse_default_cursor_shape = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 30
+theme_override_styles/normal = ExtResource("8_ljblh")
+theme_override_styles/hover = ExtResource("9_av7v1")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_brgpe")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_v80jo")
+text = "Confirm upgrades (-XXX gold)"
 
 [node name="VBoxContainer2" type="VBoxContainer" parent="MainCardContainer" unique_id=1838329570]
 layout_mode = 2
