@@ -38,7 +38,7 @@ public partial class Gameloop : Node2D
     private int RoundNumber { get; set; }
     private double GameTimer { get; set; } = 0;
     private double RegenInterval { get; set; } = 1;
-    private bool TurnPause { get; set; } = false;
+    private bool TurnPause { get; set; } = true;
     private double PauseTimer { get; set; } = 0;
     private int TurnRound = 1;
 
@@ -95,6 +95,9 @@ public partial class Gameloop : Node2D
 	// We put this in gameloop later
 	public override void _Ready()
 	{
+		HandArea = GetNode<HandArea>("HandArea");
+		HandArea.RaiseDeck();
+
 		for (int i = 0; i < 2; i++)
 		{
 			Board[i] = new Card[3];
@@ -125,16 +128,20 @@ public partial class Gameloop : Node2D
             {
                 GD.Print("Found opponent card removing texture it");
                 c.EmptyTexture();
-                // c.Scale =  -> Set scale 
+                // c.Scale =  -> Set scale
             }
         }
 
-		//TODO: Add the logic to load the nonsence so I can start using the stuff for damage numbers 
-		// and whatnot 
-        MainPlayer = PlayerStateManager.Instance; 
+		//TODO: Add the logic to load the nonsence so I can start using the stuff for damage numbers
+		// and whatnot
+        MainPlayer = PlayerStateManager.Instance;
 		IncomingPlayer = new PlayerData("Placeholder", "Placeholder", [], false);
 		CardManager = (CardManager)FindChild("CardManager", true);
+		CardManager._playerHand = GetNode<PlayerHand>("HandArea/PlayerHand");
+		CardManager._deck =  GetNode<Control>("HandArea/Deck");
 		CardManager.CardDropped += OnCardDropped;
+
+		GD.Print(CardManager._playerHand.Name);
 
 		TestCard();
 		GD.Print("Completed everything without a problem");

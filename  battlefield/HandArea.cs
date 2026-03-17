@@ -2,15 +2,17 @@ namespace FSDClient.battlefield;
 
 using Godot;
 using System;
+using FSDClient.battlefield.handManagement;
 
 public partial class HandArea : Control
 {
+	[Export] public PlayerHand PlayerHand { get; set; }
 	private float _raiseDistance = 470f;
 	private float _raiseDuration = 0.5f;
-	
+
 	private Vector2 _startPos;
 	private bool _isRaised = false;
-	
+
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
@@ -20,12 +22,16 @@ public partial class HandArea : Control
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
+		if (_isRaised)
+		{
+			PlayerHand?.UpdateHandPositions();
+		}
 	}
-	
+
 	public void RaiseDeck()
 	{
 		if (_isRaised) return;
-		
+
 		_isRaised = true;
 		var tween = CreateTween();
 		tween.TweenProperty(this, "position",
@@ -34,11 +40,11 @@ public partial class HandArea : Control
 		.SetTrans(Tween.TransitionType.Cubic)
 		.SetEase(Tween.EaseType.Out);
 	}
-	
+
 	public void LowerDeck()
 	{
 		if (!_isRaised) return;
-		
+
 		_isRaised = false;
 		var tween = CreateTween();
 		tween.TweenProperty(this, "position",

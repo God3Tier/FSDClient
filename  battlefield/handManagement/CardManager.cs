@@ -17,6 +17,8 @@ public partial class CardManager : Node2D
 	private Boolean highlighting = false;
 	private uint COLLISION_MASK_CARD = 1;
 	private uint COLLISION_MASK_CARD_SLOT = 2;
+	public PlayerHand _playerHand  { get; set; }
+	public Control _deck { get; set; }
 	private PlayerHand handReference;
 
 	// For handling game input
@@ -45,6 +47,7 @@ public partial class CardManager : Node2D
 		}
 	}
 
+	// To start drag
 	private void StartDrag(Card card)
 	{
 		cardBeingDragged = card;
@@ -52,6 +55,7 @@ public partial class CardManager : Node2D
 		card.Scale = new Vector2(1f, 1f);
 	}
 
+	// To stop drag
 	private void StopDrag()
 	{
 		cardBeingDragged.Scale = new Vector2(1.005f, 1.005f);
@@ -62,6 +66,7 @@ public partial class CardManager : Node2D
 		if (battleSlotFound != null && !battleSlotFound.CardInSlot)
 		{
 			cardBeingDragged.Position = battleSlotFound.Position;
+			cardBeingDragged.ZIndex = 1;
 			GD.Print(battleSlotFound.Position);
 			GD.Print(cardBeingDragged.Position);
 
@@ -75,7 +80,7 @@ public partial class CardManager : Node2D
 		}
 		else
 		{
-			handReference.AddCardToHand((Card)cardBeingDragged);
+			_playerHand.AddCardToHand((Card)cardBeingDragged);
 		}
 		cardBeingDragged = null;
 
@@ -88,6 +93,7 @@ public partial class CardManager : Node2D
 		card.HoveredOff += OnHoverOffCard;
 	}
 
+	// Hover Card effect
 	public void OnHoverOverCard(Card card)
 	{
 		if (!highlighting)
@@ -97,6 +103,7 @@ public partial class CardManager : Node2D
 		}
 	}
 
+	// Hover off Card effect
 	public void OnHoverOffCard(Card card)
 	{
 		if (cardBeingDragged == null)
@@ -114,17 +121,18 @@ public partial class CardManager : Node2D
 		}
 	}
 
+	// To make the card fly up to the top of the ZIndex, or back down
 	private void HighlightCard(Card card, bool hovered)
 	{
 		if (hovered)
 		{
 			card.Scale = new Vector2(1.05f, 1.05f);
-			card.ZIndex = 2;
+			card.ZIndex = 5;
 		}
 		else
 		{
 			card.Scale = new Vector2(0.95f, 0.95f);
-			card.ZIndex = 1;
+			card.ZIndex = 4; // TODO: This will likely cause problems with the hand later
 		}
 	}
 

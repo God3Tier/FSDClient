@@ -1,11 +1,13 @@
 [gd_scene format=3 uid="uid://b823yg0wlvck2"]
 
 [ext_resource type="Texture2D" uid="uid://ccx5r7bg8b7yr" path="res://assets/battlefield/empty_hand_slot.png" id="1_f6t2c"]
+[ext_resource type="Script" uid="uid://6n207tnwckd0" path="res:// battlefield/handManagement/CardSlot.cs" id="1_ig03a"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_e124b"]
 size = Vector2(160, 199)
 
 [node name="CardSlot" type="Node2D" unique_id=1762486259]
+script = ExtResource("1_ig03a")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1368923255]
 position = Vector2(3, -2.0000038)
