@@ -24,6 +24,7 @@ public partial class Home : Control
 	{
 	}
 	
+	//	Press Battle button
 	public async void _on_battle_button_pressed()
 	{
 		
@@ -53,12 +54,14 @@ public partial class Home : Control
 		}
 	}
 	
+	// Press card button
 	public void _on_card_button_pressed()
 	{
 		var GameStateManager = GetNode<GameStateManager>("/root/GameStateManager");
 		GameStateManager.ChangeGameState(GameState.CARDSCREEN);
 	}
 
+	// Press cancel button when finding match
 	public void _on_cancel_button_pressed()
 	{
 		_searching = false;
@@ -72,4 +75,31 @@ public partial class Home : Control
 		loadingNode.Visible = false;
 	}	
 	
+	// Press friend button (to show friend list)
+	public void _on_friend_button_pressed()
+	{
+		Control FriendPopupContainerNode = GetNode<Control>("FriendPopupContainer");
+		
+		// Turn it ON (make visible)
+		FriendPopupContainerNode.Visible = true;
+	}	
+	
+	public void _on_friend_popup_background_pressed()
+	{
+		close_friend_popup();
+	}	
+	
+	public void _on_close_friend_button_pressed()
+	{
+		close_friend_popup();
+	}	
+	
+	public void close_friend_popup()
+	{
+		Control FriendPopupContainerNode = GetNode<Control>("FriendPopupContainer");
+		
+		// Turn it ON (make visible)
+		FriendPopupContainerNode.Visible = false;
+	}	
+
 }

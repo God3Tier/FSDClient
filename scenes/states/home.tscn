@@ -2,6 +2,7 @@
 
 [ext_resource type="Texture2D" uid="uid://dgjjaj7pbhqff" path="res://assets/battlefield/background/background_test_box.png" id="1_48th5"]
 [ext_resource type="Script" uid="uid://dm13dy71mnwhb" path="res://scenesScripts/home/Home.cs" id="1_y784y"]
+[ext_resource type="Texture2D" uid="uid://box4pr2mjwhik" path="res://assets/home/friend.png" id="4_42gn1"]
 [ext_resource type="Texture2D" uid="uid://tl43u2wwetbq" path="res://assets/header/banner.png" id="4_eyscv"]
 [ext_resource type="Texture2D" uid="uid://k3uu1nfrcl6k" path="res://assets/cards/pack.png" id="4_pl3n4"]
 [ext_resource type="Texture2D" uid="uid://pu52dbw7egqc" path="res://assets/header/crystal_colored.png" id="5_y784y"]
@@ -11,6 +12,7 @@
 [ext_resource type="StyleBox" uid="uid://bikhijk3kb8s0" path="res://styles/button.tres" id="9_vfej2"]
 [ext_resource type="StyleBox" uid="uid://bkiusl8wj1xvr" path="res://styles/button_hover.tres" id="10_46c81"]
 [ext_resource type="Texture2D" uid="uid://d0517xwkwglh3" path="res://assets/home/loading/1.png" id="11_73yef"]
+[ext_resource type="StyleBox" uid="uid://64i6tspse80" path="res://styles/button_pressed.tres" id="11_grv6n"]
 [ext_resource type="Texture2D" uid="uid://dhl4xqabwcnr1" path="res://assets/home/loading/2.png" id="12_42gn1"]
 [ext_resource type="Texture2D" uid="uid://dbltv7i7qfmxf" path="res://assets/home/loading/3.png" id="13_grv6n"]
 [ext_resource type="Texture2D" uid="uid://ci2ufk01h7mwl" path="res://assets/home/loading/4.png" id="14_wih85"]
@@ -65,6 +67,41 @@
 [ext_resource type="Texture2D" uid="uid://d0tw37827fjqj" path="res://assets/home/loading/53.png" id="63_0mguh"]
 [ext_resource type="Texture2D" uid="uid://f75irtnl5kvl" path="res://assets/home/loading/54.png" id="64_hb6fh"]
 [ext_resource type="Texture2D" uid="uid://b13lajvsrj7w7" path="res://assets/home/loading/55.png" id="65_dyq1s"]
+[ext_resource type="StyleBox" uid="uid://cg7xt7j6ukctr" path="res://styles/popup.tres" id="68_wih85"]
+[ext_resource type="Texture2D" uid="uid://cqlpljo3fyehv" path="res://assets/popup/xmark.png" id="69_ep48t"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_42gn1"]
+bg_color = Color(0.80784315, 0.85490197, 0.85490197, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+corner_radius_top_left = 1000
+corner_radius_top_right = 1000
+corner_radius_bottom_right = 1000
+corner_radius_bottom_left = 1000
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wih85"]
+bg_color = Color(0.2993155, 0.36108202, 0.36114737, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+corner_radius_top_left = 1000
+corner_radius_top_right = 1000
+corner_radius_bottom_right = 1000
+corner_radius_bottom_left = 1000
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_grv6n"]
+bg_color = Color(0.47058824, 0.54901963, 0.54901963, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+corner_radius_top_left = 1000
+corner_radius_top_right = 1000
+corner_radius_bottom_right = 1000
+corner_radius_bottom_left = 1000
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_g7oq7"]
 
@@ -250,6 +287,21 @@ animations = [{
 "speed": 10.0
 }]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_g0575"]
+bg_color = Color(0, 0, 0, 0.75686276)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ep48t"]
+bg_color = Color(0, 0, 0, 0.75686276)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4krx0"]
+bg_color = Color(0, 0, 0, 0.75686276)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sihaw"]
+bg_color = Color(0, 0, 0, 0.75686276)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gqply"]
+bg_color = Color(0, 0, 0, 0.75686276)
+
 [node name="Home" type="Control" unique_id=413107585]
 layout_mode = 3
 anchors_preset = 15
@@ -273,6 +325,20 @@ expand_mode = 1
 position = Vector2(669, 138)
 scale = Vector2(0.61331284, 0.48444936)
 texture = ExtResource("7_s07j5")
+
+[node name="FriendButton" type="Button" parent="." unique_id=179885204]
+layout_mode = 0
+offset_left = 1657.0
+offset_top = 82.0
+offset_right = 1757.0
+offset_bottom = 182.0
+mouse_default_cursor_shape = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_42gn1")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_wih85")
+theme_override_styles/hover = SubResource("StyleBoxFlat_grv6n")
+icon = ExtResource("4_42gn1")
+icon_alignment = 1
+expand_icon = true
 
 [node name="Header" type="VBoxContainer" parent="." unique_id=1997196954]
 layout_mode = 1
@@ -519,6 +585,7 @@ mouse_default_cursor_shape = 2
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 80
 theme_override_styles/normal = ExtResource("9_vfej2")
+theme_override_styles/pressed = ExtResource("11_grv6n")
 theme_override_styles/hover = ExtResource("10_46c81")
 theme_override_styles/disabled = SubResource("StyleBoxEmpty_g7oq7")
 theme_override_styles/focus = SubResource("StyleBoxEmpty_4u8u5")
@@ -531,6 +598,7 @@ mouse_default_cursor_shape = 2
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 80
 theme_override_styles/normal = ExtResource("9_vfej2")
+theme_override_styles/pressed = ExtResource("11_grv6n")
 theme_override_styles/hover = ExtResource("10_46c81")
 theme_override_styles/disabled = SubResource("StyleBoxEmpty_g7oq7")
 theme_override_styles/focus = SubResource("StyleBoxEmpty_4u8u5")
@@ -578,6 +646,82 @@ theme_override_styles/disabled = SubResource("StyleBoxEmpty_g7oq7")
 theme_override_styles/focus = SubResource("StyleBoxEmpty_4u8u5")
 text = "Cancel"
 
+[node name="FriendPopupContainer" type="Control" parent="." unique_id=1530139423]
+visible = false
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="FriendPopupBackground" type="Button" parent="FriendPopupContainer" unique_id=577756698]
+z_index = 1
+layout_mode = 0
+offset_right = 1920.0
+offset_bottom = 1080.0
+mouse_default_cursor_shape = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_g0575")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_ep48t")
+theme_override_styles/hover = SubResource("StyleBoxFlat_4krx0")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_sihaw")
+theme_override_styles/focus = SubResource("StyleBoxFlat_gqply")
+
+[node name="FriendPopupBox" type="Panel" parent="FriendPopupContainer" unique_id=829152210]
+z_index = 2
+layout_mode = 0
+offset_left = 192.0
+offset_top = 108.0
+offset_right = 1728.0
+offset_bottom = 972.0
+theme_override_styles/panel = ExtResource("68_wih85")
+
+[node name="Header" type="Label" parent="FriendPopupContainer/FriendPopupBox" unique_id=191888097]
+layout_mode = 0
+offset_top = 57.0
+offset_right = 1536.0
+offset_bottom = 140.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = SubResource("FontVariation_vfej2")
+theme_override_font_sizes/font_size = 60
+text = "Friend list"
+horizontal_alignment = 1
+
+[node name="CloseFriendButton" type="Button" parent="FriendPopupContainer/FriendPopupBox" unique_id=779398058]
+layout_mode = 0
+offset_left = 1319.0
+offset_top = 56.0
+offset_right = 1419.0
+offset_bottom = 156.0
+mouse_default_cursor_shape = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_42gn1")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_wih85")
+theme_override_styles/hover = SubResource("StyleBoxFlat_grv6n")
+icon = ExtResource("69_ep48t")
+icon_alignment = 1
+expand_icon = true
+
+[node name="FriendListScroll" type="ScrollContainer" parent="FriendPopupContainer/FriendPopupBox" unique_id=1030752362]
+layout_mode = 0
+offset_left = 192.0
+offset_top = 193.0
+offset_right = 1344.0
+offset_bottom = 772.0
+
+[node name="FriendListText" type="Label" parent="FriendPopupContainer/FriendPopupBox/FriendListScroll" unique_id=1662466994]
+layout_mode = 2
+theme_override_font_sizes/font_size = 39
+text = "1. A
+2. B
+3. C
+1. A
+2. B
+3. C
+1. A
+2. B
+3. C
+"
+
+[connection signal="pressed" from="FriendButton" to="." method="_on_friend_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/BattleButton" to="." method="_on_battle_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/CardButton" to="." method="_on_card_button_pressed"]
 [connection signal="pressed" from="Loading/CancelButton" to="." method="_on_cancel_button_pressed"]
+[connection signal="pressed" from="FriendPopupContainer/FriendPopupBackground" to="." method="_on_friend_popup_background_pressed"]
+[connection signal="pressed" from="FriendPopupContainer/FriendPopupBox/CloseFriendButton" to="." method="_on_close_friend_button_pressed"]
