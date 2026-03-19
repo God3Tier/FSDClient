@@ -13,15 +13,15 @@ namespace FSDClient.battlefield;
 
 public partial class Gameloop : Node2D
 {
-    public static readonly string WEBSOCKET_URL = "";
-    public static readonly double MAX_ELIXER = 8;
-    public static readonly double ROUND_TIMER = 5.0;
-    public static readonly double PAUSE_TIMER = 5.0;
-    public static readonly double SECONDS_PER_ELIXIR = 3f;
-    public static readonly int BASE_ELIXIR = 4;
+	public static readonly string WEBSOCKET_URL = "";
+	public static readonly double MAX_ELIXER = 8;
+	public static readonly double ROUND_TIMER = 5.0;
+	public static readonly double PAUSE_TIMER = 5.0;
+	public static readonly double SECONDS_PER_ELIXIR = 3f;
+	public static readonly int BASE_ELIXIR = 4;
 
-    public NetworkManager NetworkManager { get; set; }
-    // Unsure to keep this as the state manager or make it it's own individual player data. TBD on a later date
+	public NetworkManager NetworkManager { get; set; }
+	// Unsure to keep this as the state manager or make it it's own individual player data. TBD on a later date
     public PlayerStateManager MainPlayer { get; set; }
     public PlayerData IncomingPlayer { get; set; }
 
@@ -66,7 +66,7 @@ public partial class Gameloop : Node2D
             if (childName.Contains("BattleSlot"))
             {
                 var BattleSlot = (BattleSlot)child;
-                int lastInt = (int)(childName[^1] - '1');
+				int lastInt = (int)(childName[^1] - '1');
 
                 BattleSlot.x = lastInt / 3;
                 BattleSlot.y = lastInt % 3;
@@ -146,117 +146,117 @@ public partial class Gameloop : Node2D
 
     }
 
-    // This is how to generate Elixir. Since client only ever knows about 1 player's resource
-    // i can do it within the gameplay loop itself
-    public override void _Process(double delta)
-    {
-        HandleWebSocket();
-        HandleGameTimer(delta);
-        HandleInputFromServer();
-    }
+	// This is how to generate Elixir. Since client only ever knows about 1 player's resource
+	// i can do it within the gameplay loop itself
+	public override void _Process(double delta)
+	{
+		HandleWebSocket();
+		HandleGameTimer(delta);
+		HandleInputFromServer();
+	}
 
-    private void HandleWebSocket()
-    {
-        Socket.Poll();
+	private void HandleWebSocket()
+	{
+		Socket.Poll();
 
-        if (Socket.GetReadyState() != WebSocketPeer.State.Open)
-        {
-            return;
-        }
+		if (Socket.GetReadyState() != WebSocketPeer.State.Open)
+		{
+			return;
+		}
 
-        while (Socket.GetAvailablePacketCount() > 0)
-        {
-            readQueue.Enqueue(Socket.GetPacket().GetStringFromUtf8());
-        }
+		while (Socket.GetAvailablePacketCount() > 0)
+		{
+			readQueue.Enqueue(Socket.GetPacket().GetStringFromUtf8());
+		}
 
-        if (writeQueue.TryDequeue(out string msg))
-        {
-            Socket.SendText(msg);
-        }
+		if (writeQueue.TryDequeue(out string msg))
+		{
+			Socket.SendText(msg);
+		}
 
-    }
-    
-    private void HandleInputFromServer()
-    {
-        if (readQueue.TryDequeue(out string msg))
-        {
-            // Here, we somehow parse said information about card and then mess around with it. But to continue, I need to settle card Dictionary
-        }
-    }
+	}
+	
+	private void HandleInputFromServer()
+	{
+		if (readQueue.TryDequeue(out string msg))
+		{
+			// Here, we somehow parse said information about card and then mess around with it. But to continue, I need to settle card Dictionary
+		}
+	}
 
-    // This is to handle the
-    private void HandleGameTimer(double delta)
-    {
-        // GD.Print("Called");
-        if (TurnPause)
-        {
-            PauseTimer += delta;
-        }
-        else
-        {
-            RegenInterval += delta;
-            GameTimer += delta;
-        }
-        if (PauseTimer >= PAUSE_TIMER)
-        {
-            GD.Print("Pause Ended");
-            HandArea.LowerDeck();
-            TurnPause = false;
-            PauseTimer = 0;
-            TurnRound += 1;
-            var ElixirBar = (Elixir)FindChild("Elixir");
-            ElixirBar.UpdateRound(TurnRound);
-            return;
-        }
+	// This is to handle the
+	private void HandleGameTimer(double delta)
+	{
+		// GD.Print("Called");
+		if (TurnPause)
+		{
+			PauseTimer += delta;
+		}
+		else
+		{
+			RegenInterval += delta;
+			GameTimer += delta;
+		}
+		if (PauseTimer >= PAUSE_TIMER)
+		{
+			GD.Print("Pause Ended");
+			HandArea.LowerDeck();
+			TurnPause = false;
+			PauseTimer = 0;
+			TurnRound += 1;
+			var ElixirBar = (Elixir)FindChild("Elixir");
+			ElixirBar.UpdateRound(TurnRound);
+			return;
+		}
 
-        if (GameTimer >= ROUND_TIMER * TurnRound && !TurnPause)
-        {
-            GD.Print("Round updated");
+		if (GameTimer >= ROUND_TIMER * TurnRound && !TurnPause)
+		{
+			GD.Print("Round updated");
 
-            // TODO: Trigger secondary draw card event
-            TurnPause = true;
-            HandArea.RaiseDeck();
-        }
+			// TODO: Trigger secondary draw card event
+			TurnPause = true;
+			HandArea.RaiseDeck();
+		}
 
-        if (RegenInterval >= SECONDS_PER_ELIXIR)
-        {
-            if (Elixir >= TurnRound + BASE_ELIXIR || Elixir >= MAX_ELIXER)
-            {
-                return;
-            }
-            Elixir++;
-            RegenInterval = 0.0;
-            var ElixirBar = (Elixir)FindChild("Elixir");
-            ElixirBar.UpdateElixir(Elixir);
-        }
-    }
+		if (RegenInterval >= SECONDS_PER_ELIXIR)
+		{
+			if (Elixir >= TurnRound + BASE_ELIXIR || Elixir >= MAX_ELIXER)
+			{
+				return;
+			}
+			Elixir++;
+			RegenInterval = 0.0;
+			var ElixirBar = (Elixir)FindChild("Elixir");
+			ElixirBar.UpdateElixir(Elixir);
+		}
+	}
 
-    public bool PlaceCardCheck(int Cost)
-    {
-        if (Elixir < Cost)
-        {
-            return false;
-        }
+	public bool PlaceCardCheck(int Cost)
+	{
+		if (Elixir < Cost)
+		{
+			return false;
+		}
 
-        Elixir -= Cost;
+		Elixir -= Cost;
 
-        return true;
-    }
+		return true;
+	}
 
-    /*
+	/*
 	* I am going on a whim here but this should be called within the main game loop
 	*/
-    public void WriteToServer(string message)
-    {
-        writeQueue.Enqueue(message);
-    }
+	public void WriteToServer(string message)
+	{
+		writeQueue.Enqueue(message);
+	}
 
-    private void ReturnToHomeScreen()
-    {
-        GameStateManager.Instance.ChangeGameState(GameState.HOMESCREEN);
-    }
+	private void ReturnToHomeScreen()
+	{
+		GameStateManager.Instance.ChangeGameState(GameState.HOMESCREEN);
+	}
 
-    // I'll leave this here temporarily because it has all our mocking information and what not
+	// I'll leave this here temporarily because it has all our mocking information and what not
     public void StartGameLoop()
     {
         // TODO: Should be obvious
@@ -267,44 +267,44 @@ public partial class Gameloop : Node2D
         }
         // This is just to test whether it would load
 
-        // Making a second card doesn't work too well
-        // TestCard = new CardData(10, "farmer", Colour.BLUE, 100, 10, 5);
-        // CardTexture = Builder.BuildCard(TestCard);
-        // CardScene = GD.Load<PackedScene>("res://scenes/gameComponents/Card.tscn");
-        // var CardTemp = CardScene.Instantiate<Card>();
-        // CardTemp.LoadDataTexture(CardTexture);
-        // CardManager.AddChild(CardTemp);
+		// Making a second card doesn't work too well
+		// TestCard = new CardData(10, "farmer", Colour.BLUE, 100, 10, 5);
+		// CardTexture = Builder.BuildCard(TestCard);
+		// CardScene = GD.Load<PackedScene>("res://scenes/gameComponents/Card.tscn");
+		// var CardTemp = CardScene.Instantiate<Card>();
+		// CardTemp.LoadDataTexture(CardTexture);
+		// CardManager.AddChild(CardTemp);
 
-        // Testing the HandArea
-        HandArea = GetNode<HandArea>("HandArea");
-        GD.Print(HandArea);
+		// Testing the HandArea
+		HandArea = GetNode<HandArea>("HandArea");
+		GD.Print(HandArea);
 
-        // Testing attack phase -> Call this function when you somehow detect a card is played on the field
-        // CardTemp.EnterBattlefield();
+		// Testing attack phase -> Call this function when you somehow detect a card is played on the field
+		// CardTemp.EnterBattlefield();
 
-        // This is just to test whether it would load
-        // SINCE THIS IS NOT TO BE CONSTANTLY DESTROYED AND RECREATED, THIS IS A POC TO TEST IF THE
-        // THING WILL LOAD (sorry Jared)
-        // GD.Print("Attempting to create the initial player view");
-        // try {
-        // 	var PlayerTextureView = Builder.BuildPlayer();
-        // 	// var PlayerIcon = (PlayerView)FindChild("PlayerIcon");
-        // 	var PlayerTrial = GD.Load<PackedScene>("res://scenes/PlayerIcon.tscn");
-        // 	var PlayerIcon = PlayerTrial.Instantiate<PlayerView>();
-        // 	PlayerIcon.LoadDataTexture(PlayerTextureView);
-        // 	PlayerIcon.Scale = new Vector2(0.35f, 0.35f);
-        // 	AddChild(PlayerIcon);
+		// This is just to test whether it would load
+		// SINCE THIS IS NOT TO BE CONSTANTLY DESTROYED AND RECREATED, THIS IS A POC TO TEST IF THE
+		// THING WILL LOAD (sorry Jared)
+		// GD.Print("Attempting to create the initial player view");
+		// try {
+		// 	var PlayerTextureView = Builder.BuildPlayer();
+		// 	// var PlayerIcon = (PlayerView)FindChild("PlayerIcon");
+		// 	var PlayerTrial = GD.Load<PackedScene>("res://scenes/PlayerIcon.tscn");
+		// 	var PlayerIcon = PlayerTrial.Instantiate<PlayerView>();
+		// 	PlayerIcon.LoadDataTexture(PlayerTextureView);
+		// 	PlayerIcon.Scale = new Vector2(0.35f, 0.35f);
+		// 	AddChild(PlayerIcon);
 
-        // } catch (Exception e) {
-        // 	GD.PrintErr("Exception: ", e);
-        // }
+		// } catch (Exception e) {
+		// 	GD.PrintErr("Exception: ", e);
+		// }
 
-        // GD.Print("Successfully created the initial player view");
+		// GD.Print("Successfully created the initial player view");
 
-        // See how to initialise Elixir
+		// See how to initialise Elixir
 
-        ReturnToHomeScreen();
-    }
+		ReturnToHomeScreen();
+	}
 
 
 }

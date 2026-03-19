@@ -18,13 +18,12 @@ public class PlayerData
     
     // IDK if these 2 is necessary. Once I do more of the game logic I will figure it out
     public List<CardData> CurrHand { get; } = new();
-    public List<CardData> DeckCardDatas { get; }
+    // public List<CardData> DeckCardDatas { get; }
 
-    public PlayerData(string username, string iconName, string borderColour,  List<CardData> deckCardDatas, bool mainPlayer)
+    public PlayerData(string username, string iconName, string borderColour, bool mainPlayer)
     {
         Username = username;
         IconName = iconName;
-        DeckCardDatas = deckCardDatas;
         MainPlayer = mainPlayer;
         BorderColour = borderColour;
     }

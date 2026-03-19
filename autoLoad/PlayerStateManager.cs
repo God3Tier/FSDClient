@@ -31,8 +31,8 @@ public partial class PlayerStateManager : Node
     public void SetPlayerData(LoginResponse loginResponse)
     {
         Token = loginResponse.Token;
-        PlayerData = new(loginResponse.Username, loginResponse.IconName, loginResponse.BorderColour, loginResponse.CurrentDeck, true);
-        DeckCardDatas = loginResponse.CurrentDeck;
+        PlayerData = new(loginResponse.Username, loginResponse.IconName, loginResponse.BorderColour, true);
+        // DeckCardDatas = loginResponse.CurrentDeck;
     }
 
 
