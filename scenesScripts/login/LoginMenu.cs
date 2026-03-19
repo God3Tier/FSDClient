@@ -22,6 +22,20 @@ public class LoginResponse
     // TODO: Settle how the levels will be do1ne
     // TODO: Also settle whatever to do with the bottom one
     public DateTime ExpiresAt { get; set; }
+
+
+    // Note: This is just to allow me to mock data since I dont want to test it with full backend yet
+    public LoginResponse(string token, long userid, string username, string iconName, string borderColour, int goldCurrency, int diamondCurrency, int level)
+    {
+        Token = token;
+        UserID = userid;
+        Username = username;
+        IconName = iconName;
+        BorderColour = borderColour;
+        GoldCurrency = goldCurrency;
+        DiamondCurrency = diamondCurrency;
+        Level = level;
+    }
 }
 
 public partial class LoginMenu : Control
@@ -93,6 +107,11 @@ public partial class LoginMenu : Control
         networkManager.SendRequest(String.Format(NetworkManager.BASE_URL + "/auth/login"), Godot.HttpClient.Method.Post, jsonString, LoginResponse);
     }
 
+    private LoginResponse MockLogin()
+    {
+        return new("token", 1, "JohnDoe", "purple", "grey", 10, 10, 1);
+    }
+
     private void Register()
     {
         var jsonObj = new
@@ -121,9 +140,23 @@ public partial class LoginMenu : Control
 
     private void LoginResponse(long result, long responseCode, string[] headers, byte[] body)
     {
-        if (result != (long)HttpRequest.Result.Success && responseCode != 200)
+        if (result != (long)HttpRequest.Result.Success || responseCode != 200)
         {
+            GD.Print("Attempting mock login");
+            PlayerStateManager.Instance.SetPlayerData(MockLogin());
             // TODO: Put some label that prevents them for conitnueing and ask them to try again
+            GD.Print("Going Home");
+            try
+            {
+                var GameStateManager = GetNode<GameStateManager>("/root/GameStateManager");
+                GameStateManager.ChangeGameState(GameState.HOMESCREEN);
+
+            }
+            catch (Exception e)
+            {
+                GD.PrintErr("Failled Home", e);
+
+            }
             return;
         }
 
@@ -131,6 +164,7 @@ public partial class LoginMenu : Control
         // Do other things with the data Ig
         var data = JsonSerializer.Deserialize<LoginResponse>(json);
         PlayerStateManager.Instance.SetPlayerData(data);
+        GameStateManager.Instance.ChangeGameState(GameState.HOMESCREEN);
 
     }
 }

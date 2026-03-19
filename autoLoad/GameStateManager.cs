@@ -49,7 +49,7 @@ public partial class GameStateManager : Node
         //SceneContainer = sceneContainer;
         //ChangeGameState(GameState.HOMESCREEN);
         //
-        //Instance = this;
+        // Instance = this;
 
         Viewport root = GetTree().Root;
         // Using a negative index counts from the end, so this gets the last child node of `root`.
