@@ -877,4 +877,5 @@ text = "Level up
 10"
 
 [connection signal="pressed" from="BackButton" to="." method="_on_back_button_pressed"]
+[connection signal="pressed" from="CardPopupContainer/CardPopupBackground" to="." method="_on_card_popup_background_pressed"]
 [connection signal="pressed" from="CardPopupContainer/CardPopupBox/CloseCardButton" to="." method="_on_close_card_button_pressed"]

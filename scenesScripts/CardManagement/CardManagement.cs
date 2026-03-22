@@ -19,7 +19,7 @@ public partial class CardManagement : Control
 		GameStateManager.ChangeGameState(GameState.HOMESCREEN);
 	}
 	
-		public void _on_card_popup_background_pressed()
+	public void _on_card_popup_background_pressed()
 	{
 		close_card_popup();
 	}	
