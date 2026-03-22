@@ -582,7 +582,6 @@ layout_mode = 2
 position = Vector2(100, 115)
 
 [node name="CardPopupContainer" type="Control" parent="." unique_id=664893130]
-visible = false
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
@@ -706,7 +705,7 @@ custom_minimum_size = Vector2(738, 0)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 0
-theme_override_constants/separation = 100
+theme_override_constants/separation = 50
 
 [node name="CardStats" type="HBoxContainer" parent="CardPopupContainer/CardPopupBox/CardDetails/RightCardDetails" unique_id=2033511817]
 layout_mode = 2
@@ -826,6 +825,27 @@ custom_minimum_size = Vector2(738, 0)
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
 text = "Attacks a random enemy leader or unit"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="DescriptionContainer" type="VBoxContainer" parent="CardPopupContainer/CardPopupBox/CardDetails/RightCardDetails" unique_id=1328096556]
+custom_minimum_size = Vector2(738, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="DescriptionTitleLabel" type="Label" parent="CardPopupContainer/CardPopupBox/CardDetails/RightCardDetails/DescriptionContainer" unique_id=872728829]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 45
+text = "Description"
+horizontal_alignment = 1
+
+[node name="DescriptionTextLabel" type="Label" parent="CardPopupContainer/CardPopupBox/CardDetails/RightCardDetails/DescriptionContainer" unique_id=67399784]
+custom_minimum_size = Vector2(738, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Im just a farmer man ~ QJ"
 horizontal_alignment = 1
 autowrap_mode = 2
 

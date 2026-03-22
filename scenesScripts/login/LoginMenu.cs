@@ -90,7 +90,7 @@ public partial class LoginMenu : Control
 	private void RegisterResponse(long result, long responseCode, string[] headers, byte[] body)
 	{
 		if (result != 201 || responseCode != 201)
-        {
+		{
 			// This one would be some sort of server fail or some sort of conluding error 
 			return;
 		}
@@ -102,7 +102,7 @@ public partial class LoginMenu : Control
 	private void LoginResponse(long result, long responseCode, string[] headers, byte[] body)
 	{
 		if (result != (long)HttpRequest.Result.Success && responseCode != 200)
-        {
+		{
 			// TODO: Put some label that prevents them for conitnueing and ask them to try again
 			return;
 		}
