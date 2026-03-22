@@ -18,4 +18,22 @@ public partial class CardManagement : Control
 		var GameStateManager = GetNode<GameStateManager>("/root/GameStateManager");
 		GameStateManager.ChangeGameState(GameState.HOMESCREEN);
 	}
+	
+		public void _on_card_popup_background_pressed()
+	{
+		close_card_popup();
+	}	
+	
+	public void _on_close_card_button_pressed()
+	{
+		close_card_popup();
+	}	
+	
+	public void close_card_popup()
+	{
+		Control CardPopupContainerNode = GetNode<Control>("CardPopupContainer");
+		
+		// Turn it OFF (make visible false)
+		CardPopupContainerNode.Visible = false;
+	}	
 }

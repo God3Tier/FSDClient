@@ -8,9 +8,19 @@
 [ext_resource type="PackedScene" uid="uid://csm0ojou5aa2g" path="res://scenes/gameComponents/Card.tscn" id="7_60kyj"]
 [ext_resource type="StyleBox" uid="uid://buvt2gu2jbmvx" path="res://styles/tab_unselected.tres" id="7_yc314"]
 [ext_resource type="StyleBox" uid="uid://fanmcmx62hlp" path="res://styles/tab_selected.tres" id="8_60kyj"]
+[ext_resource type="StyleBox" uid="uid://c1jvco4h5a04c" path="res://styles/button_success.tres" id="8_fh2y4"]
 [ext_resource type="StyleBox" uid="uid://bikhijk3kb8s0" path="res://styles/button.tres" id="8_ljblh"]
 [ext_resource type="StyleBox" uid="uid://bkiusl8wj1xvr" path="res://styles/button_hover.tres" id="9_av7v1"]
+[ext_resource type="StyleBox" uid="uid://cyvgvoktsny8y" path="res://styles/button_success_hover.tres" id="9_knx5m"]
+[ext_resource type="StyleBox" uid="uid://64i6tspse80" path="res://styles/button_pressed.tres" id="9_x8dtt"]
 [ext_resource type="Texture2D" uid="uid://b8f6kdmi27juf" path="res://assets/header/arrow-left-solid.png" id="11_av7v1"]
+[ext_resource type="StyleBox" uid="uid://cg7xt7j6ukctr" path="res://styles/popup.tres" id="12_v80jo"]
+[ext_resource type="Texture2D" uid="uid://cqlpljo3fyehv" path="res://assets/popup/xmark.png" id="13_bdlf1"]
+[ext_resource type="Texture2D" uid="uid://de1xve7wh1kwa" path="res://assets/characters/Farmer.png" id="14_vn7bd"]
+[ext_resource type="Texture2D" uid="uid://cy5gct3nkkt3x" path="res://assets/symbols/energy.png" id="15_fh2y4"]
+[ext_resource type="Texture2D" uid="uid://dn8rkapkxlomc" path="res://assets/symbols/attack_symbol.png" id="16_knx5m"]
+[ext_resource type="Texture2D" uid="uid://7iddlc41oxe6" path="res://assets/symbols/defence_symbol.png" id="17_mg07r"]
+[ext_resource type="StyleBox" uid="uid://byt6vlxbekhk0" path="res://styles/button_success_pressed.tres" id="18_mg07r"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yc314"]
 bg_color = Color(1, 1, 1, 1)
@@ -21,6 +31,61 @@ bg_color = Color(1, 1, 1, 1)
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_brgpe"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_v80jo"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vn7bd"]
+bg_color = Color(0, 0, 0, 0.75686276)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fh2y4"]
+bg_color = Color(0, 0, 0, 0.75686276)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_knx5m"]
+bg_color = Color(0, 0, 0, 0.75686276)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mg07r"]
+bg_color = Color(0, 0, 0, 0.75686276)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_x8dtt"]
+bg_color = Color(0, 0, 0, 0.75686276)
+
+[sub_resource type="FontVariation" id="FontVariation_2etno"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cjdl4"]
+bg_color = Color(0.80784315, 0.85490197, 0.85490197, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+corner_radius_top_left = 1000
+corner_radius_top_right = 1000
+corner_radius_bottom_right = 1000
+corner_radius_bottom_left = 1000
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0dskt"]
+bg_color = Color(0.2993155, 0.36108202, 0.36114737, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+corner_radius_top_left = 1000
+corner_radius_top_right = 1000
+corner_radius_bottom_right = 1000
+corner_radius_bottom_left = 1000
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3get4"]
+bg_color = Color(0.47058824, 0.54901963, 0.54901963, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+corner_radius_top_left = 1000
+corner_radius_top_right = 1000
+corner_radius_bottom_right = 1000
+corner_radius_bottom_left = 1000
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2etno"]
+bg_color = Color(0, 0.78039217, 0.3254902, 1)
+
+[sub_resource type="FontVariation" id="FontVariation_cjdl4"]
 
 [node name="CardManagement" type="Control" unique_id=1513454057]
 layout_mode = 3
@@ -166,219 +231,219 @@ grow_vertical = 0
 theme_override_constants/separation = 100
 alignment = 1
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MainCardContainer" unique_id=1914447869]
+[node name="CollectionContainer" type="VBoxContainer" parent="MainCardContainer" unique_id=1914447869]
 custom_minimum_size = Vector2(1050, 0)
 layout_mode = 2
 theme_override_constants/separation = 0
 
-[node name="CollectionHeaderText" type="PanelContainer" parent="MainCardContainer/VBoxContainer" unique_id=1323952768]
+[node name="CollectionHeaderText" type="PanelContainer" parent="MainCardContainer/CollectionContainer" unique_id=1323952768]
 custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
 size_flags_horizontal = 0
 theme_override_styles/panel = SubResource("StyleBoxFlat_yc314")
 
-[node name="MarginContainer" type="MarginContainer" parent="MainCardContainer/VBoxContainer/CollectionHeaderText" unique_id=547490778]
+[node name="MarginContainer" type="MarginContainer" parent="MainCardContainer/CollectionContainer/CollectionHeaderText" unique_id=547490778]
 layout_mode = 2
 theme_override_constants/margin_left = 5
 theme_override_constants/margin_right = 5
 
-[node name="Label" type="Label" parent="MainCardContainer/VBoxContainer/CollectionHeaderText/MarginContainer" unique_id=1513024568]
+[node name="CollectionTitleLabel" type="Label" parent="MainCardContainer/CollectionContainer/CollectionHeaderText/MarginContainer" unique_id=1513024568]
 layout_mode = 2
 size_flags_horizontal = 0
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 30
 text = "Collection"
 
-[node name="CollectionColorContainer" type="Panel" parent="MainCardContainer/VBoxContainer" unique_id=24539546]
+[node name="CollectionColorContainer" type="Panel" parent="MainCardContainer/CollectionContainer" unique_id=24539546]
 custom_minimum_size = Vector2(1050, 850)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_dtc84")
 
-[node name="ScrollContainer" type="ScrollContainer" parent="MainCardContainer/VBoxContainer/CollectionColorContainer" unique_id=2130200003]
+[node name="ScrollContainer" type="ScrollContainer" parent="MainCardContainer/CollectionContainer/CollectionColorContainer" unique_id=2130200003]
 layout_mode = 0
 offset_left = 25.0
 offset_top = 25.0
 offset_right = 1025.0
 offset_bottom = 825.0
 
-[node name="CollectionContainer" type="HFlowContainer" parent="MainCardContainer/VBoxContainer/CollectionColorContainer/ScrollContainer" unique_id=200672664]
+[node name="CollectionContainer" type="HFlowContainer" parent="MainCardContainer/CollectionContainer/CollectionColorContainer/ScrollContainer" unique_id=200672664]
 clip_contents = true
 custom_minimum_size = Vector2(1000, 650)
 layout_mode = 2
 theme_override_constants/h_separation = 60
 theme_override_constants/v_separation = 15
 
-[node name="CardContianer" type="VBoxContainer" parent="MainCardContainer/VBoxContainer/CollectionColorContainer/ScrollContainer/CollectionContainer" unique_id=1055512345]
+[node name="CardContianer" type="VBoxContainer" parent="MainCardContainer/CollectionContainer/CollectionColorContainer/ScrollContainer/CollectionContainer" unique_id=1055512345]
 layout_mode = 2
 
-[node name="CardControl" type="Control" parent="MainCardContainer/VBoxContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer" unique_id=224306224]
+[node name="CardControl" type="Control" parent="MainCardContainer/CollectionContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer" unique_id=224306224]
 custom_minimum_size = Vector2(200, 230)
 layout_mode = 2
 
-[node name="Card" parent="MainCardContainer/VBoxContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer/CardControl" unique_id=1192453098 instance=ExtResource("7_60kyj")]
+[node name="Card" parent="MainCardContainer/CollectionContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer/CardControl" unique_id=1192453098 instance=ExtResource("7_60kyj")]
 position = Vector2(100, 115)
 
-[node name="CardCount" type="Label" parent="MainCardContainer/VBoxContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer" unique_id=1375808819]
+[node name="CardCount" type="Label" parent="MainCardContainer/CollectionContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer" unique_id=1375808819]
 layout_mode = 2
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 23
 text = "X1"
 horizontal_alignment = 1
 
-[node name="CardContianer2" type="VBoxContainer" parent="MainCardContainer/VBoxContainer/CollectionColorContainer/ScrollContainer/CollectionContainer" unique_id=1243951249]
+[node name="CardContianer2" type="VBoxContainer" parent="MainCardContainer/CollectionContainer/CollectionColorContainer/ScrollContainer/CollectionContainer" unique_id=1243951249]
 layout_mode = 2
 
-[node name="CardControl" type="Control" parent="MainCardContainer/VBoxContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer2" unique_id=534025488]
+[node name="CardControl" type="Control" parent="MainCardContainer/CollectionContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer2" unique_id=534025488]
 custom_minimum_size = Vector2(200, 230)
 layout_mode = 2
 
-[node name="Card" parent="MainCardContainer/VBoxContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer2/CardControl" unique_id=1439206499 instance=ExtResource("7_60kyj")]
+[node name="Card" parent="MainCardContainer/CollectionContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer2/CardControl" unique_id=1439206499 instance=ExtResource("7_60kyj")]
 position = Vector2(100, 115)
 
-[node name="CardCount" type="Label" parent="MainCardContainer/VBoxContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer2" unique_id=1753374742]
+[node name="CardCount" type="Label" parent="MainCardContainer/CollectionContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer2" unique_id=1753374742]
 layout_mode = 2
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 23
 text = "X1"
 horizontal_alignment = 1
 
-[node name="CardContianer3" type="VBoxContainer" parent="MainCardContainer/VBoxContainer/CollectionColorContainer/ScrollContainer/CollectionContainer" unique_id=1514409204]
+[node name="CardContianer3" type="VBoxContainer" parent="MainCardContainer/CollectionContainer/CollectionColorContainer/ScrollContainer/CollectionContainer" unique_id=1514409204]
 layout_mode = 2
 
-[node name="CardControl" type="Control" parent="MainCardContainer/VBoxContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer3" unique_id=301002868]
+[node name="CardControl" type="Control" parent="MainCardContainer/CollectionContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer3" unique_id=301002868]
 custom_minimum_size = Vector2(200, 230)
 layout_mode = 2
 
-[node name="Card" parent="MainCardContainer/VBoxContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer3/CardControl" unique_id=734800886 instance=ExtResource("7_60kyj")]
+[node name="Card" parent="MainCardContainer/CollectionContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer3/CardControl" unique_id=734800886 instance=ExtResource("7_60kyj")]
 position = Vector2(100, 115)
 
-[node name="CardCount" type="Label" parent="MainCardContainer/VBoxContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer3" unique_id=1917938253]
+[node name="CardCount" type="Label" parent="MainCardContainer/CollectionContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer3" unique_id=1917938253]
 layout_mode = 2
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 23
 text = "X1"
 horizontal_alignment = 1
 
-[node name="CardContianer4" type="VBoxContainer" parent="MainCardContainer/VBoxContainer/CollectionColorContainer/ScrollContainer/CollectionContainer" unique_id=393116948]
+[node name="CardContianer4" type="VBoxContainer" parent="MainCardContainer/CollectionContainer/CollectionColorContainer/ScrollContainer/CollectionContainer" unique_id=393116948]
 layout_mode = 2
 
-[node name="CardControl" type="Control" parent="MainCardContainer/VBoxContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer4" unique_id=1830334005]
+[node name="CardControl" type="Control" parent="MainCardContainer/CollectionContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer4" unique_id=1830334005]
 custom_minimum_size = Vector2(200, 230)
 layout_mode = 2
 
-[node name="Card" parent="MainCardContainer/VBoxContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer4/CardControl" unique_id=534891511 instance=ExtResource("7_60kyj")]
+[node name="Card" parent="MainCardContainer/CollectionContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer4/CardControl" unique_id=534891511 instance=ExtResource("7_60kyj")]
 position = Vector2(100, 115)
 
-[node name="CardCount" type="Label" parent="MainCardContainer/VBoxContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer4" unique_id=929972437]
+[node name="CardCount" type="Label" parent="MainCardContainer/CollectionContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer4" unique_id=929972437]
 layout_mode = 2
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 23
 text = "X1"
 horizontal_alignment = 1
 
-[node name="CardContianer5" type="VBoxContainer" parent="MainCardContainer/VBoxContainer/CollectionColorContainer/ScrollContainer/CollectionContainer" unique_id=1143821212]
+[node name="CardContianer5" type="VBoxContainer" parent="MainCardContainer/CollectionContainer/CollectionColorContainer/ScrollContainer/CollectionContainer" unique_id=1143821212]
 layout_mode = 2
 
-[node name="CardControl" type="Control" parent="MainCardContainer/VBoxContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer5" unique_id=1653704371]
+[node name="CardControl" type="Control" parent="MainCardContainer/CollectionContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer5" unique_id=1653704371]
 custom_minimum_size = Vector2(200, 230)
 layout_mode = 2
 
-[node name="Card" parent="MainCardContainer/VBoxContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer5/CardControl" unique_id=1540019128 instance=ExtResource("7_60kyj")]
+[node name="Card" parent="MainCardContainer/CollectionContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer5/CardControl" unique_id=1540019128 instance=ExtResource("7_60kyj")]
 position = Vector2(100, 115)
 
-[node name="CardCount" type="Label" parent="MainCardContainer/VBoxContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer5" unique_id=625164407]
+[node name="CardCount" type="Label" parent="MainCardContainer/CollectionContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer5" unique_id=625164407]
 layout_mode = 2
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 23
 text = "X1"
 horizontal_alignment = 1
 
-[node name="CardContianer6" type="VBoxContainer" parent="MainCardContainer/VBoxContainer/CollectionColorContainer/ScrollContainer/CollectionContainer" unique_id=566526755]
+[node name="CardContianer6" type="VBoxContainer" parent="MainCardContainer/CollectionContainer/CollectionColorContainer/ScrollContainer/CollectionContainer" unique_id=566526755]
 layout_mode = 2
 
-[node name="CardControl" type="Control" parent="MainCardContainer/VBoxContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer6" unique_id=1707148124]
+[node name="CardControl" type="Control" parent="MainCardContainer/CollectionContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer6" unique_id=1707148124]
 custom_minimum_size = Vector2(200, 230)
 layout_mode = 2
 
-[node name="Card" parent="MainCardContainer/VBoxContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer6/CardControl" unique_id=1601416992 instance=ExtResource("7_60kyj")]
+[node name="Card" parent="MainCardContainer/CollectionContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer6/CardControl" unique_id=1601416992 instance=ExtResource("7_60kyj")]
 position = Vector2(100, 115)
 
-[node name="CardCount" type="Label" parent="MainCardContainer/VBoxContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer6" unique_id=540808208]
+[node name="CardCount" type="Label" parent="MainCardContainer/CollectionContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer6" unique_id=540808208]
 layout_mode = 2
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 23
 text = "X1"
 horizontal_alignment = 1
 
-[node name="CardContianer7" type="VBoxContainer" parent="MainCardContainer/VBoxContainer/CollectionColorContainer/ScrollContainer/CollectionContainer" unique_id=1173351238]
+[node name="CardContianer7" type="VBoxContainer" parent="MainCardContainer/CollectionContainer/CollectionColorContainer/ScrollContainer/CollectionContainer" unique_id=1173351238]
 layout_mode = 2
 
-[node name="CardControl" type="Control" parent="MainCardContainer/VBoxContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer7" unique_id=1578266901]
+[node name="CardControl" type="Control" parent="MainCardContainer/CollectionContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer7" unique_id=1578266901]
 custom_minimum_size = Vector2(200, 230)
 layout_mode = 2
 
-[node name="Card" parent="MainCardContainer/VBoxContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer7/CardControl" unique_id=1338526574 instance=ExtResource("7_60kyj")]
+[node name="Card" parent="MainCardContainer/CollectionContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer7/CardControl" unique_id=1338526574 instance=ExtResource("7_60kyj")]
 position = Vector2(100, 115)
 
-[node name="CardCount" type="Label" parent="MainCardContainer/VBoxContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer7" unique_id=485296627]
+[node name="CardCount" type="Label" parent="MainCardContainer/CollectionContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer7" unique_id=485296627]
 layout_mode = 2
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 23
 text = "X1"
 horizontal_alignment = 1
 
-[node name="CardContianer8" type="VBoxContainer" parent="MainCardContainer/VBoxContainer/CollectionColorContainer/ScrollContainer/CollectionContainer" unique_id=358285930]
+[node name="CardContianer8" type="VBoxContainer" parent="MainCardContainer/CollectionContainer/CollectionColorContainer/ScrollContainer/CollectionContainer" unique_id=358285930]
 layout_mode = 2
 
-[node name="CardControl" type="Control" parent="MainCardContainer/VBoxContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer8" unique_id=610656274]
+[node name="CardControl" type="Control" parent="MainCardContainer/CollectionContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer8" unique_id=610656274]
 custom_minimum_size = Vector2(200, 230)
 layout_mode = 2
 
-[node name="Card" parent="MainCardContainer/VBoxContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer8/CardControl" unique_id=516610417 instance=ExtResource("7_60kyj")]
+[node name="Card" parent="MainCardContainer/CollectionContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer8/CardControl" unique_id=516610417 instance=ExtResource("7_60kyj")]
 position = Vector2(100, 115)
 
-[node name="CardCount" type="Label" parent="MainCardContainer/VBoxContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer8" unique_id=1185182931]
+[node name="CardCount" type="Label" parent="MainCardContainer/CollectionContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer8" unique_id=1185182931]
 layout_mode = 2
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 23
 text = "X1"
 horizontal_alignment = 1
 
-[node name="CardContianer9" type="VBoxContainer" parent="MainCardContainer/VBoxContainer/CollectionColorContainer/ScrollContainer/CollectionContainer" unique_id=159300156]
+[node name="CardContianer9" type="VBoxContainer" parent="MainCardContainer/CollectionContainer/CollectionColorContainer/ScrollContainer/CollectionContainer" unique_id=159300156]
 layout_mode = 2
 
-[node name="CardControl" type="Control" parent="MainCardContainer/VBoxContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer9" unique_id=1235401253]
+[node name="CardControl" type="Control" parent="MainCardContainer/CollectionContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer9" unique_id=1235401253]
 custom_minimum_size = Vector2(200, 230)
 layout_mode = 2
 
-[node name="Card" parent="MainCardContainer/VBoxContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer9/CardControl" unique_id=1313239854 instance=ExtResource("7_60kyj")]
+[node name="Card" parent="MainCardContainer/CollectionContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer9/CardControl" unique_id=1313239854 instance=ExtResource("7_60kyj")]
 position = Vector2(100, 115)
 
-[node name="CardCount" type="Label" parent="MainCardContainer/VBoxContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer9" unique_id=1574150660]
+[node name="CardCount" type="Label" parent="MainCardContainer/CollectionContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer9" unique_id=1574150660]
 layout_mode = 2
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 23
 text = "X1"
 horizontal_alignment = 1
 
-[node name="CardContianer10" type="VBoxContainer" parent="MainCardContainer/VBoxContainer/CollectionColorContainer/ScrollContainer/CollectionContainer" unique_id=583164678]
+[node name="CardContianer10" type="VBoxContainer" parent="MainCardContainer/CollectionContainer/CollectionColorContainer/ScrollContainer/CollectionContainer" unique_id=583164678]
 layout_mode = 2
 
-[node name="CardControl" type="Control" parent="MainCardContainer/VBoxContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer10" unique_id=100720072]
+[node name="CardControl" type="Control" parent="MainCardContainer/CollectionContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer10" unique_id=100720072]
 custom_minimum_size = Vector2(200, 230)
 layout_mode = 2
 
-[node name="Card" parent="MainCardContainer/VBoxContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer10/CardControl" unique_id=834454309 instance=ExtResource("7_60kyj")]
+[node name="Card" parent="MainCardContainer/CollectionContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer10/CardControl" unique_id=834454309 instance=ExtResource("7_60kyj")]
 position = Vector2(100, 115)
 
-[node name="CardCount" type="Label" parent="MainCardContainer/VBoxContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer10" unique_id=542485548]
+[node name="CardCount" type="Label" parent="MainCardContainer/CollectionContainer/CollectionColorContainer/ScrollContainer/CollectionContainer/CardContianer10" unique_id=542485548]
 layout_mode = 2
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 23
 text = "X1"
 horizontal_alignment = 1
 
-[node name="BattleButton" type="Button" parent="MainCardContainer/VBoxContainer/CollectionColorContainer" unique_id=5481639]
+[node name="BattleButton" type="Button" parent="MainCardContainer/CollectionContainer/CollectionColorContainer" unique_id=5481639]
 layout_mode = 0
 offset_left = 556.0
 offset_top = 778.0
@@ -388,16 +453,17 @@ mouse_default_cursor_shape = 2
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 30
 theme_override_styles/normal = ExtResource("8_ljblh")
+theme_override_styles/pressed = ExtResource("9_x8dtt")
 theme_override_styles/hover = ExtResource("9_av7v1")
 theme_override_styles/disabled = SubResource("StyleBoxEmpty_brgpe")
 theme_override_styles/focus = SubResource("StyleBoxEmpty_v80jo")
 text = "Confirm upgrades (-XXX gold)"
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="MainCardContainer" unique_id=1838329570]
+[node name="DeckContainer" type="VBoxContainer" parent="MainCardContainer" unique_id=1838329570]
 layout_mode = 2
 theme_override_constants/separation = 0
 
-[node name="TabBar" type="TabBar" parent="MainCardContainer/VBoxContainer2" unique_id=1880105284]
+[node name="TabBar" type="TabBar" parent="MainCardContainer/DeckContainer" unique_id=1880105284]
 layout_mode = 2
 mouse_default_cursor_shape = 2
 theme_override_colors/font_selected_color = Color(0, 0, 0, 1)
@@ -413,106 +479,382 @@ tab_0/title = "Deck 1"
 tab_1/title = "Deck 2"
 tab_2/title = "Deck 3"
 
-[node name="DeckColorContainer" type="Panel" parent="MainCardContainer/VBoxContainer2" unique_id=2134822323]
+[node name="DeckColorContainer" type="Panel" parent="MainCardContainer/DeckContainer" unique_id=2134822323]
 custom_minimum_size = Vector2(650, 850)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_dtc84")
 
-[node name="ScrollContainer" type="ScrollContainer" parent="MainCardContainer/VBoxContainer2/DeckColorContainer" unique_id=1597182044]
+[node name="ScrollContainer" type="ScrollContainer" parent="MainCardContainer/DeckContainer/DeckColorContainer" unique_id=1597182044]
 layout_mode = 0
 offset_left = 15.0
 offset_top = 15.0
 offset_right = 625.0
 offset_bottom = 815.0
 
-[node name="DeckContainer" type="HFlowContainer" parent="MainCardContainer/VBoxContainer2/DeckColorContainer/ScrollContainer" unique_id=1708738154]
+[node name="DeckContainer" type="HFlowContainer" parent="MainCardContainer/DeckContainer/DeckColorContainer/ScrollContainer" unique_id=1708738154]
 custom_minimum_size = Vector2(610, 660)
 layout_mode = 2
 theme_override_constants/h_separation = 4
 theme_override_constants/v_separation = 4
 
-[node name="CardControl" type="Control" parent="MainCardContainer/VBoxContainer2/DeckColorContainer/ScrollContainer/DeckContainer" unique_id=1485348067]
+[node name="CardControl" type="Control" parent="MainCardContainer/DeckContainer/DeckColorContainer/ScrollContainer/DeckContainer" unique_id=1485348067]
 custom_minimum_size = Vector2(200, 230)
 layout_mode = 2
 
-[node name="Card" parent="MainCardContainer/VBoxContainer2/DeckColorContainer/ScrollContainer/DeckContainer/CardControl" unique_id=992434383 instance=ExtResource("7_60kyj")]
+[node name="Card" parent="MainCardContainer/DeckContainer/DeckColorContainer/ScrollContainer/DeckContainer/CardControl" unique_id=992434383 instance=ExtResource("7_60kyj")]
 position = Vector2(100, 115)
 
-[node name="CardControl2" type="Control" parent="MainCardContainer/VBoxContainer2/DeckColorContainer/ScrollContainer/DeckContainer" unique_id=1428093968]
+[node name="CardControl2" type="Control" parent="MainCardContainer/DeckContainer/DeckColorContainer/ScrollContainer/DeckContainer" unique_id=1428093968]
 custom_minimum_size = Vector2(200, 230)
 layout_mode = 2
 
-[node name="Card" parent="MainCardContainer/VBoxContainer2/DeckColorContainer/ScrollContainer/DeckContainer/CardControl2" unique_id=1129972756 instance=ExtResource("7_60kyj")]
+[node name="Card" parent="MainCardContainer/DeckContainer/DeckColorContainer/ScrollContainer/DeckContainer/CardControl2" unique_id=1129972756 instance=ExtResource("7_60kyj")]
 position = Vector2(100, 115)
 
-[node name="CardControl3" type="Control" parent="MainCardContainer/VBoxContainer2/DeckColorContainer/ScrollContainer/DeckContainer" unique_id=1796194247]
+[node name="CardControl3" type="Control" parent="MainCardContainer/DeckContainer/DeckColorContainer/ScrollContainer/DeckContainer" unique_id=1796194247]
 custom_minimum_size = Vector2(200, 230)
 layout_mode = 2
 
-[node name="Card" parent="MainCardContainer/VBoxContainer2/DeckColorContainer/ScrollContainer/DeckContainer/CardControl3" unique_id=313005160 instance=ExtResource("7_60kyj")]
+[node name="Card" parent="MainCardContainer/DeckContainer/DeckColorContainer/ScrollContainer/DeckContainer/CardControl3" unique_id=313005160 instance=ExtResource("7_60kyj")]
 position = Vector2(100, 115)
 
-[node name="CardControl4" type="Control" parent="MainCardContainer/VBoxContainer2/DeckColorContainer/ScrollContainer/DeckContainer" unique_id=70023330]
+[node name="CardControl4" type="Control" parent="MainCardContainer/DeckContainer/DeckColorContainer/ScrollContainer/DeckContainer" unique_id=70023330]
 custom_minimum_size = Vector2(200, 230)
 layout_mode = 2
 
-[node name="Card" parent="MainCardContainer/VBoxContainer2/DeckColorContainer/ScrollContainer/DeckContainer/CardControl4" unique_id=2015439652 instance=ExtResource("7_60kyj")]
+[node name="Card" parent="MainCardContainer/DeckContainer/DeckColorContainer/ScrollContainer/DeckContainer/CardControl4" unique_id=2015439652 instance=ExtResource("7_60kyj")]
 position = Vector2(100, 115)
 
-[node name="CardControl5" type="Control" parent="MainCardContainer/VBoxContainer2/DeckColorContainer/ScrollContainer/DeckContainer" unique_id=1951590957]
+[node name="CardControl5" type="Control" parent="MainCardContainer/DeckContainer/DeckColorContainer/ScrollContainer/DeckContainer" unique_id=1951590957]
 custom_minimum_size = Vector2(200, 230)
 layout_mode = 2
 
-[node name="Card" parent="MainCardContainer/VBoxContainer2/DeckColorContainer/ScrollContainer/DeckContainer/CardControl5" unique_id=233160247 instance=ExtResource("7_60kyj")]
+[node name="Card" parent="MainCardContainer/DeckContainer/DeckColorContainer/ScrollContainer/DeckContainer/CardControl5" unique_id=233160247 instance=ExtResource("7_60kyj")]
 position = Vector2(100, 115)
 
-[node name="CardControl6" type="Control" parent="MainCardContainer/VBoxContainer2/DeckColorContainer/ScrollContainer/DeckContainer" unique_id=2093665716]
+[node name="CardControl6" type="Control" parent="MainCardContainer/DeckContainer/DeckColorContainer/ScrollContainer/DeckContainer" unique_id=2093665716]
 custom_minimum_size = Vector2(200, 230)
 layout_mode = 2
 
-[node name="Card" parent="MainCardContainer/VBoxContainer2/DeckColorContainer/ScrollContainer/DeckContainer/CardControl6" unique_id=1786632986 instance=ExtResource("7_60kyj")]
+[node name="Card" parent="MainCardContainer/DeckContainer/DeckColorContainer/ScrollContainer/DeckContainer/CardControl6" unique_id=1786632986 instance=ExtResource("7_60kyj")]
 position = Vector2(100, 115)
 
-[node name="CardControl7" type="Control" parent="MainCardContainer/VBoxContainer2/DeckColorContainer/ScrollContainer/DeckContainer" unique_id=1847669550]
+[node name="CardControl7" type="Control" parent="MainCardContainer/DeckContainer/DeckColorContainer/ScrollContainer/DeckContainer" unique_id=1847669550]
 custom_minimum_size = Vector2(200, 230)
 layout_mode = 2
 
-[node name="Card" parent="MainCardContainer/VBoxContainer2/DeckColorContainer/ScrollContainer/DeckContainer/CardControl7" unique_id=602863645 instance=ExtResource("7_60kyj")]
+[node name="Card" parent="MainCardContainer/DeckContainer/DeckColorContainer/ScrollContainer/DeckContainer/CardControl7" unique_id=602863645 instance=ExtResource("7_60kyj")]
 position = Vector2(100, 115)
 
-[node name="CardControl8" type="Control" parent="MainCardContainer/VBoxContainer2/DeckColorContainer/ScrollContainer/DeckContainer" unique_id=1484923713]
+[node name="CardControl8" type="Control" parent="MainCardContainer/DeckContainer/DeckColorContainer/ScrollContainer/DeckContainer" unique_id=1484923713]
 custom_minimum_size = Vector2(200, 230)
 layout_mode = 2
 
-[node name="Card" parent="MainCardContainer/VBoxContainer2/DeckColorContainer/ScrollContainer/DeckContainer/CardControl8" unique_id=1037052393 instance=ExtResource("7_60kyj")]
+[node name="Card" parent="MainCardContainer/DeckContainer/DeckColorContainer/ScrollContainer/DeckContainer/CardControl8" unique_id=1037052393 instance=ExtResource("7_60kyj")]
 position = Vector2(100, 115)
 
-[node name="CardControl9" type="Control" parent="MainCardContainer/VBoxContainer2/DeckColorContainer/ScrollContainer/DeckContainer" unique_id=192655402]
+[node name="CardControl9" type="Control" parent="MainCardContainer/DeckContainer/DeckColorContainer/ScrollContainer/DeckContainer" unique_id=192655402]
 custom_minimum_size = Vector2(200, 230)
 layout_mode = 2
 
-[node name="Card" parent="MainCardContainer/VBoxContainer2/DeckColorContainer/ScrollContainer/DeckContainer/CardControl9" unique_id=131775597 instance=ExtResource("7_60kyj")]
+[node name="Card" parent="MainCardContainer/DeckContainer/DeckColorContainer/ScrollContainer/DeckContainer/CardControl9" unique_id=131775597 instance=ExtResource("7_60kyj")]
 position = Vector2(100, 115)
 
-[node name="CardControl10" type="Control" parent="MainCardContainer/VBoxContainer2/DeckColorContainer/ScrollContainer/DeckContainer" unique_id=796325546]
+[node name="CardControl10" type="Control" parent="MainCardContainer/DeckContainer/DeckColorContainer/ScrollContainer/DeckContainer" unique_id=796325546]
 custom_minimum_size = Vector2(200, 230)
 layout_mode = 2
 
-[node name="Card" parent="MainCardContainer/VBoxContainer2/DeckColorContainer/ScrollContainer/DeckContainer/CardControl10" unique_id=1528772513 instance=ExtResource("7_60kyj")]
+[node name="Card" parent="MainCardContainer/DeckContainer/DeckColorContainer/ScrollContainer/DeckContainer/CardControl10" unique_id=1528772513 instance=ExtResource("7_60kyj")]
 position = Vector2(100, 115)
 
-[node name="CardControl11" type="Control" parent="MainCardContainer/VBoxContainer2/DeckColorContainer/ScrollContainer/DeckContainer" unique_id=1715094590]
+[node name="CardControl11" type="Control" parent="MainCardContainer/DeckContainer/DeckColorContainer/ScrollContainer/DeckContainer" unique_id=1715094590]
 custom_minimum_size = Vector2(200, 230)
 layout_mode = 2
 
-[node name="Card" parent="MainCardContainer/VBoxContainer2/DeckColorContainer/ScrollContainer/DeckContainer/CardControl11" unique_id=47916746 instance=ExtResource("7_60kyj")]
+[node name="Card" parent="MainCardContainer/DeckContainer/DeckColorContainer/ScrollContainer/DeckContainer/CardControl11" unique_id=47916746 instance=ExtResource("7_60kyj")]
 position = Vector2(100, 115)
 
-[node name="CardControl12" type="Control" parent="MainCardContainer/VBoxContainer2/DeckColorContainer/ScrollContainer/DeckContainer" unique_id=1455829668]
+[node name="CardControl12" type="Control" parent="MainCardContainer/DeckContainer/DeckColorContainer/ScrollContainer/DeckContainer" unique_id=1455829668]
 custom_minimum_size = Vector2(200, 230)
 layout_mode = 2
 
-[node name="Card" parent="MainCardContainer/VBoxContainer2/DeckColorContainer/ScrollContainer/DeckContainer/CardControl12" unique_id=1536628447 instance=ExtResource("7_60kyj")]
+[node name="Card" parent="MainCardContainer/DeckContainer/DeckColorContainer/ScrollContainer/DeckContainer/CardControl12" unique_id=1536628447 instance=ExtResource("7_60kyj")]
 position = Vector2(100, 115)
+
+[node name="CardPopupContainer" type="Control" parent="." unique_id=664893130]
+visible = false
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="CardPopupBackground" type="Button" parent="CardPopupContainer" unique_id=1464129023]
+z_index = 1
+layout_mode = 0
+offset_right = 1920.0
+offset_bottom = 1080.0
+mouse_default_cursor_shape = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_vn7bd")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_fh2y4")
+theme_override_styles/hover = SubResource("StyleBoxFlat_knx5m")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_mg07r")
+theme_override_styles/focus = SubResource("StyleBoxFlat_x8dtt")
+
+[node name="CardPopupBox" type="Panel" parent="CardPopupContainer" unique_id=1111818189]
+z_index = 2
+layout_mode = 0
+offset_left = 192.0
+offset_top = 108.0
+offset_right = 1728.0
+offset_bottom = 972.0
+theme_override_styles/panel = ExtResource("12_v80jo")
+
+[node name="Header" type="Label" parent="CardPopupContainer/CardPopupBox" unique_id=1151240236]
+layout_mode = 0
+offset_top = 57.0
+offset_right = 1536.0
+offset_bottom = 140.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = SubResource("FontVariation_2etno")
+theme_override_font_sizes/font_size = 60
+text = "Name of card"
+horizontal_alignment = 1
+
+[node name="CloseCardButton" type="Button" parent="CardPopupContainer/CardPopupBox" unique_id=1067103883]
+layout_mode = 0
+offset_left = 1319.0
+offset_top = 56.0
+offset_right = 1419.0
+offset_bottom = 156.0
+mouse_default_cursor_shape = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_cjdl4")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_0dskt")
+theme_override_styles/hover = SubResource("StyleBoxFlat_3get4")
+icon = ExtResource("13_bdlf1")
+icon_alignment = 1
+expand_icon = true
+
+[node name="CardDetails" type="HBoxContainer" parent="CardPopupContainer/CardPopupBox" unique_id=1285782793]
+layout_mode = 0
+offset_left = 30.0
+offset_top = 177.0
+offset_right = 1506.0
+offset_bottom = 865.0
+
+[node name="LeftCardDetails" type="VBoxContainer" parent="CardPopupContainer/CardPopupBox/CardDetails" unique_id=865567276]
+custom_minimum_size = Vector2(738, 0)
+layout_mode = 2
+
+[node name="CardAppearance" type="TextureRect" parent="CardPopupContainer/CardPopupBox/CardDetails/LeftCardDetails" unique_id=1128580234]
+custom_minimum_size = Vector2(0, 524)
+layout_mode = 2
+texture = ExtResource("14_vn7bd")
+expand_mode = 2
+stretch_mode = 5
+
+[node name="CardDescription" type="HBoxContainer" parent="CardPopupContainer/CardPopupBox/CardDetails/LeftCardDetails" unique_id=1913964343]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 29
+
+[node name="RarityContainer" type="VBoxContainer" parent="CardPopupContainer/CardPopupBox/CardDetails/LeftCardDetails/CardDescription" unique_id=1268533779]
+layout_mode = 2
+
+[node name="RarityTitleLabel" type="Label" parent="CardPopupContainer/CardPopupBox/CardDetails/LeftCardDetails/CardDescription/RarityContainer" unique_id=206487635]
+layout_mode = 2
+theme_override_font_sizes/font_size = 40
+text = "Rarity"
+horizontal_alignment = 1
+
+[node name="RarityTextLabel" type="Label" parent="CardPopupContainer/CardPopupBox/CardDetails/LeftCardDetails/CardDescription/RarityContainer" unique_id=1756637776]
+layout_mode = 2
+theme_override_font_sizes/font_size = 40
+text = "Common"
+horizontal_alignment = 1
+
+[node name="RaceContainer" type="VBoxContainer" parent="CardPopupContainer/CardPopupBox/CardDetails/LeftCardDetails/CardDescription" unique_id=1032764242]
+layout_mode = 2
+
+[node name="RaceTitleLabel" type="Label" parent="CardPopupContainer/CardPopupBox/CardDetails/LeftCardDetails/CardDescription/RaceContainer" unique_id=409399399]
+layout_mode = 2
+theme_override_font_sizes/font_size = 40
+text = "Race"
+horizontal_alignment = 1
+
+[node name="RaceTextLabel" type="Label" parent="CardPopupContainer/CardPopupBox/CardDetails/LeftCardDetails/CardDescription/RaceContainer" unique_id=1970505760]
+layout_mode = 2
+theme_override_font_sizes/font_size = 40
+text = "Human"
+horizontal_alignment = 1
+
+[node name="DeckLimitContainer" type="VBoxContainer" parent="CardPopupContainer/CardPopupBox/CardDetails/LeftCardDetails/CardDescription" unique_id=1149281734]
+layout_mode = 2
+
+[node name="DeckLimitTitleLabel" type="Label" parent="CardPopupContainer/CardPopupBox/CardDetails/LeftCardDetails/CardDescription/DeckLimitContainer" unique_id=1311334668]
+layout_mode = 2
+theme_override_font_sizes/font_size = 40
+text = "Deck Set Limit"
+horizontal_alignment = 1
+
+[node name="DeckLimitTextLabel" type="Label" parent="CardPopupContainer/CardPopupBox/CardDetails/LeftCardDetails/CardDescription/DeckLimitContainer" unique_id=1617641830]
+layout_mode = 2
+theme_override_font_sizes/font_size = 40
+text = "2"
+horizontal_alignment = 1
+
+[node name="RightCardDetails" type="VBoxContainer" parent="CardPopupContainer/CardPopupBox/CardDetails" unique_id=720606456]
+custom_minimum_size = Vector2(738, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+theme_override_constants/separation = 100
+
+[node name="CardStats" type="HBoxContainer" parent="CardPopupContainer/CardPopupBox/CardDetails/RightCardDetails" unique_id=2033511817]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_constants/separation = 100
+
+[node name="CostContainer" type="VBoxContainer" parent="CardPopupContainer/CardPopupBox/CardDetails/RightCardDetails/CardStats" unique_id=61417645]
+layout_mode = 2
+
+[node name="CostTitleLabel" type="Label" parent="CardPopupContainer/CardPopupBox/CardDetails/RightCardDetails/CardStats/CostContainer" unique_id=963826871]
+layout_mode = 2
+theme_override_font_sizes/font_size = 40
+text = "Cost"
+horizontal_alignment = 1
+
+[node name="CostLevelContainer" type="HBoxContainer" parent="CardPopupContainer/CardPopupBox/CardDetails/RightCardDetails/CardStats/CostContainer" unique_id=1167266083]
+layout_mode = 2
+
+[node name="CostIcon" type="TextureRect" parent="CardPopupContainer/CardPopupBox/CardDetails/RightCardDetails/CardStats/CostContainer/CostLevelContainer" unique_id=2072394627]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+texture = ExtResource("15_fh2y4")
+expand_mode = 4
+stretch_mode = 4
+
+[node name="CostTextLabel" type="Label" parent="CardPopupContainer/CardPopupBox/CardDetails/RightCardDetails/CardStats/CostContainer/CostLevelContainer" unique_id=1325430921]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.21960784, 0.8509804, 0.6627451, 1)
+theme_override_font_sizes/font_size = 40
+text = "3"
+horizontal_alignment = 1
+
+[node name="PowerContainer" type="VBoxContainer" parent="CardPopupContainer/CardPopupBox/CardDetails/RightCardDetails/CardStats" unique_id=711039525]
+layout_mode = 2
+
+[node name="PowerTitleLabel" type="Label" parent="CardPopupContainer/CardPopupBox/CardDetails/RightCardDetails/CardStats/PowerContainer" unique_id=109561328]
+layout_mode = 2
+theme_override_font_sizes/font_size = 40
+text = "Power"
+horizontal_alignment = 1
+
+[node name="PowerLevelContainer" type="HBoxContainer" parent="CardPopupContainer/CardPopupBox/CardDetails/RightCardDetails/CardStats/PowerContainer" unique_id=78364686]
+layout_mode = 2
+alignment = 1
+
+[node name="PowerIcon" type="TextureRect" parent="CardPopupContainer/CardPopupBox/CardDetails/RightCardDetails/CardStats/PowerContainer/PowerLevelContainer" unique_id=1062102514]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+texture = ExtResource("16_knx5m")
+expand_mode = 4
+stretch_mode = 4
+
+[node name="PowerTextLabel" type="Label" parent="CardPopupContainer/CardPopupBox/CardDetails/RightCardDetails/CardStats/PowerContainer/PowerLevelContainer" unique_id=51894295]
+layout_mode = 2
+theme_override_font_sizes/font_size = 40
+text = "4"
+horizontal_alignment = 1
+
+[node name="PowerLevelLabel" type="Label" parent="CardPopupContainer/CardPopupBox/CardDetails/RightCardDetails/CardStats/PowerContainer/PowerLevelContainer" unique_id=1153669387]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0.8392157, 0.3529412, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 35
+text = "+ 2"
+
+[node name="HPContainer" type="VBoxContainer" parent="CardPopupContainer/CardPopupBox/CardDetails/RightCardDetails/CardStats" unique_id=1123537232]
+layout_mode = 2
+
+[node name="HPTitleLabel" type="Label" parent="CardPopupContainer/CardPopupBox/CardDetails/RightCardDetails/CardStats/HPContainer" unique_id=185034721]
+layout_mode = 2
+theme_override_font_sizes/font_size = 40
+text = "HP"
+horizontal_alignment = 1
+
+[node name="HPLevelContainer" type="HBoxContainer" parent="CardPopupContainer/CardPopupBox/CardDetails/RightCardDetails/CardStats/HPContainer" unique_id=1578348572]
+layout_mode = 2
+alignment = 1
+
+[node name="HPIcon" type="TextureRect" parent="CardPopupContainer/CardPopupBox/CardDetails/RightCardDetails/CardStats/HPContainer/HPLevelContainer" unique_id=1944347637]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+texture = ExtResource("17_mg07r")
+expand_mode = 4
+stretch_mode = 4
+
+[node name="HPTextLabel" type="Label" parent="CardPopupContainer/CardPopupBox/CardDetails/RightCardDetails/CardStats/HPContainer/HPLevelContainer" unique_id=1897216838]
+layout_mode = 2
+theme_override_font_sizes/font_size = 40
+text = "2"
+horizontal_alignment = 1
+
+[node name="HPLevelLabel" type="Label" parent="CardPopupContainer/CardPopupBox/CardDetails/RightCardDetails/CardStats/HPContainer/HPLevelContainer" unique_id=883056675]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0.8398252, 0.35469672, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 35
+text = "+ 2"
+
+[node name="AbilityContainer" type="VBoxContainer" parent="CardPopupContainer/CardPopupBox/CardDetails/RightCardDetails" unique_id=1414633837]
+custom_minimum_size = Vector2(738, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="AbilityTitleLabel" type="Label" parent="CardPopupContainer/CardPopupBox/CardDetails/RightCardDetails/AbilityContainer" unique_id=1247334105]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 45
+text = "Ability"
+horizontal_alignment = 1
+
+[node name="AbilityTextLabel" type="Label" parent="CardPopupContainer/CardPopupBox/CardDetails/RightCardDetails/AbilityContainer" unique_id=484765759]
+custom_minimum_size = Vector2(738, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Attacks a random enemy leader or unit"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="LevelContainer" type="VBoxContainer" parent="CardPopupContainer/CardPopupBox/CardDetails/RightCardDetails" unique_id=68907072]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_constants/separation = 30
+
+[node name="LevelLabel" type="Label" parent="CardPopupContainer/CardPopupBox/CardDetails/RightCardDetails/LevelContainer" unique_id=455733406]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 40
+theme_override_styles/normal = SubResource("StyleBoxFlat_2etno")
+text = "3/2"
+horizontal_alignment = 2
+
+[node name="LevelButton" type="Button" parent="CardPopupContainer/CardPopupBox/CardDetails/RightCardDetails/LevelContainer" unique_id=1283903765]
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_fonts/font = SubResource("FontVariation_cjdl4")
+theme_override_font_sizes/font_size = 30
+theme_override_styles/normal = ExtResource("8_fh2y4")
+theme_override_styles/pressed = ExtResource("18_mg07r")
+theme_override_styles/hover = ExtResource("9_knx5m")
+text = "Level up
+10"
 
 [connection signal="pressed" from="BackButton" to="." method="_on_back_button_pressed"]
+[connection signal="pressed" from="CardPopupContainer/CardPopupBox/CloseCardButton" to="." method="_on_close_card_button_pressed"]

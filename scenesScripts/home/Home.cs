@@ -98,7 +98,7 @@ public partial class Home : Control
 	{
 		Control FriendPopupContainerNode = GetNode<Control>("FriendPopupContainer");
 		
-		// Turn it ON (make visible)
+		// Turn it OFF (make visible false)
 		FriendPopupContainerNode.Visible = false;
 	}	
 
