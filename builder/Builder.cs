@@ -3,6 +3,7 @@ namespace FSDClient.builder;
 using FSDClient.card.display;
 using FSDClient.card;
 using FSDClient.player.display;
+using FSDClient.player;
 
 /*
     This is a static class that contains the 2 builder methods to construct the control (NOT NODE) of the card. 
@@ -20,9 +21,10 @@ public class Builder
 
     // Have not figured out how I wish to parse data to it. Will use placeholders for the time being 
     // TODO: Look up 
-    public static PlayerViewTextures BuildPlayer()
+    public static PlayerViewTextures BuildPlayer(PlayerData RawPlayerData)
     {
-        var data = new PlayerViewData("purple", "purple", 100, 5);
+        var data = new PlayerViewData(RawPlayerData.Username, RawPlayerData.IconName, RawPlayerData.BorderColour, 100, 5);
+        // var data = new PlayerViewData("temp", "purple", "purple", 100, 5);
         var PlayerViewTextures = new PlayerViewTextures(data);
         return PlayerViewTextures;
     }

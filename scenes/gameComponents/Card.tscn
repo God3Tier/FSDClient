@@ -11,6 +11,7 @@
 size = Vector2(165, 196)
 
 [node name="Card" type="Node2D" unique_id=1192453098]
+z_index = 2
 position = Vector2(0, 1)
 script = ExtResource("1_4dx8l")
 
@@ -32,9 +33,9 @@ texture = ExtResource("3_5273u")
 
 [node name="Health" type="RichTextLabel" parent="." unique_id=133566933]
 modulate = Color(0, 0, 0, 1)
-offset_left = 39.75
+offset_left = 28.0
 offset_top = 54.0
-offset_right = 70.75
+offset_right = 59.0
 offset_bottom = 77.0
 text = "0"
 fit_content = true
@@ -42,10 +43,10 @@ metadata/_edit_use_anchors_ = true
 
 [node name="Attack" type="RichTextLabel" parent="." unique_id=1321693604]
 modulate = Color(0, 0, 0, 1)
-offset_left = -44.75
-offset_top = 54.75
-offset_right = -5.75
-offset_bottom = 77.75
+offset_left = -69.0
+offset_top = 55.0
+offset_right = -30.0
+offset_bottom = 78.0
 text = "0"
 fit_content = true
 metadata/_edit_use_anchors_ = true
@@ -61,12 +62,12 @@ fit_content = true
 metadata/_edit_use_anchors_ = true
 
 [node name="AttackIcon" type="Sprite2D" parent="." unique_id=1226578192]
-position = Vector2(-58.75, 64.75)
+position = Vector2(-55, 47)
 scale = Vector2(0.36567163, 0.3852459)
 texture = ExtResource("4_qbjcq")
 
 [node name="HealthIcon" type="Sprite2D" parent="." unique_id=1171870406]
-position = Vector2(25.749992, 66)
+position = Vector2(45, 46)
 scale = Vector2(0.4196427, 0.4)
 texture = ExtResource("5_dqwud")
 

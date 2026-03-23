@@ -7,12 +7,16 @@ using FSDClient.battlefield.handManagement;
 public partial class Card : Node2D
 {
 	[Signal] public delegate void HoveredEventHandler(Card card);
-    [Signal] public delegate void HoveredOffEventHandler(Card card);
+	[Signal] public delegate void HoveredOffEventHandler(Card card);
+	[Signal] public delegate void AttackedEventHandler(Card card);
+
 	public Vector2 StartingPosition { get; set; }
 	private int Health { get; set; }
-    private bool BattleMode { get; set; } = false;
-    private double TimeToAttack { get; set; }
-    private double Timer { get; set; }
+	public int Attack { get; set; }
+	private bool BattleMode { get; set; } = false;
+	private double TimeToAttack { get; set; }
+	private double Timer { get; set; }
+	public int ActiveY { get; set; }
 	// hi
 
 	// Called when the node enters the scene tree for the first time.
@@ -26,57 +30,44 @@ public partial class Card : Node2D
 			{
 				Hovered += CardManager.OnHoverOverCard;
 				HoveredOff += CardManager.OnHoverOffCard;
+				var area = (Area2D)FindChild("Area2D", true);
+				area.MouseEntered += OnMouseEntered;
+				area.MouseExited += OnMouseExited;
 			}
 			GD.Print("Successfully initialised Parent Card Manager");
-
-			var area = (Area2D)FindChild("Area2D", true);
-			area.MouseEntered += OnMouseEntered;
-			area.MouseExited += OnMouseExited;
-
-			// var control = FindChild("CardView", true);
-
-
 		}
 		catch (Exception e)
 		{
-			GD.PrintErr("Whoops ", e);
+			var Area2D = FindChild("Area2D");
+			Area2D.QueueFree();
+			// GD.Print("This is an opponent card");
 		}
-
-
-
 	}
-
-	// public void InitializeCard(CardView CardView)
-	// {
-
-	//     var control = FindChild("CardView", true);
-	//     AddChild(CardView);
-	//     GD.Print("Initialized the card into the Card");
-	// }
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
-    {
-        if (!BattleMode)
-        {
-            return;
-        }
+	{
+		if (!BattleMode)
+		{
+			return;
+		}
 
 
-        if (Timer + delta >= TimeToAttack)
-        {
-            Timer = 0;
-            // Send signal that attack has commenced
-            return;
-        }
-        Timer += delta;
-        var ProgressBar = (ProgressBar)FindChild("ProgressBar");
-        ProgressBar.Value = Timer;
+		if (Timer + delta >= TimeToAttack)
+		{
+			Timer = 0;
+			EmitSignal(SignalName.Attacked, this);
+			return;
+		}
+
+		Timer += delta;
+		var ProgressBar = (ProgressBar)FindChild("ProgressBar");
+		ProgressBar.Value = Timer;
 	}
 
 	public void LoadDataTexture(CardViewTextures cardViewTextures)
-    {
-        GD.Print("Creating card");
+	{
+		GD.Print("Creating card");
 		var BorderTexture = (Sprite2D)FindChild("Border", true);
 		BorderTexture.Texture = cardViewTextures.BorderTexture;
 		BorderTexture.Scale = new Vector2(0.500f, 0.500f);
@@ -87,6 +78,10 @@ public partial class Card : Node2D
 
 		var AttackValue = (RichTextLabel)FindChild("Attack", true);
 		AttackValue.Text = cardViewTextures.AttackValue;
+		if (int.TryParse(cardViewTextures.AttackValue, out int attack))
+		{
+			Attack = attack;
+		}
 
 		var CurrentHealth = (RichTextLabel)FindChild("Health", true);
 		CurrentHealth.Text = cardViewTextures.CurrentHealth;
@@ -96,13 +91,13 @@ public partial class Card : Node2D
 		}
 
 		var ElixirCost = (RichTextLabel)FindChild("ElixirCost", true);
-        ElixirCost.Text = cardViewTextures.ElixirCost;
+		ElixirCost.Text = cardViewTextures.ElixirCost;
 
-        var ProgressBar = (ProgressBar)FindChild("ProgressBar", true);
-        ProgressBar.MaxValue = cardViewTextures.TimeToAttack;
-        TimeToAttack = cardViewTextures.TimeToAttack;
+		var ProgressBar = (ProgressBar)FindChild("ProgressBar", true);
+		ProgressBar.MaxValue = cardViewTextures.TimeToAttack;
+		TimeToAttack = cardViewTextures.TimeToAttack;
 
-        GD.Print("Able to create card");
+		GD.Print("Able to create card");
 	}
 
 	public void UpdateHealth(int damageTaken)
@@ -123,7 +118,7 @@ public partial class Card : Node2D
 	{
 		var ElixirCost = (RichTextLabel)FindChild("ElixirCost");
 		ElixirCost.Text = "";
-        BattleMode = true;
+		BattleMode = true;
 		// var
 	}
 
@@ -135,6 +130,25 @@ public partial class Card : Node2D
 	public void OnMouseExited()
 	{
 		EmitSignal(SignalName.HoveredOff, this);
+	}
+
+
+	public void EmptyTexture()
+	{
+		GD.Print("Empty Texture called");
+		foreach (Node child in GetChildren())
+		{
+			if (child is RichTextLabel label)
+			{
+				label.Text = "";
+				GD.Print("Getting rid of label");
+			}
+			else if (child is Sprite2D sprite)
+			{
+				GD.Print("Making child null");
+				sprite.Texture = null;
+			}
+		}
 	}
 
 }
