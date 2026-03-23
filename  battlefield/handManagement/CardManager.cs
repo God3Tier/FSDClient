@@ -59,11 +59,11 @@ public partial class CardManager : Node2D
 	private void StopDrag()
 	{
 		cardBeingDragged.Scale = new Vector2(1.005f, 1.005f);
-		var battleSlotFound = _raycastCheckForBattleSlot();
+		var slotFound = _raycastCheckForSlot();
 
 		// Put the signal here for nonsence in gameloop
 		// TODO: DO it
-		if (battleSlotFound != null && !battleSlotFound.CardInSlot)
+		if (slotFound is BattleSlot battleSlotFound && !battleSlotFound.CardInSlot)
 		{
 			cardBeingDragged.Position = battleSlotFound.Position;
 			cardBeingDragged.ZIndex = 1;
@@ -161,7 +161,7 @@ public partial class CardManager : Node2D
 	}
 
 	// To return what is under our cursor when clicking
-	public BattleSlot? _raycastCheckForBattleSlot()
+	public Slot? _raycastCheckForSlot()
 	{
 		var spaceState = GetWorld2D().DirectSpaceState;
 		var parameters = new PhysicsPointQueryParameters2D
@@ -175,7 +175,7 @@ public partial class CardManager : Node2D
 		if (result.Count > 0)
 		{
 			var collider = (Area2D)result[0]["collider"];
-			var cardParent = collider.GetParent<BattleSlot>();
+			var cardParent = collider.GetParent<Slot>();
 			return cardParent;
 		}
 		return null;

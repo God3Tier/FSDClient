@@ -6,9 +6,9 @@ using FSDClient.battlefield.handManagement;
 
 public partial class HandArea : Control
 {
-	[Export] public PlayerHand PlayerHand { get; set; }
+	[Export] public PlayerHand _playerHand { get; set; }
 	private float _raiseDistance = 470f;
-	private float _raiseDuration = 0.5f;
+	private float _raiseDuration = 0.3f;
 
 	private Vector2 _startPos;
 	private bool _isRaised = false;
@@ -22,10 +22,7 @@ public partial class HandArea : Control
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
-		if (_isRaised)
-		{
-			PlayerHand?.UpdateHandPositions();
-		}
+		
 	}
 
 	public void RaiseDeck()
@@ -39,6 +36,11 @@ public partial class HandArea : Control
 		_raiseDuration)
 		.SetTrans(Tween.TransitionType.Cubic)
 		.SetEase(Tween.EaseType.Out);
+		
+		if (_playerHand != null) {
+			_playerHand.AnimateAllCardsToPosition(_raiseDistance/128, true);
+		}
+		
 	}
 
 	public void LowerDeck()
@@ -52,5 +54,8 @@ public partial class HandArea : Control
 		_raiseDuration)
 		.SetTrans(Tween.TransitionType.Cubic)
 		.SetEase(Tween.EaseType.Out);
+		if (_playerHand != null) {
+			_playerHand.AnimateAllCardsToPosition(_raiseDistance, false);
+		}
 	}
 }

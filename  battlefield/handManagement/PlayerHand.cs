@@ -15,6 +15,8 @@ public partial class PlayerHand : Control
 	private int HAND_Y_POSITION = 4;
 	private int CARD_WIDTH = 100;
 	private int centerScreenX;
+	private float normalSpeed = 0.5f;
+	private float deckSpeed = 0.2f;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -56,7 +58,8 @@ public partial class PlayerHand : Control
 		}
 		else
 		{
-			AnimateCardToPosition(card, card.StartingPosition);
+			int index = Array.IndexOf(Hand, card);
+			AnimateCardToPosition(card, HandSlots[index].GlobalPosition, normalSpeed);
 		}
 
 	}
@@ -69,15 +72,31 @@ public partial class PlayerHand : Control
 			var newPosition = HandSlots[i].GlobalPosition;
 			var card = Hand[i];
 			card.StartingPosition = newPosition;
-			AnimateCardToPosition(card, newPosition);
+			AnimateCardToPosition(card, newPosition, normalSpeed);
 		}
 	}
 
 
-	public void AnimateCardToPosition(Card card, Vector2 position)
+	public void AnimateCardToPosition(Card card, Vector2 position, float speed)
 	{
 		var tween = GetTree().CreateTween();
-		tween.TweenProperty(card, "global_position", position, 0.3);
+		tween.TweenProperty(card, "global_position", position, speed);
+	}
+	
+	public void AnimateAllCardsToPosition(float distance, bool isRaise) {
+		for (int i = 0; i < Hand.Length; i++)
+		{
+			if (Hand[i] == null) { continue; }
+			var card = Hand[i];
+			if (isRaise) {
+				var newPosition = card.StartingPosition - new Vector2(0, distance);
+				AnimateCardToPosition(card, newPosition, deckSpeed);
+			}
+			else {
+				var newPosition = card.StartingPosition + new Vector2(0, distance);
+				AnimateCardToPosition(card, newPosition, deckSpeed);
+			}
+		}
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
