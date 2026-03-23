@@ -17,9 +17,9 @@
 [ext_resource type="StyleBox" uid="uid://cg7xt7j6ukctr" path="res://styles/popup.tres" id="12_v80jo"]
 [ext_resource type="Texture2D" uid="uid://cqlpljo3fyehv" path="res://assets/popup/xmark.png" id="13_bdlf1"]
 [ext_resource type="Texture2D" uid="uid://de1xve7wh1kwa" path="res://assets/characters/Farmer.png" id="14_vn7bd"]
-[ext_resource type="Texture2D" uid="uid://cy5gct3nkkt3x" path="res://assets/symbols/energy.png" id="15_fh2y4"]
-[ext_resource type="Texture2D" uid="uid://dn8rkapkxlomc" path="res://assets/symbols/attack_symbol.png" id="16_knx5m"]
-[ext_resource type="Texture2D" uid="uid://7iddlc41oxe6" path="res://assets/symbols/defence_symbol.png" id="17_mg07r"]
+[ext_resource type="Texture2D" uid="uid://cng6okaxx3fyt" path="res://assets/symbols/energy.png" id="15_fh2y4"]
+[ext_resource type="Texture2D" uid="uid://bqe7flm7kyijb" path="res://assets/symbols/attack_symbol.png" id="16_knx5m"]
+[ext_resource type="Texture2D" uid="uid://u0l0s1ftn71l" path="res://assets/symbols/defence_symbol.png" id="17_mg07r"]
 [ext_resource type="StyleBox" uid="uid://byt6vlxbekhk0" path="res://styles/button_success_pressed.tres" id="18_mg07r"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yc314"]
@@ -444,6 +444,7 @@ text = "X1"
 horizontal_alignment = 1
 
 [node name="BattleButton" type="Button" parent="MainCardContainer/CollectionContainer/CollectionColorContainer" unique_id=5481639]
+visible = false
 layout_mode = 0
 offset_left = 556.0
 offset_top = 778.0
@@ -582,6 +583,7 @@ layout_mode = 2
 position = Vector2(100, 115)
 
 [node name="CardPopupContainer" type="Control" parent="." unique_id=664893130]
+visible = false
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
@@ -850,6 +852,7 @@ horizontal_alignment = 1
 autowrap_mode = 2
 
 [node name="LevelContainer" type="VBoxContainer" parent="CardPopupContainer/CardPopupBox/CardDetails/RightCardDetails" unique_id=68907072]
+visible = false
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
