@@ -1,13 +1,13 @@
 [gd_scene format=3 uid="uid://bbgm8t1esyy3b"]
 
-[ext_resource type="Texture2D" uid="uid://ck8ljvmae8tna" path="res://assets/battlefield/background/background_test_box.png" id="1_48th5"]
+[ext_resource type="Texture2D" uid="uid://dgjjaj7pbhqff" path="res://assets/battlefield/background/background_test_box.png" id="1_48th5"]
 [ext_resource type="Script" uid="uid://dm13dy71mnwhb" path="res://scenesScripts/home/Home.cs" id="1_y784y"]
-[ext_resource type="Texture2D" uid="uid://c2kpgy8a80p5i" path="res://assets/header/banner.png" id="4_eyscv"]
-[ext_resource type="Texture2D" uid="uid://vgu2lfiihps" path="res://assets/cards/pack.png" id="4_pl3n4"]
-[ext_resource type="Texture2D" uid="uid://rmnf1w71t133" path="res://assets/header/crystal_colored.png" id="5_y784y"]
-[ext_resource type="Texture2D" uid="uid://dgkp2pd0i8muq" path="res://assets/header/gold_Colored.png" id="6_6n0se"]
-[ext_resource type="Texture2D" uid="uid://bbhxir2lxdc61" path="res://assets/header/rank.png" id="7_6fqk1"]
-[ext_resource type="Texture2D" uid="uid://dxpaodnd52vgh" path="res://assets/heros/purple_hero.png" id="7_s07j5"]
+[ext_resource type="Texture2D" uid="uid://tl43u2wwetbq" path="res://assets/header/banner.png" id="4_eyscv"]
+[ext_resource type="Texture2D" uid="uid://k3uu1nfrcl6k" path="res://assets/cards/pack.png" id="4_pl3n4"]
+[ext_resource type="Texture2D" uid="uid://pu52dbw7egqc" path="res://assets/header/crystal_colored.png" id="5_y784y"]
+[ext_resource type="Texture2D" uid="uid://nkdqwj6g8mqc" path="res://assets/header/gold_Colored.png" id="6_6n0se"]
+[ext_resource type="Texture2D" uid="uid://cnboeuly7ue15" path="res://assets/header/rank.png" id="7_6fqk1"]
+[ext_resource type="Texture2D" uid="uid://bif2ng1aadtnc" path="res://assets/heros/purple_hero.png" id="7_s07j5"]
 [ext_resource type="StyleBox" uid="uid://bikhijk3kb8s0" path="res://styles/button.tres" id="9_vfej2"]
 [ext_resource type="StyleBox" uid="uid://bkiusl8wj1xvr" path="res://styles/button_hover.tres" id="10_46c81"]
 [ext_resource type="Texture2D" uid="uid://d0517xwkwglh3" path="res://assets/home/loading/1.png" id="11_73yef"]
@@ -505,13 +505,13 @@ grow_horizontal = 2
 grow_vertical = 0
 theme_override_constants/h_separation = 30
 
-[node name="ColorRect" type="ColorRect" parent="Packs" unique_id=4191471]
+[node name="PackSlot1" type="ColorRect" parent="Packs" unique_id=4191471]
 custom_minimum_size = Vector2(210, 300)
 layout_mode = 2
 mouse_default_cursor_shape = 2
 color = Color(0.30200383, 0.30200386, 0.30200377, 0.6666667)
 
-[node name="TextureRect" type="TextureRect" parent="Packs/ColorRect" unique_id=1082623625]
+[node name="PackImage" type="TextureRect" parent="Packs/PackSlot1" unique_id=1082623625]
 layout_mode = 0
 offset_top = 61.0
 offset_right = 211.20001
@@ -519,13 +519,13 @@ offset_bottom = 237.0
 texture = ExtResource("4_pl3n4")
 expand_mode = 3
 
-[node name="ColorRect2" type="ColorRect" parent="Packs" unique_id=1765294642]
+[node name="PackSlot2" type="ColorRect" parent="Packs" unique_id=1765294642]
 custom_minimum_size = Vector2(210, 300)
 layout_mode = 2
 mouse_default_cursor_shape = 2
 color = Color(0.30200383, 0.30200386, 0.30200377, 0.6666667)
 
-[node name="TextureRect" type="TextureRect" parent="Packs/ColorRect2" unique_id=1712244655]
+[node name="PackImage" type="TextureRect" parent="Packs/PackSlot2" unique_id=1712244655]
 layout_mode = 0
 offset_top = 61.0
 offset_right = 211.20001
@@ -533,13 +533,13 @@ offset_bottom = 237.0
 texture = ExtResource("4_pl3n4")
 expand_mode = 3
 
-[node name="ColorRect3" type="ColorRect" parent="Packs" unique_id=1411925447]
+[node name="PackSlot3" type="ColorRect" parent="Packs" unique_id=1411925447]
 custom_minimum_size = Vector2(210, 300)
 layout_mode = 2
 mouse_default_cursor_shape = 2
 color = Color(0.30200383, 0.30200386, 0.30200377, 0.6666667)
 
-[node name="TextureRect" type="TextureRect" parent="Packs/ColorRect3" unique_id=765236761]
+[node name="PackImage" type="TextureRect" parent="Packs/PackSlot3" unique_id=765236761]
 layout_mode = 0
 offset_top = 61.0
 offset_right = 211.20001
@@ -547,13 +547,13 @@ offset_bottom = 237.0
 texture = ExtResource("4_pl3n4")
 expand_mode = 3
 
-[node name="ColorRect4" type="ColorRect" parent="Packs" unique_id=873535625]
+[node name="PackSlot4" type="ColorRect" parent="Packs" unique_id=873535625]
 custom_minimum_size = Vector2(210, 300)
 layout_mode = 2
 mouse_default_cursor_shape = 2
 color = Color(0.30200383, 0.30200386, 0.30200377, 0.6666667)
 
-[node name="TextureRect" type="TextureRect" parent="Packs/ColorRect4" unique_id=18669302]
+[node name="PackImage" type="TextureRect" parent="Packs/PackSlot4" unique_id=18669302]
 layout_mode = 0
 offset_top = 61.0
 offset_right = 211.20001
