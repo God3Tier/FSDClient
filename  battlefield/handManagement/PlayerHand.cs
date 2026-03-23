@@ -67,6 +67,7 @@ public partial class PlayerHand : Control
 	
 	public void RemoveCardFromHand(Card card)
 	{
+		card.ZIndex = 2;
 		int index = Array.IndexOf(Hand, card);
 		Hand[index] = null;
 		HAND_COUNT--;

@@ -116,6 +116,7 @@ public partial class Gameloop : Node2D
 		var CardScene = GD.Load<PackedScene>("res://scenes/gameComponents/Card.tscn");
 		var CardTemp = CardScene.Instantiate<Card>();
 		CardTemp.CurrentSlotStatus = Card.SlotStatus.HandTemp;
+		CardTemp.ZIndex = 5;
 		CardTemp.LoadDataTexture(CardTexture);
 		CardManager.AddChild(CardTemp);
 	}
@@ -151,6 +152,13 @@ public partial class Gameloop : Node2D
 		battleslot.Card.ActiveY = battleslot.y;
 		battleslot.Card.Attacked += OnAttacked;
 		battleslot.Card.EnterBattlefield();
+		for (int x = 0; x < 2; x++) {
+			for (int y = 0; y < 3; y++) {
+				if (Board[x][y] is Card card) {
+					GD.Print($"ZIndex {card.ZIndex} for card[{x}][{y}]");
+				}
+			}
+		}
 
 	}
 
@@ -221,7 +229,7 @@ public partial class Gameloop : Node2D
 		if (GameTimer >= ROUND_TIMER * TurnRound && !TurnPause)
 		{
 			GD.Print("Round updated");
-
+			GD.Print(HandArea.ZIndex);
 			// TODO: Trigger secondary draw card event
 			TurnPause = true;
 			HandArea.RaiseDeck();

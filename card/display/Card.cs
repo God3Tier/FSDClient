@@ -130,6 +130,7 @@ public partial class Card : Node2D
 		ElixirCost.Text = "";
 		BattleMode = true;
 		// var
+		ZIndex = 2;
 	}
 
 	public void OnMouseEntered()

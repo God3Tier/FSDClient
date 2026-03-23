@@ -84,10 +84,8 @@ public partial class CardManager : Node2D
 	
 	private void IntoBattleSlot(BattleSlot battleSlotFound) {
 		cardBeingDragged.Position = battleSlotFound.Position;
-		cardBeingDragged.ZIndex = 1;
 		GD.Print(battleSlotFound.Position);
 		GD.Print(cardBeingDragged.Position);
-
 		GD.Print(dragOffset);
 		battleSlotFound.CardInSlot = true;
 		var collisionShape = cardBeingDragged.GetNode<CollisionShape2D>("Area2D/CollisionShape2D");
@@ -95,7 +93,6 @@ public partial class CardManager : Node2D
 		battleSlotFound.Card = (Card)cardBeingDragged;
 		cardBeingDragged.CurrentSlotStatus = Card.SlotStatus.Battle;
 		_playerHand.RemoveCardFromHand((Card)cardBeingDragged);
-
 		EmitSignal(SignalName.CardDropped, battleSlotFound);
 	}
 
@@ -109,6 +106,7 @@ public partial class CardManager : Node2D
 	// Hover Card effect
 	public void OnHoverOverCard(Card card)
 	{
+		if (card.CurrentSlotStatus == Card.SlotStatus.Battle) {return;}
 		if (!highlighting)
 		{
 			highlighting = true;
@@ -119,6 +117,7 @@ public partial class CardManager : Node2D
 	// Hover off Card effect
 	public void OnHoverOffCard(Card card)
 	{
+		if (card.CurrentSlotStatus == Card.SlotStatus.Battle) {return;}
 		if (cardBeingDragged == null)
 		{
 			HighlightCard(card, false);
@@ -140,12 +139,12 @@ public partial class CardManager : Node2D
 		if (hovered)
 		{
 			card.Scale = new Vector2(1.05f, 1.05f);
-			card.ZIndex = 5;
+			card.ZIndex = 6;
 		}
 		else
 		{
 			card.Scale = new Vector2(0.95f, 0.95f);
-			card.ZIndex = 4; // TODO: This will likely cause problems with the hand later
+			card.ZIndex = 5; // TODO: This will likely cause problems with the hand later
 		}
 	}
 
