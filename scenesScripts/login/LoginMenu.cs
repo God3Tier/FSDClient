@@ -62,14 +62,14 @@ public partial class LoginMenu : Control
 	public void _OnInformationReady()
 	{
 		var RightPanel = (Control)FindChild("RightPanel", true);
-		var UsernameEdit = (TextEdit)RightPanel.FindChild("UsernameInput", true);
+		var UsernameEdit = (LineEdit)RightPanel.FindChild("UsernameInput", true);
 		Username = UsernameEdit.Text;
 
-		var PasswordEdit = (TextEdit)RightPanel.FindChild("PasswordInput", true);
+		var PasswordEdit = (LineEdit)RightPanel.FindChild("PasswordInput", true);
 		Password = PasswordEdit.Text;
 
 		// NOTE DO NOT UNCOMMENT BELOW. I HAVENT SETTLED IT YET THIS will cause null pointer exception
-		// var EmailEdit = (TextEdit)FindChild("Email", true);
+		// var EmailEdit = (LineEdit)FindChild("Email", true);
 		// Email = EmailEdit.Text;
 
 
