@@ -50,6 +50,7 @@ public partial class PlayerHand : Control
 			for (int i = 0; i < 4; i ++) {
 				if (Hand[i] == null) {
 					Hand[i] = card;
+					HAND_COUNT++;
 					break;
 				}
 
@@ -61,6 +62,14 @@ public partial class PlayerHand : Control
 			int index = Array.IndexOf(Hand, card);
 			AnimateCardToPosition(card, HandSlots[index].GlobalPosition, normalSpeed);
 		}
+
+	}
+	
+	public void RemoveCardFromHand(Card card)
+	{
+		int index = Array.IndexOf(Hand, card);
+		Hand[index] = null;
+		HAND_COUNT--;
 
 	}
 
@@ -83,6 +92,7 @@ public partial class PlayerHand : Control
 		tween.TweenProperty(card, "global_position", position, speed);
 	}
 	
+	// To help with the hand animation
 	public void AnimateAllCardsToPosition(float distance, bool isRaise) {
 		for (int i = 0; i < Hand.Length; i++)
 		{
@@ -96,6 +106,27 @@ public partial class PlayerHand : Control
 				var newPosition = card.StartingPosition + new Vector2(0, distance);
 				AnimateCardToPosition(card, newPosition, deckSpeed);
 			}
+		}
+	}
+	
+	// This will allow all cards to be placed into the battlefield
+	public void ActivateCardsInHand() {
+		GD.Print("Activating All cards in hand");
+		for (int i = 0; i < Hand.Length; i++)
+		{
+			if (Hand[i] == null) { continue; }
+			var card = Hand[i];
+			card.CurrentSlotStatus = Card.SlotStatus.Hand;
+		}
+	}
+	
+	// This will prevent cards to be placed into the battlefield
+	public void PauseCardsInHand() {
+		for (int i = 0; i < Hand.Length; i++)
+		{
+			if (Hand[i] == null) { continue; }
+			var card = Hand[i];
+			card.CurrentSlotStatus = Card.SlotStatus.HandPause;
 		}
 	}
 

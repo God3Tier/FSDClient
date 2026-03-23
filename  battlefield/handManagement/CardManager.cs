@@ -60,30 +60,43 @@ public partial class CardManager : Node2D
 	{
 		cardBeingDragged.Scale = new Vector2(1.005f, 1.005f);
 		var slotFound = _raycastCheckForSlot();
+		GD.Print(cardBeingDragged.CurrentSlotStatus);
 
 		// Put the signal here for nonsence in gameloop
 		// TODO: DO it
-		if (slotFound is BattleSlot battleSlotFound && !battleSlotFound.CardInSlot)
+		// First check if the slot is a BattleSlot, 
+		// then check if there is a card in the slot already, 
+		// then check if the card is currently allowed to be added
+		if (slotFound is BattleSlot battleSlotFound && 
+			!battleSlotFound.CardInSlot && 
+			cardBeingDragged.CurrentSlotStatus == Card.SlotStatus.Hand)
 		{
-			cardBeingDragged.Position = battleSlotFound.Position;
-			cardBeingDragged.ZIndex = 1;
-			GD.Print(battleSlotFound.Position);
-			GD.Print(cardBeingDragged.Position);
-
-			GD.Print(dragOffset);
-			battleSlotFound.CardInSlot = true;
-			var collisionShape = cardBeingDragged.GetNode<CollisionShape2D>("Area2D/CollisionShape2D");
-			collisionShape.Disabled = true;
-			battleSlotFound.Card = (Card)cardBeingDragged;
-
-			EmitSignal(SignalName.CardDropped, battleSlotFound);
+			IntoBattleSlot(battleSlotFound);
 		}
+		
 		else
 		{
 			_playerHand.AddCardToHand((Card)cardBeingDragged);
 		}
 		cardBeingDragged = null;
 
+	}
+	
+	private void IntoBattleSlot(BattleSlot battleSlotFound) {
+		cardBeingDragged.Position = battleSlotFound.Position;
+		cardBeingDragged.ZIndex = 1;
+		GD.Print(battleSlotFound.Position);
+		GD.Print(cardBeingDragged.Position);
+
+		GD.Print(dragOffset);
+		battleSlotFound.CardInSlot = true;
+		var collisionShape = cardBeingDragged.GetNode<CollisionShape2D>("Area2D/CollisionShape2D");
+		collisionShape.Disabled = true;
+		battleSlotFound.Card = (Card)cardBeingDragged;
+		cardBeingDragged.CurrentSlotStatus = Card.SlotStatus.Battle;
+		_playerHand.RemoveCardFromHand((Card)cardBeingDragged);
+
+		EmitSignal(SignalName.CardDropped, battleSlotFound);
 	}
 
 	// For the hover effect

@@ -115,6 +115,7 @@ public partial class Gameloop : Node2D
 		var CardTexture = Builder.BuildCard(TestCard);
 		var CardScene = GD.Load<PackedScene>("res://scenes/gameComponents/Card.tscn");
 		var CardTemp = CardScene.Instantiate<Card>();
+		CardTemp.CurrentSlotStatus = Card.SlotStatus.HandTemp;
 		CardTemp.LoadDataTexture(CardTexture);
 		CardManager.AddChild(CardTemp);
 	}
@@ -208,6 +209,7 @@ public partial class Gameloop : Node2D
 		{
 			GD.Print("Pause Ended");
 			HandArea.LowerDeck();
+			CardManager._playerHand.ActivateCardsInHand();
 			TurnPause = false;
 			PauseTimer = 0;
 			TurnRound += 1;
@@ -223,6 +225,7 @@ public partial class Gameloop : Node2D
 			// TODO: Trigger secondary draw card event
 			TurnPause = true;
 			HandArea.RaiseDeck();
+			CardManager._playerHand.PauseCardsInHand();
 		}
 
 		if (RegenInterval >= SECONDS_PER_ELIXIR)

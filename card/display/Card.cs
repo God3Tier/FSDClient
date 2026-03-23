@@ -18,7 +18,17 @@ public partial class Card : Node2D
 	private double Timer { get; set; }
 	public int ActiveY { get; set; }
 	// hi
-
+	public enum SlotStatus 
+	{
+		Pack,
+		Deck,
+		HandTemp,
+		HandPause,
+		Hand,
+		Battle
+	}
+	public SlotStatus CurrentSlotStatus { get; set; }
+	
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
