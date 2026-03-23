@@ -15,7 +15,7 @@ using FSDClient.sceneScripts.login;
 public partial class PlayerStateManager : Node
 {
 	public static PlayerStateManager Instance { get; private set; }
-	public PlayerData PlayerData { get; private set; } = null;
+	public PlayerData PlayerData { get; private set; }
 	private List<CardData> DeckCardDatas { get; set; }
 	public string Token { get; set; } = null;
 	
