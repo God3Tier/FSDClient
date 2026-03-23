@@ -1,41 +1,154 @@
 [gd_scene format=3 uid="uid://c7leg11ys58mp"]
 
 [ext_resource type="Script" uid="uid://bppiwtv57cawo" path="res://scenesScripts/login/LoginMenu.cs" id="1_u8sew"]
+[ext_resource type="Texture2D" uid="uid://dgjjaj7pbhqff" path="res://assets/battlefield/background/background_test_box.png" id="2_hhelq"]
+[ext_resource type="Texture2D" uid="uid://bif2ng1aadtnc" path="res://assets/heros/purple_hero.png" id="3_twuvq"]
+[ext_resource type="Texture2D" uid="uid://dqy1b78rbalrw" path="res://assets/heros/grey_hero.png" id="4_4hsiq"]
+[ext_resource type="StyleBox" uid="uid://bcc8641wxsiam" path="res://styles/form.tres" id="4_x2epc"]
+[ext_resource type="StyleBox" uid="uid://btymgymew14qs" path="res://styles/form_button.tres" id="5_4hsiq"]
+
+[sub_resource type="FontVariation" id="FontVariation_728b3"]
+
+[sub_resource type="FontFile" id="FontFile_x2epc"]
+cache/0/variation_coordinates = {}
+cache/0/face_index = 0
+cache/0/embolden = 0.0
+cache/0/transform = Transform2D(1, 0, 0, 1, 0, 0)
+cache/0/spacing_top = 0
+cache/0/spacing_bottom = 0
+cache/0/spacing_space = 0
+cache/0/spacing_glyph = 0
+cache/0/baseline_offset = 0.0
+cache/0/16/0/ascent = 0.0
+cache/0/16/0/descent = 0.0
+cache/0/16/0/underline_position = 0.0
+cache/0/16/0/underline_thickness = 0.0
+cache/0/16/0/scale = 1.0
+cache/0/50/0/ascent = 0.0
+cache/0/50/0/descent = 0.0
+cache/0/50/0/underline_position = 0.0
+cache/0/50/0/underline_thickness = 0.0
+cache/0/50/0/scale = 1.0
 
 [node name="Login_menu" type="Control" unique_id=1086706066]
 layout_mode = 3
 anchors_preset = 0
+offset_right = 1920.0
+offset_bottom = 1080.0
 script = ExtResource("1_u8sew")
 
-[node name="Username" type="TextEdit" parent="." unique_id=1515806500]
-layout_mode = 0
-offset_right = 319.0
-offset_bottom = 79.0
-text = "Username
-"
+[node name="Background" type="TextureRect" parent="." unique_id=1949712050]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_hhelq")
+expand_mode = 1
 
-[node name="Password" type="TextEdit" parent="." unique_id=1662331780]
-layout_mode = 0
-offset_top = 80.0
-offset_right = 319.0
-offset_bottom = 159.0
-text = "Password
-"
+[node name="LeftPanel" type="Control" parent="." unique_id=1220826053]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
 
-[node name="SendInformation" type="Button" parent="." unique_id=1486221930]
+[node name="Header" type="Label" parent="LeftPanel" unique_id=466476320]
 layout_mode = 0
-offset_top = 159.0
-offset_right = 321.0
-offset_bottom = 190.0
+offset_top = 93.0
+offset_right = 1120.0
+offset_bottom = 176.0
+theme_override_colors/font_color = Color(0.3764706, 0.44313726, 0.44313726, 1)
+theme_override_fonts/font = SubResource("FontVariation_728b3")
+theme_override_font_sizes/font_size = 60
+text = "READY TO WIN?"
+horizontal_alignment = 1
+
+[node name="LeftCharacter" type="TextureRect" parent="LeftPanel" unique_id=1810746276]
+layout_mode = 0
+offset_left = 64.0
+offset_top = 299.0
+offset_right = 447.0
+offset_bottom = 796.44214
+texture = ExtResource("3_twuvq")
+
+[node name="VS" type="Label" parent="LeftPanel" unique_id=1034517684]
+layout_mode = 0
+offset_left = 543.0
+offset_top = 524.0
+offset_right = 618.0
+offset_bottom = 607.0
+theme_override_colors/font_color = Color(0.3764706, 0.44313726, 0.44313726, 1)
+theme_override_fonts/font = SubResource("FontVariation_728b3")
+theme_override_font_sizes/font_size = 60
+text = "VS"
+
+[node name="RightCharacter" type="TextureRect" parent="LeftPanel" unique_id=530079176]
+layout_mode = 0
+offset_left = 701.0
+offset_top = 296.0
+offset_right = 1084.0
+offset_bottom = 793.44214
+texture = ExtResource("4_4hsiq")
+
+[node name="RightPanel" type="ColorRect" parent="." unique_id=1711109228]
+layout_mode = 0
+offset_left = 1120.0
+offset_right = 1920.0
+offset_bottom = 1080.0
+color = Color(0.47058824, 0.54901963, 0.54901963, 1)
+
+[node name="Header" type="Label" parent="RightPanel" unique_id=2045533370]
+layout_mode = 0
+offset_left = 225.0
+offset_top = 272.0
+offset_right = 550.0
+offset_bottom = 341.0
+theme_override_fonts/font = SubResource("FontFile_x2epc")
+theme_override_font_sizes/font_size = 50
+text = "Welcome back"
+
+[node name="UsernameInput" type="TextEdit" parent="RightPanel" unique_id=1515806500]
+layout_mode = 0
+offset_left = 229.0
+offset_top = 374.0
+offset_right = 569.0
+offset_bottom = 429.0
+theme_override_font_sizes/font_size = 25
+theme_override_styles/normal = ExtResource("4_x2epc")
+placeholder_text = "Username"
+tab_input_mode = false
+
+[node name="PasswordInput" type="TextEdit" parent="RightPanel" unique_id=1662331780]
+layout_mode = 0
+offset_left = 229.0
+offset_top = 461.0
+offset_right = 569.0
+offset_bottom = 516.0
+theme_override_font_sizes/font_size = 25
+theme_override_styles/normal = ExtResource("4_x2epc")
+placeholder_text = "Password"
+tab_input_mode = false
+
+[node name="SendInformation" type="Button" parent="RightPanel" unique_id=1486221930]
+layout_mode = 0
+offset_left = 239.0
+offset_top = 638.0
+offset_right = 559.0
+offset_bottom = 674.0
+mouse_default_cursor_shape = 2
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = ExtResource("5_4hsiq")
 text = "Login"
 
-[node name="StateChanger" type="Button" parent="." unique_id=197976993]
-
+[node name="StateChanger" type="Button" parent="RightPanel" unique_id=197976993]
 layout_mode = 0
-offset_left = -1.0
-offset_top = 190.0
-offset_right = 320.0
-offset_bottom = 206.0
+offset_left = 239.0
+offset_top = 588.0
+offset_right = 559.0
+offset_bottom = 624.0
+mouse_default_cursor_shape = 2
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = ExtResource("5_4hsiq")
 text = "No account? Click here"
 
-[connection signal="pressed" from="SendInformation" to="." method="_OnInformationReady"]
+[connection signal="pressed" from="RightPanel/SendInformation" to="." method="_OnInformationReady"]
