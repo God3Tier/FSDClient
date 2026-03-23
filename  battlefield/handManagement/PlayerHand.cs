@@ -1,10 +1,9 @@
+namespace FSDClient.battlefield.handManagement;
+
 using Godot;
 using System;
 using System.Linq;
 using FSDClient.card.display;
-
-
-namespace FSDClient.battlefield.handManagement;
 
 
 public partial class PlayerHand : Control
