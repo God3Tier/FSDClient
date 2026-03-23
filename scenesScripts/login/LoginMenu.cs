@@ -44,6 +44,8 @@ public partial class LoginMenu : Control
 	private string Username { get; set; } = "";
 	private string Password { get; set; } = "";
 	private string Email { get; set; } = "";
+
+	// This may or may not cause a problem later
 	private bool CreatingAccount { get; set; } = false;
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -114,65 +116,56 @@ public partial class LoginMenu : Control
 		GD.Print("Logging in");
 		var jsonObj = new
 		{
-			Username = Username,
-			Password = Password
+			username = Username,
+			password = Password
 		};
 		var jsonString = JsonSerializer.Serialize(jsonObj);
 
 		// Temporarily hardcoded DO NOT PUSH TS until I find out how to properly send the data
-		networkManager.SendRequest(String.Format(NetworkManager.BASE_URL + "/auth/login"), Godot.HttpClient.Method.Post, jsonString, LoginResponse);
+		networkManager.SendRequest(String.Format(NetworkManager.BASE_URL + NetworkManager.AUTH + "/auth/login"), Godot.HttpClient.Method.Post, jsonString, LoginResponse);
 	}
 
-	private LoginResponse MockLogin()
-	{
-		return new("token", 1, "JohnDoe", "purple", "grey", 10, 10, 1);
-	}
+	// private LoginResponse MockLogin()
+	// {
+	// 	return new("token", 1, "JohnDoe", "purple", "grey", 10, 10, 1);
+	// }
 
 	private void Register()
 	{
 		var jsonObj = new
 		{
-			Username = Username,
-			Password = Password,
-			Email = Email
+			username = Username,
+			password = Password,
 		};
 		var jsonString = JsonSerializer.Serialize(jsonObj);
-
+		GD.Print(jsonObj);
 		// Temporarily hardcoded DO NOT PUSH TS until I find out how to properly send the data
-		networkManager.SendRequest(NetworkManager.BASE_URL + "auth/register", Godot.HttpClient.Method.Post, jsonString, RegisterResponse);
+		GD.Print("Sending the register method");
+		networkManager.SendRequest(NetworkManager.BASE_URL + NetworkManager.AUTH + "/auth/register", Godot.HttpClient.Method.Post, jsonString, RegisterResponse);
 	}
 
 	private void RegisterResponse(long result, long responseCode, string[] headers, byte[] body)
 	{
+		GD.Print(responseCode);
+		GD.Print(System.Text.Encoding.UTF8.GetString(body));
 		if (result != 201 || responseCode != 201)
 		{
 			// This one would be some sort of server fail or some sort of conluding error
 			return;
 		}
-
 		// If successful, swithc back to login mode
 		CreatingAccount = false;
+		GD.Print("Login Request sent");
 	}
 
 	private void LoginResponse(long result, long responseCode, string[] headers, byte[] body)
 	{
 		if (result != (long)HttpRequest.Result.Success || responseCode != 200)
 		{
-			GD.Print("Attempting mock login");
-			PlayerStateManager.Instance.SetPlayerData(MockLogin());
+			// GD.Print("Attempting mock login");
+			// PlayerStateManager.Instance.SetPlayerData(MockLogin());
 			// TODO: Put some label that prevents them for conitnueing and ask them to try again
-			GD.Print("Going Home");
-			try
-			{
-				var GameStateManager = GetNode<GameStateManager>("/root/GameStateManager");
-				GameStateManager.ChangeGameState(GameState.HOMESCREEN);
-
-			}
-			catch (Exception e)
-			{
-				GD.PrintErr("Failled Home", e);
-
-			}
+			// GD.Print("Going Home");
 			return;
 		}
 
@@ -181,6 +174,19 @@ public partial class LoginMenu : Control
 		var data = JsonSerializer.Deserialize<LoginResponse>(json);
 		PlayerStateManager.Instance.SetPlayerData(data);
 		GameStateManager.Instance.ChangeGameState(GameState.HOMESCREEN);
+
+		GD.Print("Successful Message received");
+		try
+		{
+			var GameStateManager = GetNode<GameStateManager>("/root/GameStateManager");
+			GameStateManager.ChangeGameState(GameState.HOMESCREEN);
+
+		}
+		catch (Exception e)
+		{
+			GD.PrintErr("Failled Home", e);
+
+		}
 
 	}
 }
