@@ -8,23 +8,23 @@ using FSDClient.card;
 
 public class PlayerData
 {
-    private string Username { get; set; }
+    public string Username { get; set; }
     
     // TODO: Not sure whether this is standard to keep it individual or to create an abstracted class
     //       that acts as a wrapper around the data but ts looks ugly
-    private string IconName { get; set; }
-    private bool MainPlayer { get; set; }
-    // Numbers to be confirmed. Will place a proper named thing once everything has been sorted out 
-    private int Health { get; set; } = 250;
-    private int Attack { get; } = 5;
+    public string IconName { get; set; }
+    public string BorderColour { get; set; }
+    public bool MainPlayer { get; set; }
+    
+    // IDK if these 2 is necessary. Once I do more of the game logic I will figure it out
     public List<CardData> CurrHand { get; } = new();
-    private List<CardData> DeckCardDatas { get; }
+    // public List<CardData> DeckCardDatas { get; }
 
-    public PlayerData(string username, string iconName, List<CardData> deckCardDatas, bool mainPlayer)
+    public PlayerData(string username, string iconName, string borderColour, bool mainPlayer)
     {
         Username = username;
         IconName = iconName;
-        DeckCardDatas = deckCardDatas;
         MainPlayer = mainPlayer;
+        BorderColour = borderColour;
     }
 }
