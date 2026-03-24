@@ -4,12 +4,14 @@ using Godot;
 using System;
 using System.Text.Json;
 using FSDClient.autoLoad;
+using System.Text.Json.Serialization;
 using System.Collections.Generic;
 using FSDClient.card;
 
 public class LoginResponse
 {
 	public string Token { get; set; }
+	[JsonPropertyName("user_id")]
 	public long UserID { get; set; }
 	public string Username { get; set; }
 	public string IconName { get; set; }
@@ -21,6 +23,7 @@ public class LoginResponse
 	public int Level { get; set; }
 	// TODO: Settle how the levels will be do1ne
 	// TODO: Also settle whatever to do with the bottom one
+	[JsonPropertyName("expires_at")]
 	public DateTime ExpiresAt { get; set; }
 
 
@@ -160,6 +163,9 @@ public partial class LoginMenu : Control
 
 	private void LoginResponse(long result, long responseCode, string[] headers, byte[] body)
 	{
+		GD.Print(responseCode); ;
+		string json = System.Text.Encoding.UTF8.GetString(body);
+		GD.Print(json);
 		if (result != (long)HttpRequest.Result.Success || responseCode != 200)
 		{
 			// GD.Print("Attempting mock login");
@@ -169,12 +175,9 @@ public partial class LoginMenu : Control
 			return;
 		}
 
-		string json = System.Text.Encoding.UTF8.GetString(body);
 		// Do other things with the data Ig
 		var data = JsonSerializer.Deserialize<LoginResponse>(json);
 		PlayerStateManager.Instance.SetPlayerData(data);
-		GameStateManager.Instance.ChangeGameState(GameState.HOMESCREEN);
-
 		GD.Print("Successful Message received");
 		try
 		{
