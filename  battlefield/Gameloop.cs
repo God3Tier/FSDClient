@@ -94,7 +94,7 @@ public partial class Gameloop : Node2D
 		// IncomingPlayer = new PlayerData("Placeholder", "Placeholder", [], false);
 		CardManager = (CardManager)FindChild("CardManager", true);
 		CardManager._playerHand = GetNode<PlayerHand>("HandArea/PlayerHand");
-		CardManager._deck = GetNode<Control>("HandArea/Deck");
+		CardManager._deck = GetNode<DeckSpace>("HandArea/DeckSpace");
 		CardManager.CardDropped += OnCardDropped;
 		// Testing the HandArea
 		HandArea = GetNode<HandArea>("HandArea");

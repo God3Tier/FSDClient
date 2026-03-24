@@ -18,7 +18,7 @@ public partial class CardManager : Node2D
 	private uint COLLISION_MASK_CARD = 1;
 	private uint COLLISION_MASK_CARD_SLOT = 2;
 	public PlayerHand _playerHand  { get; set; }
-	public Control _deck { get; set; }
+	public DeckSpace _deck { get; set; }
 	private PlayerHand handReference;
 
 	// For handling game input
@@ -75,7 +75,7 @@ public partial class CardManager : Node2D
 		
 		else
 		{
-			_playerHand.AddCardToHand((Card)cardBeingDragged);
+			_playerHand.AddCard((Card)cardBeingDragged);
 		}
 		cardBeingDragged = null;
 
@@ -85,15 +85,15 @@ public partial class CardManager : Node2D
 	private void IntoBattleSlot(BattleSlot battleSlotFound) {
 		// Set the card's position to the batte slot
 		cardBeingDragged.Position = battleSlotFound.Position;
+		cardBeingDragged.ZIndex = 2;
 		// To ensure another card cannot go into the battle slot
-		battleSlotFound.CardInSlot = true;
-		battleSlotFound.Card = (Card)cardBeingDragged;
+		battleSlotFound.AddCard(cardBeingDragged);
 		// To deactivate interactions with the card that entered the battle slot
 		var collisionShape = cardBeingDragged.GetNode<CollisionShape2D>("Area2D/CollisionShape2D");
 		collisionShape.Disabled = true;
 		cardBeingDragged.CurrentSlotStatus = Card.SlotStatus.Battle;
 		// To remove the card from the players hand and free up a slot
-		_playerHand.RemoveCardFromHand((Card)cardBeingDragged);
+		_playerHand.RemoveCard((Card)cardBeingDragged);
 		EmitSignal(SignalName.CardDropped, battleSlotFound);
 	}
 
