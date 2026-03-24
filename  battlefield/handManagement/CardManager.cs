@@ -30,7 +30,6 @@ public partial class CardManager : Node2D
 			// Check if it was left button
 			if (mouseEvent.ButtonIndex == MouseButton.Left)
 			{
-
 				if (mouseEvent.IsPressed())
 				{
 					Card card = _raycastCheckForCard();
@@ -82,16 +81,18 @@ public partial class CardManager : Node2D
 
 	}
 	
+	// To handle the logic of a card entering a battle slot
 	private void IntoBattleSlot(BattleSlot battleSlotFound) {
+		// Set the card's position to the batte slot
 		cardBeingDragged.Position = battleSlotFound.Position;
-		GD.Print(battleSlotFound.Position);
-		GD.Print(cardBeingDragged.Position);
-		GD.Print(dragOffset);
+		// To ensure another card cannot go into the battle slot
 		battleSlotFound.CardInSlot = true;
+		battleSlotFound.Card = (Card)cardBeingDragged;
+		// To deactivate interactions with the card that entered the battle slot
 		var collisionShape = cardBeingDragged.GetNode<CollisionShape2D>("Area2D/CollisionShape2D");
 		collisionShape.Disabled = true;
-		battleSlotFound.Card = (Card)cardBeingDragged;
 		cardBeingDragged.CurrentSlotStatus = Card.SlotStatus.Battle;
+		// To remove the card from the players hand and free up a slot
 		_playerHand.RemoveCardFromHand((Card)cardBeingDragged);
 		EmitSignal(SignalName.CardDropped, battleSlotFound);
 	}

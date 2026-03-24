@@ -16,7 +16,7 @@ public partial class PlayerHand : Control
 	private int CARD_WIDTH = 100;
 	private int centerScreenX;
 	private float normalSpeed = 0.5f;
-	private float deckSpeed = 0.2f;
+	private float deckSpeed = 0.18f;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
