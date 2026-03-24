@@ -5,8 +5,6 @@ using System;
 using System.Text.Json;
 using FSDClient.autoLoad;
 using System.Text.Json.Serialization;
-using System.Collections.Generic;
-using FSDClient.card;
 
 public class LoginResponse
 {

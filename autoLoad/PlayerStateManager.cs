@@ -20,6 +20,7 @@ public partial class PlayerStateManager : Node
 	public int Level { get; set; }
 	public int Crystal { get; set; }
 	public int Gold { get; set; }
+	public string SessionId { get; set;}
 	public string Token { get; set; } = null;
 	
 	public override void _Ready()

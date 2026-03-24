@@ -4,14 +4,19 @@ using Godot;
 using System;
 using FSDClient.autoLoad;
 using System.Text.Json;
-
+using System.Text.Json.Serialization;
 
 class MatchStatusResponse
 {
+	[JsonPropertyName("matched")]
 	public bool Matched { get; set; }
+	[JsonPropertyName("session_id")]
 	public string SessionId { get; set; }
+	[JsonPropertyName("opponent")]
 	public string Opponent { get; set; }
+	[JsonPropertyName("your_mmr")]
 	public int YourMMR { get; set; }
+	[JsonPropertyName("their_mmr")]
 	public int TheirMMR { get; set; }
 
 	public MatchStatusResponse(bool matched, string sessionId, string opponent, int yourMMR, int theirMMR)
@@ -120,7 +125,7 @@ public partial class Home : Control
 		{
 
 			// 1 SECOND TIMEOUT - Godot way
-			await ToSignal(GetTree().CreateTimer(10.0f), "timeout");
+			await ToSignal(GetTree().CreateTimer(1.0f), "timeout");
 
 			// 2. Check if the player has been matched
 			Network.SendRequest(NetworkManager.BASE_URL + NetworkManager.MATCHMAKING + "/matchmaking/match", Godot.HttpClient.Method.Get, "", MatchCheckResponse, Header);
@@ -128,6 +133,8 @@ public partial class Home : Control
 
 
 		// 3. Accept the match and proceed
+		Network.SendRequest(NetworkManager.BASE_URL + NetworkManager.MATCHMAKING + "/matchmaking/accept", Godot.HttpClient.Method.Post, "", AcceptMatchResponse, Header);
+
 	}
 
 	// Press card button
@@ -181,12 +188,14 @@ public partial class Home : Control
 	}
 
 
-	// Network helper functions and managers
+	/*
+	*  Network helper functions and managers
+	*/
 	private void MatchCheckResponse(long result, long responseCode, string[] headers, byte[] body)
 	{
 		string json = System.Text.Encoding.UTF8.GetString(body);
 		GD.Print(responseCode);
-		if (result != 200 &&  responseCode != 200)
+		if (result != 200 && responseCode != 200)
 		{
 			GD.PrintErr("Failed to get a successful response about state of matchmaking");
 			GD.PrintErr(json);
@@ -199,21 +208,36 @@ public partial class Home : Control
 		{
 			return;
 		}
+
 		_searching = false;
-		var GameStateManager = GetNode<GameStateManager>("/root/GameStateManager");
-		GameStateManager.ChangeGameState(GameState.INGAMEMODE);
 	}
 
 	private void CancelMatchResponse(long result, long responseCode, string[] headers, byte[] body)
 	{
 		GD.Print(responseCode);
+		GD.Print(System.Text.Encoding.UTF8.GetString(body));
 		if (result != 200 && responseCode != 200)
 		{
 			GD.PrintErr("Failed to leave current queue");
-			GD.PrintErr(System.Text.Encoding.UTF8.GetString(body));
+			return;
+		}
+	}
+
+	private void AcceptMatchResponse(long result, long responseCode, string[] headers, byte[] body)
+	{
+		string json = System.Text.Encoding.UTF8.GetString(body);
+		GD.Print(responseCode);
+		GD.Print(json);
+
+		if (result != 200 && responseCode != 200)
+		{
+			GD.PrintErr("Unable to accept value");
 			return;
 		}
 
+		PlayerStateManager.Instance.PlayerData.SessionId =
+		var GameStateManager = GetNode<GameStateManager>("/root/GameStateManager");
+		GameStateManager.ChangeGameState(GameState.INGAMEMODE);
 
 	}
 }
