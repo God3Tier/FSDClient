@@ -10,14 +10,16 @@ using FSDClient.card;
 
 public class LoginResponse
 {
+	[JsonPropertyName("token")]
 	public string Token { get; set; }
 	[JsonPropertyName("user_id")]
 	public long UserID { get; set; }
+	[JsonPropertyName("username")]
 	public string Username { get; set; }
 	public string IconName { get; set; }
 	public string BorderColour { get; set; }
-	public int GoldCurrency { get; set; }
-	public int DiamondCurrency { get; set; }
+	public int Gold { get; set; }
+	public int Crystal { get; set; }
 	// This one I will set later
 	// public List<CardData> CurrentDeck { get; set; }
 	public int Level { get; set; }
@@ -28,15 +30,15 @@ public class LoginResponse
 
 
 	// Note: This is just to allow me to mock data since I dont want to test it with full backend yet
-	public LoginResponse(string token, long userid, string username, string iconName, string borderColour, int goldCurrency, int diamondCurrency, int level)
+	public LoginResponse(string token, long userid, string username, string iconName, string borderColour, int gold, int crystal, int level)
 	{
 		Token = token;
 		UserID = userid;
 		Username = username;
 		IconName = iconName;
 		BorderColour = borderColour;
-		GoldCurrency = goldCurrency;
-		DiamondCurrency = diamondCurrency;
+		Gold = gold;
+		Crystal = crystal;
 		Level = level;
 	}
 }

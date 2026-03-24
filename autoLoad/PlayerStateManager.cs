@@ -16,7 +16,10 @@ public partial class PlayerStateManager : Node
 {
 	public static PlayerStateManager Instance { get; private set; }
 	public PlayerData PlayerData { get; private set; }
-	private List<CardData> DeckCardDatas { get; set; }
+	public List<CardData> DeckCardDatas { get; set; }
+	public int Level { get; set; }
+	public int Crystal { get; set; }
+	public int Gold { get; set; }
 	public string Token { get; set; } = null;
 	
 	public override void _Ready()
@@ -30,7 +33,11 @@ public partial class PlayerStateManager : Node
 	// Here, we should request however the server stores the data of the user
 	public void SetPlayerData(LoginResponse loginResponse)
 	{
+		GD.Print("Intitialisiing with ", loginResponse.ToString() + " end of line");
 		Token = loginResponse.Token;
+		Level = loginResponse.Level;
+		Crystal = loginResponse.Crystal;
+		Gold = loginResponse.Gold;
 		PlayerData = new(loginResponse.Username, loginResponse.IconName, loginResponse.BorderColour, true);
 		// DeckCardDatas = loginResponse.CurrentDeck;
 	}
