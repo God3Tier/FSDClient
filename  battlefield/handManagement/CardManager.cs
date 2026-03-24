@@ -2,6 +2,7 @@ namespace FSDClient.battlefield.handManagement;
 
 using Godot;
 using System;
+using System.Linq; // For the Contains method
 using FSDClient.card.display;
 
 
@@ -18,7 +19,7 @@ public partial class CardManager : Node2D
 	private uint COLLISION_MASK_CARD = 1;
 	private uint COLLISION_MASK_CARD_SLOT = 2;
 	public PlayerHand _playerHand  { get; set; }
-	public DeckSpace _deck { get; set; }
+	public DeckSpace _deckSpace { get; set; }
 	private PlayerHand handReference;
 
 	// For handling game input
@@ -36,6 +37,10 @@ public partial class CardManager : Node2D
 					if (card != null)
 					{
 						StartDrag(card);
+					}
+					else
+					{
+						return;
 					}
 				}
 				else
@@ -73,9 +78,13 @@ public partial class CardManager : Node2D
 			IntoBattleSlot(battleSlotFound);
 		}
 		
-		else
+		else if (_playerHand._cardList.Contains(cardBeingDragged))
 		{
 			_playerHand.AddCard((Card)cardBeingDragged);
+		}
+		else
+		{
+			_deckSpace.AddCard((Card)cardBeingDragged);
 		}
 		cardBeingDragged = null;
 
@@ -145,7 +154,7 @@ public partial class CardManager : Node2D
 		else
 		{
 			card.Scale = new Vector2(0.95f, 0.95f);
-			card.ZIndex = 5; // TODO: This will likely cause problems with the hand later
+			card.ZIndex = 5;
 		}
 	}
 

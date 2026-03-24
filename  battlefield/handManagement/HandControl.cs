@@ -7,12 +7,12 @@ using FSDClient.card.display;
 
 public partial class HandControl : Control
 {
-	protected Card[] _cardList;
-	protected Slot[] _slotList;
+	public Card[] _cardList { get; protected set; }
+	public Slot[] _slotList { get; protected set; }
 	protected int _cardCount = 0;
 	protected int _cardLimit;
-	protected float _normalSpeed;
-	protected float _deckSpeed;
+	protected float _normalSpeed = 0.3f;
+	protected float _deckSpeed = 0.3f;
 	
 	// Add card to this hand control provided there is enough space
 	public void AddCard(Card card)
@@ -26,6 +26,13 @@ public partial class HandControl : Control
 					_slotList[i].AddCard(card);
 					_cardCount++;
 					break;
+				}
+			}
+			
+			GD.Print("Deck Check");
+			foreach (Card c in _cardList) {
+				if (c != null) {
+					GD.Print(c.ZIndex);
 				}
 			}
 			// update all the card positions
@@ -47,6 +54,7 @@ public partial class HandControl : Control
 		_slotList[index].RemoveCard();
 		_cardCount--;
 	}
+	
 	
 	// To animate 1 card back to its position
 	public void AnimateCardToPosition(Card card, Vector2 position, float speed) 

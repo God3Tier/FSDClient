@@ -15,7 +15,7 @@ public partial class Gameloop : Node2D
 {
 	public static readonly string WEBSOCKET_URL = "";
 	public static readonly double MAX_ELIXER = 8;
-	public static readonly double ROUND_TIMER = 5.0;
+	public static readonly double ROUND_TIMER = 10.0;
 	public static readonly double PAUSE_TIMER = 5.0;
 	public static readonly double SECONDS_PER_ELIXIR = 3f;
 	public static readonly int BASE_ELIXIR = 4;
@@ -30,13 +30,14 @@ public partial class Gameloop : Node2D
 	private Card[][] OpponentBoard { get; set; } = new Card[2][];
 	private CardManager CardManager;
 	private HandArea HandArea;
+	private DeckSpace DeckSpace;
 
 	// Parameters for game state to be managed
 	private int Elixir { get; set; }
 	private int RoundNumber { get; set; }
 	private double GameTimer { get; set; } = 0;
 	private double RegenInterval { get; set; } = 1;
-	private bool TurnPause { get; set; } = false;
+	private bool TurnPause { get; set; } = true;
 	private double PauseTimer { get; set; } = 0;
 	private int TurnRound = 1;
 
@@ -52,7 +53,7 @@ public partial class Gameloop : Node2D
 	{
 		Socket.ConnectToUrl(WEBSOCKET_URL);
 		HandArea = GetNode<HandArea>("HandArea");
-		HandArea.RaiseDeck();
+		
 
 		for (int i = 0; i < 2; i++)
 		{
@@ -94,18 +95,25 @@ public partial class Gameloop : Node2D
 		// IncomingPlayer = new PlayerData("Placeholder", "Placeholder", [], false);
 		CardManager = (CardManager)FindChild("CardManager", true);
 		CardManager._playerHand = GetNode<PlayerHand>("HandArea/PlayerHand");
-		CardManager._deck = GetNode<DeckSpace>("HandArea/DeckSpace");
+		CardManager._deckSpace = GetNode<DeckSpace>("HandArea/DeckSpace");
 		CardManager.CardDropped += OnCardDropped;
 		// Testing the HandArea
 		HandArea = GetNode<HandArea>("HandArea");
 		HandArea._playerHand = GetNode<PlayerHand>("HandArea/PlayerHand");
+		HandArea._deckSpace = GetNode<DeckSpace>("HandArea/DeckSpace");
 		GD.Print(HandArea);
 		GD.Print(CardManager._playerHand.Name);
-
+		
 		TestCard();
 		TestCard();
 		TestCard();
 		TestCard();
+		TestCard();
+		TestCard();
+		TestCard();
+		TestCard();
+		HandArea.RaiseDeck();
+		
 		GD.Print("Completed everything without a problem");
 	}
 
@@ -119,6 +127,7 @@ public partial class Gameloop : Node2D
 		CardTemp.ZIndex = 5;
 		CardTemp.LoadDataTexture(CardTexture);
 		CardManager.AddChild(CardTemp);
+		CardManager._deckSpace.AddCard(CardTemp);
 	}
 
 
@@ -229,7 +238,6 @@ public partial class Gameloop : Node2D
 		if (GameTimer >= ROUND_TIMER * TurnRound && !TurnPause)
 		{
 			GD.Print("Round updated");
-			GD.Print(HandArea.ZIndex);
 			// TODO: Trigger secondary draw card event
 			TurnPause = true;
 			HandArea.RaiseDeck();

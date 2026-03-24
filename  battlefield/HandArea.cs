@@ -6,7 +6,8 @@ using FSDClient.battlefield.handManagement;
 
 public partial class HandArea : Control
 {
-	[Export] public PlayerHand _playerHand { get; set; }
+	public PlayerHand _playerHand { get; set; }
+	public DeckSpace _deckSpace {get; set;}
 	private float _raiseDistance = 470f;
 	private float _raiseDuration = 0.3f;
 
@@ -33,12 +34,13 @@ public partial class HandArea : Control
 		var tween = CreateTween();
 		tween.TweenProperty(this, "position",
 		_startPos - new Vector2(0, _raiseDistance),
-		_raiseDuration)
-		.SetTrans(Tween.TransitionType.Cubic)
-		.SetEase(Tween.EaseType.Out);
+		_raiseDuration);
 		
 		if (_playerHand != null) {
 			_playerHand.AnimateAllCardsToPosition(_raiseDistance/128, true);
+		}
+		if (_deckSpace != null) {
+			_deckSpace.AnimateAllCardsToPosition(_raiseDistance, true);
 		}
 		
 	}
@@ -51,11 +53,12 @@ public partial class HandArea : Control
 		var tween = CreateTween();
 		tween.TweenProperty(this, "position",
 		_startPos,
-		_raiseDuration)
-		.SetTrans(Tween.TransitionType.Cubic)
-		.SetEase(Tween.EaseType.Out);
+		_raiseDuration);
 		if (_playerHand != null) {
 			_playerHand.AnimateAllCardsToPosition(_raiseDistance, false);
+		}
+		if (_deckSpace != null) {
+			_deckSpace.AnimateAllCardsToPosition(_raiseDistance/64, false);
 		}
 	}
 }
