@@ -65,19 +65,25 @@ public partial class CardManager : Node2D
 		cardBeingDragged.Scale = new Vector2(1.005f, 1.005f);
 		var slotFound = _raycastCheckForSlot();
 		GD.Print(cardBeingDragged.CurrentSlotStatus);
-
+		if (slotFound != null) {
+		}
 		// Put the signal here for nonsence in gameloop
 		// TODO: DO it
-		// First check if the slot is a BattleSlot, 
-		// then check if there is a card in the slot already, 
+		// First check if the slot is a BattleSlot,
+		// then check if there is a card in the slot already,
 		// then check if the card is currently allowed to be added
-		if (slotFound is BattleSlot battleSlotFound && 
-			!battleSlotFound.CardInSlot && 
+		if (slotFound is BattleSlot battleSlotFound &&
+			!battleSlotFound.CardInSlot &&
 			cardBeingDragged.CurrentSlotStatus == Card.SlotStatus.Hand)
 		{
 			IntoBattleSlot(battleSlotFound);
 		}
-		
+		else if (slotFound is HandSlot handSlotFound && 
+				!handSlotFound.CardInSlot && 
+				cardBeingDragged.CurrentSlotStatus == Card.SlotStatus.Deck)
+		{
+			IntoHandSlot(handSlotFound);
+		}
 		else if (_playerHand._cardList.Contains(cardBeingDragged))
 		{
 			_playerHand.AddCard((Card)cardBeingDragged);
@@ -89,7 +95,7 @@ public partial class CardManager : Node2D
 		cardBeingDragged = null;
 
 	}
-	
+
 	// To handle the logic of a card entering a battle slot
 	private void IntoBattleSlot(BattleSlot battleSlotFound) {
 		// Set the card's position to the batte slot
@@ -104,6 +110,11 @@ public partial class CardManager : Node2D
 		// To remove the card from the players hand and free up a slot
 		_playerHand.RemoveCard((Card)cardBeingDragged);
 		EmitSignal(SignalName.CardDropped, battleSlotFound);
+	}
+	
+	private void IntoHandSlot(HandSlot handSlotFound) {
+		cardBeingDragged.CurrentSlotStatus = Card.SlotStatus.HandTemp;
+		_playerHand.AddCard(cardBeingDragged);
 	}
 
 	// For the hover effect
@@ -149,7 +160,7 @@ public partial class CardManager : Node2D
 		if (hovered)
 		{
 			card.Scale = new Vector2(1.05f, 1.05f);
-			card.ZIndex = 6;
+			card.ZIndex = 5;
 		}
 		else
 		{
@@ -196,27 +207,31 @@ public partial class CardManager : Node2D
 		var result = spaceState.IntersectPoint(parameters);
 		if (result.Count > 0)
 		{
-			var collider = (Area2D)result[0]["collider"];
-			var cardParent = collider.GetParent<Slot>();
-			return cardParent;
+			var slot = GetHighestZIndex(result);
+			if (slot is Slot) {
+				return (Slot) slot;
+			}
+
 		}
 		return null;
 	}
 
+	// To retrieve the node that is rendered at the top
 	private Node2D GetHighestZIndex(Godot.Collections.Array<Godot.Collections.Dictionary> result)
 	{
 		var HighestZCollider = (Area2D)result[0]["collider"];
-		var HighestZCard = HighestZCollider.GetParent<Node2D>();
+		var HighestZNode = HighestZCollider.GetParent<Node2D>();
 		for (int i = 0; i < result.Count; i++)
 		{
 			var collider = (Area2D)result[i]["collider"];
-			var card = collider.GetParent<Node2D>();
-			if (card.ZIndex > HighestZCard.ZIndex)
+			var node = collider.GetParent<Node2D>();
+			if (node.ZIndex > HighestZNode.ZIndex)
 			{
-				HighestZCard = card;
+				HighestZNode = node;
 			}
+			GD.Print($"{i}: {node.Name} - {node.ZIndex}");
 		}
-		return HighestZCard;
+		return HighestZNode;
 	}
 
 	// Called when the node enters the scene tree for the first time.

@@ -20,10 +20,6 @@ public partial class PlayerHand : HandControl
 			int lastInt = (int)(childName[^1] - '1');
 			_slotList[lastInt] = slot;
 		}
-
-		foreach (Slot slot in _slotList) {
-			GD.Print(slot);
-		}
 	}
 	
 	// This will allow all cards to be placed into the battlefield

@@ -123,8 +123,8 @@ public partial class Gameloop : Node2D
 		var CardTexture = Builder.BuildCard(TestCard);
 		var CardScene = GD.Load<PackedScene>("res://scenes/gameComponents/Card.tscn");
 		var CardTemp = CardScene.Instantiate<Card>();
-		CardTemp.CurrentSlotStatus = Card.SlotStatus.HandTemp;
-		CardTemp.ZIndex = 5;
+		CardTemp.CurrentSlotStatus = Card.SlotStatus.Deck;
+		CardTemp.ZIndex = 4;
 		CardTemp.LoadDataTexture(CardTexture);
 		CardManager.AddChild(CardTemp);
 		CardManager._deckSpace.AddCard(CardTemp);

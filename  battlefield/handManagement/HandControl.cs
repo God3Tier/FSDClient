@@ -28,13 +28,6 @@ public partial class HandControl : Control
 					break;
 				}
 			}
-			
-			GD.Print("Deck Check");
-			foreach (Card c in _cardList) {
-				if (c != null) {
-					GD.Print(c.ZIndex);
-				}
-			}
 			// update all the card positions
 			UpdateCardPositions();
 		}
@@ -45,6 +38,7 @@ public partial class HandControl : Control
 			AnimateCardToPosition(card, _slotList[index].GlobalPosition, _normalSpeed);
 		}
 	}
+	
 	
 	// To remove the card from the slot
 	public void RemoveCard(Card card) 
