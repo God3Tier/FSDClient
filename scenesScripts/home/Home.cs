@@ -29,6 +29,28 @@ class MatchStatusResponse
 	}
 }
 
+class AcceptMatchResponse
+{
+	[JsonPropertyName("message")]
+	public string Message { get; set; }
+	[JsonPropertyName("session_id")]
+	public string SessionId;
+	[JsonPropertyName("status")]
+	public string Status;
+	[JsonPropertyName("player1_ready")]
+	public bool Player1Ready;
+	[JsonPropertyName("player2_ready")]
+	public bool Player2Ready;
+
+	public AcceptMatchResponse(string message, string sessionId, string status, bool player1Ready, bool player2Ready) {
+		Message = message; 
+		SessionId = sessionId;
+		Status = status;
+		Player1Ready = player1Ready;
+		Player2Ready = player2Ready;
+	}
+}
+
 public partial class Home : Control
 {
 
@@ -234,8 +256,9 @@ public partial class Home : Control
 			GD.PrintErr("Unable to accept value");
 			return;
 		}
-
-		PlayerStateManager.Instance.PlayerData.SessionId =
+		
+		var Response = JsonSerializer.Deserialize<AcceptMatchResponse>(json);
+		PlayerStateManager.Instance.SessionId = Response.SessionId;
 		var GameStateManager = GetNode<GameStateManager>("/root/GameStateManager");
 		GameStateManager.ChangeGameState(GameState.INGAMEMODE);
 
