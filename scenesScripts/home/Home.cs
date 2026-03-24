@@ -3,114 +3,264 @@ namespace FSDClient.home;
 using Godot;
 using System;
 using FSDClient.autoLoad;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+
+class MatchStatusResponse
+{
+	[JsonPropertyName("matched")]
+	public bool Matched { get; set; }
+	[JsonPropertyName("session_id")]
+	public string SessionId { get; set; }
+	[JsonPropertyName("opponent")]
+	public string Opponent { get; set; }
+	[JsonPropertyName("your_mmr")]
+	public int YourMMR { get; set; }
+	[JsonPropertyName("their_mmr")]
+	public int TheirMMR { get; set; }
+
+	public MatchStatusResponse(bool matched, string sessionId, string opponent, int yourMMR, int theirMMR)
+	{
+		Matched = matched;
+		SessionId = sessionId;
+		Opponent = opponent;
+		YourMMR = yourMMR;
+		TheirMMR = theirMMR;
+	}
+}
+
+class AcceptMatchResponse
+{
+	[JsonPropertyName("message")]
+	public string Message { get; set; }
+	[JsonPropertyName("session_id")]
+	public string SessionId;
+	[JsonPropertyName("status")]
+	public string Status;
+	[JsonPropertyName("player1_ready")]
+	public bool Player1Ready;
+	[JsonPropertyName("player2_ready")]
+	public bool Player2Ready;
+
+	public AcceptMatchResponse(string message, string sessionId, string status, bool player1Ready, bool player2Ready) {
+		Message = message; 
+		SessionId = sessionId;
+		Status = status;
+		Player1Ready = player1Ready;
+		Player2Ready = player2Ready;
+	}
+}
 
 public partial class Home : Control
 {
-    private volatile bool _searching = false;
-    private PlayerStateManager CurrentPlayer { get; set; }
-    // Called when the node enters the scene tree for the first time.
-    public override void _Ready()
-    {
-        try
-        {
-            CurrentPlayer = PlayerStateManager.Instance;
-            GD.Print(CurrentPlayer.ToString());
-            if (CurrentPlayer.PlayerData == null)
-            {
-                GD.Print("The PlayerData is empty");
-                var GameStateManager = GetNode<GameStateManager>("/root/GameStateManager");
-                GameStateManager.ChangeGameState(GameState.LOGIN);
-            }
 
-        }
-        catch (Exception e)
-        {
-            GD.PrintErr("Whoops ", e);
-        }
-    }
+	private volatile bool _searching = false;
+	private PlayerStateManager CurrentPlayer { get; set; }
+	private NetworkManager Network { get; set; }
+	private string[] Header { get; } = new string[2];
+	// Called when the node enters the scene tree for the first time.
+	public override void _Ready()
+	{
+		Network = NetworkManager.Instance;
+		try
+		{
+			CurrentPlayer = PlayerStateManager.Instance;
+			GD.Print(CurrentPlayer.ToString());
+			if (CurrentPlayer.PlayerData == null)
+			{
+				GD.Print("The PlayerData is empty");
+				var GameStateManager = GetNode<GameStateManager>("/root/GameStateManager");
+				GameStateManager.ChangeGameState(GameState.LOGIN);
+				return;
+			}
 
-    // Called every frame. 'delta' is the elapsed time since the previous frame.
-    public override void _Process(double delta)
-    {
-    }
+		}
+		catch (Exception e)
+		{
+			GD.PrintErr("Whoops ", e);
+		}
 
-    //	Press Battle button
-    public async void _on_battle_button_pressed()
-    {
+		var token = CurrentPlayer.Token;
+		Header[1] = $"Authorization: Bearer {token}";
 
-        Control loadingNode = GetNode<ColorRect>("Loading");
+		try
+		{
+			InitialisePlayerInformation();
+		}
+		catch (Exception e)
+		{
+			GD.PrintErr("Whoops", e);
+		}
+	}
 
-        // start animation
-        AnimatedSprite2D LoadingSprite = GetNode<AnimatedSprite2D>("Loading/LoadingAnimation");
-        LoadingSprite.Play("loading");  // Replace "default" with your animation name
+	private void InitialisePlayerInformation()
+	{
+		// Set player Icon TODO: I need Windy's code to be merged before I can do this
 
-        // Turn it ON (make visible)
-        loadingNode.Visible = true;
-        _searching = true;
+		var Header = (BoxContainer)FindChild("Header");
+		var Row1 = (BoxContainer)Header.FindChild("Row 1");
+		var Row2 = (BoxContainer)Header.FindChild("Row 2");
 
-        // find game stuff
-        while (_searching)
-        {
-            // 1 SECOND TIMEOUT - Godot way
-            await ToSignal(GetTree().CreateTimer(1.0f), "timeout");
+		// GD.Print(Row1, Row2);
 
-            // if it did not get canceled
-            if (_searching)
-            {
-                // found match
-                _searching = false;
-                var GameStateManager = GetNode<GameStateManager>("/root/GameStateManager");
-                GameStateManager.ChangeGameState(GameState.INGAMEMODE);
-            }
-        }
-    }
+		// Set Header -> Row1 -> XP -> Banner -> Level
+		var Lv = (Label)((TextureRect)((ColorRect)Row1.FindChild("XP")).FindChild("Banner")).FindChild("Level");
+		Lv.Text = CurrentPlayer.Level.ToString();
+		// Set Header -> Row1 -> Crystal ->  Label
+		var Cry = (Label)((ColorRect)Row1.FindChild("Crystal", true)).FindChild("Label");
+		Cry.Text = CurrentPlayer.Crystal.ToString();
 
-    // Press card button
-    public void _on_card_button_pressed()
-    {
-        var GameStateManager = GetNode<GameStateManager>("/root/GameStateManager");
-        GameStateManager.ChangeGameState(GameState.CARDSCREEN);
-    }
+		// Set Header -> Row1 -> Gold ->  Label
+		var Gld = (Label)((ColorRect)Row1.FindChild("Gold", true)).FindChild("Label");
+		Gld.Text = CurrentPlayer.Gold.ToString();
 
-    // Press cancel button when finding match
-    public void _on_cancel_button_pressed()
-    {
-        _searching = false;
-        Control loadingNode = GetNode<ColorRect>("Loading");
+		// Set Header -> Row2 -> Name ->  Label
+		var Username = (Label)((ColorRect)Row2.FindChild("Name", true)).FindChild("Label");
+		Username.Text = CurrentPlayer.PlayerData.Username;
 
-        // stop animation
-        AnimatedSprite2D LoadingSprite = GetNode<AnimatedSprite2D>("Loading/LoadingAnimation");
-        LoadingSprite.Stop();  // Replace "default" with your animation name
 
-        // Turn it OFF (make visible false)
-        loadingNode.Visible = false;
-    }
+	}
 
-    // Press friend button (to show friend list)
-    public void _on_friend_button_pressed()
-    {
-        Control FriendPopupContainerNode = GetNode<Control>("FriendPopupContainer");
+	// Called every frame. 'delta' is the elapsed time since the previous frame.
+	public override void _Process(double delta)
+	{
+	}
 
-        // Turn it ON (make visible)
-        FriendPopupContainerNode.Visible = true;
-    }
+	//	Press Battle button
+	public async void _on_battle_button_pressed()
+	{
 
-    public void _on_friend_popup_background_pressed()
-    {
-        close_friend_popup();
-    }
+		Control loadingNode = GetNode<ColorRect>("Loading");
+		// 1. Add player to queue
+		Network.SendRequest(NetworkManager.BASE_URL + NetworkManager.MATCHMAKING + "/matchmaking/join", Godot.HttpClient.Method.Post, "", MatchCheckResponse, Header);
 
-    public void _on_close_friend_button_pressed()
-    {
-        close_friend_popup();
-    }
+		// start animation
+		AnimatedSprite2D LoadingSprite = GetNode<AnimatedSprite2D>("Loading/LoadingAnimation");
+		LoadingSprite.Play("loading");  // Replace "default" with your animation name
 
-    public void close_friend_popup()
-    {
-        Control FriendPopupContainerNode = GetNode<Control>("FriendPopupContainer");
+		// Turn it ON (make visible)
+		loadingNode.Visible = true;
+		_searching = true;
 
-        // Turn it ON (make visible)
-        FriendPopupContainerNode.Visible = false;
-    }
+		// find game stuff
+		while (_searching)
+		{
 
+			// 1 SECOND TIMEOUT - Godot way
+			await ToSignal(GetTree().CreateTimer(1.0f), "timeout");
+
+			// 2. Check if the player has been matched
+			Network.SendRequest(NetworkManager.BASE_URL + NetworkManager.MATCHMAKING + "/matchmaking/match", Godot.HttpClient.Method.Get, "", MatchCheckResponse, Header);
+		}
+
+
+		// 3. Accept the match and proceed
+		Network.SendRequest(NetworkManager.BASE_URL + NetworkManager.MATCHMAKING + "/matchmaking/accept", Godot.HttpClient.Method.Post, "", AcceptMatchResponse, Header);
+
+	}
+
+	// Press card button
+	public void _on_card_button_pressed()
+	{
+		var GameStateManager = GetNode<GameStateManager>("/root/GameStateManager");
+		GameStateManager.ChangeGameState(GameState.CARDSCREEN);
+	}
+
+	// Press cancel button when finding match
+	public void _on_cancel_button_pressed()
+	{
+		// Send request to cancel the game connection
+		Network.SendRequest(NetworkManager.BASE_URL + NetworkManager.MATCHMAKING + "/matchmaking/leave", Godot.HttpClient.Method.Post, "", CancelMatchResponse, Header);
+		_searching = false;
+		Control loadingNode = GetNode<ColorRect>("Loading");
+
+		// stop animation
+		AnimatedSprite2D LoadingSprite = GetNode<AnimatedSprite2D>("Loading/LoadingAnimation");
+		LoadingSprite.Stop();  // Replace "default" with your animation name
+
+		// Turn it OFF (make visible false)
+		loadingNode.Visible = false;
+	}
+
+	// Press friend button (to show friend list)
+	public void _on_friend_button_pressed()
+	{
+		Control FriendPopupContainerNode = GetNode<Control>("FriendPopupContainer");
+
+		// Turn it ON (make visible)
+		FriendPopupContainerNode.Visible = true;
+	}
+
+	public void _on_friend_popup_background_pressed()
+	{
+		close_friend_popup();
+	}
+
+	public void _on_close_friend_button_pressed()
+	{
+		close_friend_popup();
+	}
+
+	public void close_friend_popup()
+	{
+		Control FriendPopupContainerNode = GetNode<Control>("FriendPopupContainer");
+
+		// Turn it ON (make visible)
+		FriendPopupContainerNode.Visible = false;
+	}
+
+
+	/*
+	*  Network helper functions and managers
+	*/
+	private void MatchCheckResponse(long result, long responseCode, string[] headers, byte[] body)
+	{
+		string json = System.Text.Encoding.UTF8.GetString(body);
+		GD.Print(responseCode);
+		if (result != 200 && responseCode != 200)
+		{
+			GD.PrintErr("Failed to get a successful response about state of matchmaking");
+			GD.PrintErr(json);
+			return;
+		}
+
+
+		var data = JsonSerializer.Deserialize<MatchStatusResponse>(json);
+		if (data.Matched == false)
+		{
+			return;
+		}
+
+		_searching = false;
+	}
+
+	private void CancelMatchResponse(long result, long responseCode, string[] headers, byte[] body)
+	{
+		GD.Print(responseCode);
+		GD.Print(System.Text.Encoding.UTF8.GetString(body));
+		if (result != 200 && responseCode != 200)
+		{
+			GD.PrintErr("Failed to leave current queue");
+			return;
+		}
+	}
+
+	private void AcceptMatchResponse(long result, long responseCode, string[] headers, byte[] body)
+	{
+		string json = System.Text.Encoding.UTF8.GetString(body);
+		GD.Print(responseCode);
+		GD.Print(json);
+
+		if (result != 200 && responseCode != 200)
+		{
+			GD.PrintErr("Unable to accept value");
+			return;
+		}
+		
+		var Response = JsonSerializer.Deserialize<AcceptMatchResponse>(json);
+		PlayerStateManager.Instance.SessionId = Response.SessionId;
+		var GameStateManager = GetNode<GameStateManager>("/root/GameStateManager");
+		GameStateManager.ChangeGameState(GameState.INGAMEMODE);
+
+	}
 }
