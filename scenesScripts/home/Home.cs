@@ -88,12 +88,9 @@ public partial class Home : Control
 			{
 				GD.Print("The PlayerData is empty");
 				var GameStateManager = GetNode<GameStateManager>("/root/GameStateManager");
-				//GameStateManager.ChangeGameState(GameState.LOGIN);
-				//return;
+				GameStateManager.ChangeGameState(GameState.LOGIN);
+				return;
 			}
-			
-			// Function to get pack, update param to accept user data
-			GetPacks();
 
 		}
 		catch (Exception e)
@@ -106,6 +103,9 @@ public partial class Home : Control
 		try
 		{
 			InitialisePlayerInformation();
+			
+			// Function to get pack, update param to accept user data
+			GetPacks();
 		}
 		catch (Exception e)
 		{
