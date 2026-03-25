@@ -84,6 +84,7 @@ public partial class CardManagement : Control
 		}
 	}
 	
+	// When a Card in Collection is being pressed
 	private void OnCollectionCardPressed(int index){
 		var CollectionContainer = GetNode<FlowContainer>("MainCardContainer/CollectionContainer/CollectionColorContainer/ScrollContainer/CollectionContainer");
 		
@@ -99,7 +100,6 @@ public partial class CardManagement : Control
 		if(ButtonIndex == -1){
 			// Create button
 			CreateCardButton(pos.X, pos.Y, index);
-			GD.Print(pos.Y);
 			RefreshScrollbar();
 		}else{
 			// Else deletes it
@@ -107,13 +107,12 @@ public partial class CardManagement : Control
 		}
 	}
 	
+	// Need to refresh because the extra card buttons won't be included in the initial calculations
 	private void RefreshScrollbar(){
-		GD.Print("TotalHeightCA");
 		ScrollContainer Scroll = GetNode<ScrollContainer>("MainCardContainer/CollectionContainer/CollectionColorContainer/ScrollContainer");
 		HFlowContainer Content = Scroll.GetNode<HFlowContainer>("CollectionContainer");
 
 		// Calculate total Content height
-		GD.Print("TotalHeightA");
 		float TotalHeight = 0;
 		foreach(Control Child in Content.GetChildren().OfType<Control>())
 		{
@@ -122,10 +121,8 @@ public partial class CardManagement : Control
 				TotalHeight = pos.Y;
 			}
 		}
-		GD.Print(TotalHeight);
 
 		float DesiredHeight = TotalHeight + 300;
-		GD.Print(DesiredHeight);
 		Content.CustomMinimumSize = new Vector2(Scroll.Size.X, DesiredHeight);
 		Scroll.QueueSort();  // Refresh layout
 	}
