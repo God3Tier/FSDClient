@@ -5,7 +5,6 @@
 [ext_resource type="Texture2D" uid="uid://tl43u2wwetbq" path="res://assets/header/banner.png" id="3_c7st2"]
 [ext_resource type="Texture2D" uid="uid://pu52dbw7egqc" path="res://assets/header/crystal_colored.png" id="4_yc314"]
 [ext_resource type="Texture2D" uid="uid://nkdqwj6g8mqc" path="res://assets/header/gold_Colored.png" id="5_60kyj"]
-[ext_resource type="PackedScene" uid="uid://csm0ojou5aa2g" path="res://scenes/gameComponents/Card.tscn" id="7_60kyj"]
 [ext_resource type="StyleBox" uid="uid://buvt2gu2jbmvx" path="res://styles/tab_unselected.tres" id="7_yc314"]
 [ext_resource type="StyleBox" uid="uid://fanmcmx62hlp" path="res://styles/tab_selected.tres" id="8_60kyj"]
 [ext_resource type="StyleBox" uid="uid://c1jvco4h5a04c" path="res://styles/button_success.tres" id="8_fh2y4"]
@@ -320,108 +319,8 @@ offset_top = 15.0
 offset_right = 625.0
 offset_bottom = 815.0
 
-[node name="DeckContainer" type="HFlowContainer" parent="MainCardContainer/DeckContainer/DeckColorContainer/ScrollContainer" unique_id=1708738154]
-visible = false
-custom_minimum_size = Vector2(610, 660)
+[node name="ButtonContainer" type="Control" parent="MainCardContainer/DeckContainer/DeckColorContainer/ScrollContainer" unique_id=1186676521]
 layout_mode = 2
-theme_override_constants/h_separation = 4
-theme_override_constants/v_separation = 4
-
-[node name="CardControl" type="Control" parent="MainCardContainer/DeckContainer/DeckColorContainer/ScrollContainer/DeckContainer" unique_id=1485348067]
-visible = false
-custom_minimum_size = Vector2(200, 230)
-layout_mode = 2
-
-[node name="Card" parent="MainCardContainer/DeckContainer/DeckColorContainer/ScrollContainer/DeckContainer/CardControl" unique_id=992434383 instance=ExtResource("7_60kyj")]
-position = Vector2(100, 115)
-
-[node name="CardControl2" type="Control" parent="MainCardContainer/DeckContainer/DeckColorContainer/ScrollContainer/DeckContainer" unique_id=1428093968]
-visible = false
-custom_minimum_size = Vector2(200, 230)
-layout_mode = 2
-
-[node name="Card" parent="MainCardContainer/DeckContainer/DeckColorContainer/ScrollContainer/DeckContainer/CardControl2" unique_id=1129972756 instance=ExtResource("7_60kyj")]
-position = Vector2(100, 115)
-
-[node name="CardControl3" type="Control" parent="MainCardContainer/DeckContainer/DeckColorContainer/ScrollContainer/DeckContainer" unique_id=1796194247]
-visible = false
-custom_minimum_size = Vector2(200, 230)
-layout_mode = 2
-
-[node name="Card" parent="MainCardContainer/DeckContainer/DeckColorContainer/ScrollContainer/DeckContainer/CardControl3" unique_id=313005160 instance=ExtResource("7_60kyj")]
-position = Vector2(100, 115)
-
-[node name="CardControl4" type="Control" parent="MainCardContainer/DeckContainer/DeckColorContainer/ScrollContainer/DeckContainer" unique_id=70023330]
-visible = false
-custom_minimum_size = Vector2(200, 230)
-layout_mode = 2
-
-[node name="Card" parent="MainCardContainer/DeckContainer/DeckColorContainer/ScrollContainer/DeckContainer/CardControl4" unique_id=2015439652 instance=ExtResource("7_60kyj")]
-position = Vector2(100, 115)
-
-[node name="CardControl5" type="Control" parent="MainCardContainer/DeckContainer/DeckColorContainer/ScrollContainer/DeckContainer" unique_id=1951590957]
-visible = false
-custom_minimum_size = Vector2(200, 230)
-layout_mode = 2
-
-[node name="Card" parent="MainCardContainer/DeckContainer/DeckColorContainer/ScrollContainer/DeckContainer/CardControl5" unique_id=233160247 instance=ExtResource("7_60kyj")]
-position = Vector2(100, 115)
-
-[node name="CardControl6" type="Control" parent="MainCardContainer/DeckContainer/DeckColorContainer/ScrollContainer/DeckContainer" unique_id=2093665716]
-visible = false
-custom_minimum_size = Vector2(200, 230)
-layout_mode = 2
-
-[node name="Card" parent="MainCardContainer/DeckContainer/DeckColorContainer/ScrollContainer/DeckContainer/CardControl6" unique_id=1786632986 instance=ExtResource("7_60kyj")]
-position = Vector2(100, 115)
-
-[node name="CardControl7" type="Control" parent="MainCardContainer/DeckContainer/DeckColorContainer/ScrollContainer/DeckContainer" unique_id=1847669550]
-visible = false
-custom_minimum_size = Vector2(200, 230)
-layout_mode = 2
-
-[node name="Card" parent="MainCardContainer/DeckContainer/DeckColorContainer/ScrollContainer/DeckContainer/CardControl7" unique_id=602863645 instance=ExtResource("7_60kyj")]
-position = Vector2(100, 115)
-
-[node name="CardControl8" type="Control" parent="MainCardContainer/DeckContainer/DeckColorContainer/ScrollContainer/DeckContainer" unique_id=1484923713]
-visible = false
-custom_minimum_size = Vector2(200, 230)
-layout_mode = 2
-
-[node name="Card" parent="MainCardContainer/DeckContainer/DeckColorContainer/ScrollContainer/DeckContainer/CardControl8" unique_id=1037052393 instance=ExtResource("7_60kyj")]
-position = Vector2(100, 115)
-
-[node name="CardControl9" type="Control" parent="MainCardContainer/DeckContainer/DeckColorContainer/ScrollContainer/DeckContainer" unique_id=192655402]
-visible = false
-custom_minimum_size = Vector2(200, 230)
-layout_mode = 2
-
-[node name="Card" parent="MainCardContainer/DeckContainer/DeckColorContainer/ScrollContainer/DeckContainer/CardControl9" unique_id=131775597 instance=ExtResource("7_60kyj")]
-position = Vector2(100, 115)
-
-[node name="CardControl10" type="Control" parent="MainCardContainer/DeckContainer/DeckColorContainer/ScrollContainer/DeckContainer" unique_id=796325546]
-visible = false
-custom_minimum_size = Vector2(200, 230)
-layout_mode = 2
-
-[node name="Card" parent="MainCardContainer/DeckContainer/DeckColorContainer/ScrollContainer/DeckContainer/CardControl10" unique_id=1528772513 instance=ExtResource("7_60kyj")]
-position = Vector2(100, 115)
-
-[node name="CardControl11" type="Control" parent="MainCardContainer/DeckContainer/DeckColorContainer/ScrollContainer/DeckContainer" unique_id=1715094590]
-visible = false
-custom_minimum_size = Vector2(200, 230)
-layout_mode = 2
-
-[node name="Card" parent="MainCardContainer/DeckContainer/DeckColorContainer/ScrollContainer/DeckContainer/CardControl11" unique_id=47916746 instance=ExtResource("7_60kyj")]
-position = Vector2(100, 115)
-
-[node name="CardControl12" type="Control" parent="MainCardContainer/DeckContainer/DeckColorContainer/ScrollContainer/DeckContainer" unique_id=1455829668]
-visible = false
-custom_minimum_size = Vector2(200, 230)
-layout_mode = 2
-
-[node name="Card" parent="MainCardContainer/DeckContainer/DeckColorContainer/ScrollContainer/DeckContainer/CardControl12" unique_id=1536628447 instance=ExtResource("7_60kyj")]
-position = Vector2(100, 115)
 
 [node name="CardPopupContainer" type="Control" parent="." unique_id=664893130]
 visible = false

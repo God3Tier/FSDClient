@@ -63,7 +63,7 @@ public partial class CardManagement : Control
 			CardButtonOverlay.AddThemeStyleboxOverride("disabled", Transparent);
 
 			// Connect pressed to a function
-			CardButtonOverlay.Pressed += () => OnCollectionCardPressed(index);
+			CardButtonOverlay.Pressed += () => OnCardPressed(index, "Collection");
 			CardControl.AddChild(CardButtonOverlay);
 			
 			// Add the card into the container
@@ -84,33 +84,67 @@ public partial class CardManagement : Control
 		}
 	}
 	
-	// When a Card in Collection is being pressed
-	private void OnCollectionCardPressed(int index){
-		var CollectionContainer = GetNode<FlowContainer>("MainCardContainer/CollectionContainer/CollectionColorContainer/ScrollContainer/CollectionContainer");
+	// When a Card is being pressed
+	private void OnCardPressed(int index, string location){
+		Vector2 pos;
+		Control ButtonContainer;
+		Panel AllCardsContainer;
+		if(location == "Collection"){
+			AllCardsContainer = GetNode<Panel>("MainCardContainer/CollectionContainer/CollectionColorContainer");
+			FlowContainer CardFlowContainer = AllCardsContainer.GetNode<FlowContainer>("ScrollContainer/CollectionContainer");
+			VBoxContainer CardContainer = CardFlowContainer.GetChild(index) as VBoxContainer;
+			pos = CardContainer.Position;
+			
+			ButtonContainer = AllCardsContainer.GetNode<Control>("ScrollContainer/ButtonContainer");
+		}else if(location == "Deck"){
+			AllCardsContainer = GetNode<Panel>("MainCardContainer/DeckContainer/DeckColorContainer");
+			
+			// Find the cards being displayed (as decks have multiple but only 1 displayed) (i-1 to account for button overlays)
+			ScrollContainer Scroll = AllCardsContainer.GetNode<ScrollContainer>("ScrollContainer");
+			FlowContainer CardFlowContainer = null;
+			for (int i = 0; i < Scroll.GetChildCount() - 1; i++){
+				CardFlowContainer = Scroll.GetChild(i) as HFlowContainer;
+			
+				if(CardFlowContainer.Visible == true){
+					break;
+				}
+			}
+			
+			Control CardControl = CardFlowContainer.GetChild(index) as Control;
+			pos = CardControl.Position;
+			
+			ButtonContainer = Scroll.GetNode<Control>("ButtonContainer");
+		}else{
+			return;
+		}
 		
-		VBoxContainer CardContainer = CollectionContainer.GetChild(index) as VBoxContainer;
-		
-		Control CardControl = CardContainer.GetNode<Control>("CardControl");
-		Vector2 pos = CardContainer.Position;
-		
+			
 		// Check if card button exists
-		int ButtonIndex = CheckCardButton(pos.X, pos.Y);
-		
+		int ButtonIndex = CheckCardButton(pos.X, pos.Y, ButtonContainer);
 		// Button does not exist yet
 		if(ButtonIndex == -1){
 			// Create button
-			CreateCardButton(pos.X, pos.Y, index);
-			RefreshScrollbar();
+			CreateCardButton(pos.X, pos.Y, index, location, ButtonContainer);
+			RefreshScrollbar(AllCardsContainer);
 		}else{
 			// Else deletes it
-			DeleteCardButton(ButtonIndex);
+			DeleteCardButton(ButtonIndex, ButtonContainer);
 		}
 	}
 	
 	// Need to refresh because the extra card buttons won't be included in the initial calculations
-	private void RefreshScrollbar(){
-		ScrollContainer Scroll = GetNode<ScrollContainer>("MainCardContainer/CollectionContainer/CollectionColorContainer/ScrollContainer");
-		HFlowContainer Content = Scroll.GetNode<HFlowContainer>("CollectionContainer");
+	private void RefreshScrollbar(Panel AllCardsContainer){
+		ScrollContainer Scroll = AllCardsContainer.GetNode<ScrollContainer>("ScrollContainer");
+		HFlowContainer Content = null;
+		
+		// Find the cards being displayed (as decks have multiple but only 1 displayed) (i-1 to account for button overlays)
+		for (int i = 0; i < Scroll.GetChildCount() - 1; i++){
+			Content = Scroll.GetChild(i) as HFlowContainer;
+			
+			if(Content.Visible == true){
+				break;
+			}
+		}
 
 		// Calculate total Content height
 		float TotalHeight = 0;
@@ -124,12 +158,10 @@ public partial class CardManagement : Control
 
 		float DesiredHeight = TotalHeight + 300;
 		Content.CustomMinimumSize = new Vector2(Scroll.Size.X, DesiredHeight);
-		Scroll.QueueSort();  // Refresh layout
 	}
 	
 	// Function to check if card button set exists, return the index of the element child
-	private int CheckCardButton(float X, float Y){
-		var ButtonContainer = GetNode<Control>("MainCardContainer/CollectionContainer/CollectionColorContainer/ScrollContainer/ButtonContainer");
+	private int CheckCardButton(float X, float Y, Control ButtonContainer){
 		
 		for (int i = 0; i < ButtonContainer.GetChildCount(); i++){
 			Control ButtonSet = ButtonContainer.GetChild(i) as Control;
@@ -141,58 +173,65 @@ public partial class CardManagement : Control
 		return -1;
 	}
 	
-	private void DeleteCardButton(int index){
-		var ButtonContainer = GetNode<Control>("MainCardContainer/CollectionContainer/CollectionColorContainer/ScrollContainer/ButtonContainer");
-		
+	private void DeleteCardButton(int index, Control ButtonContainer){		
 		Control ButtonSet = ButtonContainer.GetChild(index) as Control;
 		ButtonSet.QueueFree();
 	}
 	
 	// Function to create the 2 buttons
-	private void CreateCardButton(float X, float Y, int index){
+	private void CreateCardButton(float X, float Y, int index, string location, Control ButtonContainer){
 		var ButtonSet = new Control();
 		ButtonSet.Position = new Vector2(X + 10, Y + 200);
 		
 		// Add the 2 button (more info & add to deck)
-		var MoreInfoButton = new Button();
-		var AddToDeckButton = new Button();
+		var InfoButton = new Button();
+		var AddOrRemoveDeckButton = new Button();
 		
-		MoreInfoButton.CustomMinimumSize = new Vector2(170, 40);
-		MoreInfoButton.Position = new Vector2(0, 0);
-		MoreInfoButton.Text = "More Info";
-		MoreInfoButton.ZIndex = 3;
-		MoreInfoButton.AddThemeFontSizeOverride("font_size", 20);
-		MoreInfoButton.AddThemeColorOverride("font_color", new Color(255, 255, 255));
-		MoreInfoButton.MouseDefaultCursorShape = Control.CursorShape.PointingHand;
+		InfoButton.CustomMinimumSize = new Vector2(170, 40);
+		InfoButton.Position = new Vector2(0, 0);
+		InfoButton.Text = "Info";
+		InfoButton.ZIndex = 3;
+		InfoButton.AddThemeFontSizeOverride("font_size", 20);
+		InfoButton.AddThemeColorOverride("font_color", new Color(0, 0, 0));
+		InfoButton.MouseDefaultCursorShape = Control.CursorShape.PointingHand;
 			
-		AddToDeckButton.CustomMinimumSize = new Vector2(170, 40);
-		AddToDeckButton.Position = new Vector2(0, 40);
-		AddToDeckButton.Text = "Add";
-		AddToDeckButton.ZIndex = 3;
-		AddToDeckButton.AddThemeFontSizeOverride("font_size", 20);
-		AddToDeckButton.AddThemeColorOverride("font_color", new Color(255, 255, 255));
-		AddToDeckButton.MouseDefaultCursorShape = Control.CursorShape.PointingHand;
+		AddOrRemoveDeckButton.CustomMinimumSize = new Vector2(170, 40);
+		AddOrRemoveDeckButton.Position = new Vector2(0, 40);
+		if(location == "Collection"){
+			AddOrRemoveDeckButton.Text = "Add";
+		}else if(location == "Deck"){
+			AddOrRemoveDeckButton.Text = "Remove";
+		}
+		AddOrRemoveDeckButton.ZIndex = 3;
+		AddOrRemoveDeckButton.AddThemeFontSizeOverride("font_size", 20);
+		AddOrRemoveDeckButton.AddThemeColorOverride("font_color", new Color(0, 0, 0));
+		AddOrRemoveDeckButton.MouseDefaultCursorShape = Control.CursorShape.PointingHand;
 		
 		StyleBox button = GD.Load<StyleBox>("res://styles/button.tres");
 		StyleBox ButtonHover = GD.Load<StyleBox>("res://styles/button.tres");
 		StyleBox ButtonPressed = GD.Load<StyleBox>("res://styles/button.tres");
 
-		MoreInfoButton.AddThemeStyleboxOverride("normal", button);
-		MoreInfoButton.AddThemeStyleboxOverride("hover", ButtonHover);
-		MoreInfoButton.AddThemeStyleboxOverride("pressed", ButtonPressed);
+		InfoButton.AddThemeStyleboxOverride("normal", button);
+		InfoButton.AddThemeStyleboxOverride("hover", ButtonHover);
+		InfoButton.AddThemeStyleboxOverride("pressed", ButtonPressed);
 			
-		AddToDeckButton.AddThemeStyleboxOverride("normal", button);
-		AddToDeckButton.AddThemeStyleboxOverride("hover", ButtonHover);
-		AddToDeckButton.AddThemeStyleboxOverride("pressed", ButtonPressed);
+		AddOrRemoveDeckButton.AddThemeStyleboxOverride("normal", button);
+		AddOrRemoveDeckButton.AddThemeStyleboxOverride("hover", ButtonHover);
+		AddOrRemoveDeckButton.AddThemeStyleboxOverride("pressed", ButtonPressed);
 			
 		// Connect pressed to a function
-		MoreInfoButton.Pressed += () => OpenCardPopup(index);
-		AddToDeckButton.Pressed += () => OpenCardPopup(index);
+		InfoButton.Pressed += () => OpenCardPopup(index);
 		
-		ButtonSet.AddChild(MoreInfoButton);
-		ButtonSet.AddChild(AddToDeckButton);
+		if(location == "Collection"){
+			AddOrRemoveDeckButton.Pressed += () => OpenCardPopup(index);
+		}else if(location == "Deck"){
+			AddOrRemoveDeckButton.Pressed += () => OpenCardPopup(index);
+		}
+		AddOrRemoveDeckButton.Pressed += () => OpenCardPopup(index);
+		
+		ButtonSet.AddChild(InfoButton);
+		ButtonSet.AddChild(AddOrRemoveDeckButton);
 	
-		var ButtonContainer = GetNode<Control>("MainCardContainer/CollectionContainer/CollectionColorContainer/ScrollContainer/ButtonContainer");
 		ButtonContainer.AddChild(ButtonSet);
 	}
 	
@@ -205,32 +244,61 @@ public partial class CardManagement : Control
 			// insert cards into deck
 			var DeckContainer = new HFlowContainer();
 			DeckContainer.CustomMinimumSize = new Vector2(610, 660);
+			DeckContainer.Name = "DeckContainer";
 			
 			// Generate 12 items
 			for (int i = 0; i < 10 + j; i++)
 			{
+				// to pass the values over to any functions (passing i will always pass max)
+				int index = i;
 				// Create control that gives the card its size
 				var CardControl = new Control();
-				CardControl.CustomMinimumSize = new Vector2(200, 230);
+				CardControl.CustomMinimumSize = new Vector2(190, 200);
 				
 				// Create the card itself
 				var Card = CardScene.Instantiate<Node2D>();
-				Card.Position = new Vector2(100, 115);
+				Card.Position = new Vector2(95, 100);
 				CardControl.AddChild(Card);
 				
+				
+				// Add card button overlay
+				var CardButtonOverlay = new Button();
+				CardButtonOverlay.CustomMinimumSize = new Vector2(170, 200);
+				CardButtonOverlay.Position = new Vector2(10, 0);
+				CardButtonOverlay.ZIndex = 2;
+				CardButtonOverlay.MouseDefaultCursorShape = Control.CursorShape.PointingHand;
+				
+				// Make all states fully transparent
+				var Transparent = new StyleBoxFlat();
+				Transparent.BgColor = new Color(0, 0, 0, 0); // RGBA, alpha = 0 (transparent)
+
+				CardButtonOverlay.AddThemeStyleboxOverride("normal", Transparent);
+				CardButtonOverlay.AddThemeStyleboxOverride("hover", Transparent);
+				CardButtonOverlay.AddThemeStyleboxOverride("pressed", Transparent);
+				CardButtonOverlay.AddThemeStyleboxOverride("focus", Transparent);
+				CardButtonOverlay.AddThemeStyleboxOverride("disabled", Transparent);
+
+				// Connect pressed to a function
+				CardButtonOverlay.Pressed += () => OnCardPressed(index, "Deck");
+				CardControl.AddChild(CardButtonOverlay);
+			
 				// Add the card into the main container
 				DeckContainer.AddChild(CardControl);
 			}
 			
 			
-			// load it all in
-			var ScrollContainer = GetNode<ScrollContainer>("MainCardContainer/DeckContainer/DeckColorContainer/ScrollContainer");
-			ScrollContainer.AddChild(DeckContainer);
-			
 			// First deck will be visible, rest won't
 			if (j != 0){
 				DeckContainer.Visible = false;
 			}
+			
+			// load it all in
+			ScrollContainer DecksScrollContainer = GetNode<ScrollContainer>("MainCardContainer/DeckContainer/DeckColorContainer/ScrollContainer");
+			DecksScrollContainer.AddChild(DeckContainer);
+			
+			// the button container must always be below in the tree so that its button will be overlayed on top
+			Control ButtonContainer = GetNode<Control>("MainCardContainer/DeckContainer/DeckColorContainer/ScrollContainer/ButtonContainer");
+			DecksScrollContainer.MoveChild(ButtonContainer, DecksScrollContainer.GetChildCount() - 1);
 			
 			Decks.Add(DeckContainer);
 		}
@@ -259,6 +327,13 @@ public partial class CardManagement : Control
 		for(int i = 0; i < Decks.Count; i++)
 		{
 			Decks[i].Visible = (i == tabIndex);
+		}
+		
+		// Delete all past Card Buttons ("Info, "Remove") as there should not be any in new decks
+		Control ButtonContainer = GetNode<Control>("MainCardContainer/DeckContainer/DeckColorContainer/ScrollContainer/ButtonContainer");
+		
+		for(int i = 0; i < ButtonContainer.GetChildCount(); i++){
+			ButtonContainer.GetChild(i).QueueFree();
 		}
 	}
 
