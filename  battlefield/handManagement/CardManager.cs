@@ -50,7 +50,32 @@ public partial class CardManager : Node2D
 			}
 		}
 	}
-
+	
+	// debug printer
+	public void CheckHandAndDeck()
+	{
+		foreach (Slot slot in _playerHand._slotList) {
+			if (slot != null && slot.CardInSlot)
+			{
+				GD.Print($"{slot.Name}: {slot.Card.Name}");
+			}
+			else if (slot != null)
+			{
+			GD.Print($"{slot.Name}: none");
+			}
+		}
+		
+		foreach (Slot slot in _deckSpace._slotList) {
+			if (slot != null && slot.CardInSlot)
+			{
+				GD.Print($"{slot.Name}: {slot.Card.Name}");
+			}
+			else if (slot != null)
+			{
+			GD.Print($"{slot.Name}: none");
+			}
+		}
+	}
 	// To start drag
 	private void StartDrag(Card card)
 	{
@@ -65,8 +90,6 @@ public partial class CardManager : Node2D
 		cardBeingDragged.Scale = new Vector2(1.005f, 1.005f);
 		var slotFound = _raycastCheckForSlot();
 		GD.Print(cardBeingDragged.CurrentSlotStatus);
-		if (slotFound != null) {
-		}
 		// Put the signal here for nonsence in gameloop
 		// TODO: DO it
 		// First check if the slot is a BattleSlot,
@@ -83,6 +106,11 @@ public partial class CardManager : Node2D
 				cardBeingDragged.CurrentSlotStatus == Card.SlotStatus.Deck)
 		{
 			IntoHandSlot(handSlotFound);
+		}
+		else if (slotFound is DeckSlot deckSlotFound &&
+				cardBeingDragged.CurrentSlotStatus == Card.SlotStatus.HandTemp)
+		{
+			ReturnToDeckSlot(deckSlotFound);
 		}
 		else if (_playerHand._cardList.Contains(cardBeingDragged))
 		{
@@ -112,9 +140,18 @@ public partial class CardManager : Node2D
 		EmitSignal(SignalName.CardDropped, battleSlotFound);
 	}
 	
-	private void IntoHandSlot(HandSlot handSlotFound) {
+	private void IntoHandSlot(HandSlot handSlotFound) 
+	{
 		cardBeingDragged.CurrentSlotStatus = Card.SlotStatus.HandTemp;
-		_playerHand.AddCard(cardBeingDragged);
+		_deckSpace.RemoveCard(cardBeingDragged);
+		_playerHand.AddCard(cardBeingDragged, handSlotFound);
+	}
+	
+	private void ReturnToDeckSlot(DeckSlot deckSlotFound)
+	{
+		cardBeingDragged.CurrentSlotStatus = Card.SlotStatus.Deck;
+		_playerHand.RemoveCard(cardBeingDragged);
+		_deckSpace.AddCard(cardBeingDragged, deckSlotFound);
 	}
 
 	// For the hover effect
@@ -229,7 +266,6 @@ public partial class CardManager : Node2D
 			{
 				HighestZNode = node;
 			}
-			GD.Print($"{i}: {node.Name} - {node.ZIndex}");
 		}
 		return HighestZNode;
 	}

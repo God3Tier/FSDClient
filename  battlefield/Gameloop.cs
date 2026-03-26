@@ -99,30 +99,31 @@ public partial class Gameloop : Node2D
 		CardManager.CardDropped += OnCardDropped;
 		// Testing the HandArea
 		HandArea = GetNode<HandArea>("HandArea");
-		HandArea._playerHand = GetNode<PlayerHand>("HandArea/PlayerHand");
-		HandArea._deckSpace = GetNode<DeckSpace>("HandArea/DeckSpace");
+		HandArea._playerHand = CardManager._playerHand;
+		HandArea._deckSpace = CardManager._deckSpace;
 		GD.Print(HandArea);
 		GD.Print(CardManager._playerHand.Name);
 		
-		TestCard();
-		TestCard();
-		TestCard();
-		TestCard();
-		TestCard();
-		TestCard();
-		TestCard();
-		TestCard();
+		TestCard("Card1");
+		TestCard("Card2");
+		TestCard("Card3");
+		TestCard("Card4");
+		TestCard("Card5");
+		TestCard("Card6");
+		TestCard("Card7");
+		TestCard("Card8");
 		HandArea.RaiseDeck();
 		
 		GD.Print("Completed everything without a problem");
 	}
 
-	private void TestCard()
+	private void TestCard(string Name)
 	{
 		var TestCard = new CardData(10, "farmer", Colour.RED, 100, 10, 5);
 		var CardTexture = Builder.BuildCard(TestCard);
 		var CardScene = GD.Load<PackedScene>("res://scenes/gameComponents/Card.tscn");
 		var CardTemp = CardScene.Instantiate<Card>();
+		CardTemp.Name = Name;
 		CardTemp.CurrentSlotStatus = Card.SlotStatus.Deck;
 		CardTemp.ZIndex = 4;
 		CardTemp.LoadDataTexture(CardTexture);

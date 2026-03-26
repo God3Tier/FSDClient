@@ -39,6 +39,37 @@ public partial class HandControl : Control
 		}
 	}
 	
+	// Add card to a specific slot
+	public void AddCard(Card card, Slot slot)
+	{
+		// If the slot is not part of this group, don't do anything
+		if (!_slotList.Contains(slot))
+		{
+			GD.Print($"{this.Name} doesn't have {slot.Name}");
+			return;
+		}
+		
+		// If the slot has a card already, don't do anything
+		if (slot.CardInSlot)
+		{
+			return;
+		}
+		
+		// If the card doesn't already exist in the space, add it
+		if (!_cardList.Contains(card))
+		{
+			int index = Array.IndexOf(_slotList, slot);
+			_slotList[index].AddCard(card);
+			_cardList[index] = card;
+			_cardCount++;
+			UpdateCardPositions();
+		}
+		else
+		{
+			int index = Array.IndexOf(_cardList, card);
+			AnimateCardToPosition(card, _slotList[index].GlobalPosition, _normalSpeed);
+		}
+	}
 	
 	// To remove the card from the slot
 	public void RemoveCard(Card card) 
@@ -47,13 +78,22 @@ public partial class HandControl : Control
 		_cardList[index] = null;
 		_slotList[index].RemoveCard();
 		_cardCount--;
+		UpdateCardPositions();
 	}
 	
 	
 	// To animate 1 card back to its position
 	public void AnimateCardToPosition(Card card, Vector2 position, float speed) 
 	{
+		GD.Print($"{card.Name} called with {position}");
+		if (card.MoveTween != null && card.MoveTween.IsRunning())
+		{
+			card.MoveTween.Kill();
+		}
+        
+        
 		var tween = GetTree().CreateTween();
+		card.MoveTween = tween;
 		tween.TweenProperty(card, "global_position", position, speed);
 	}
 	
@@ -73,6 +113,7 @@ public partial class HandControl : Control
 	// To move all cards with the whole area
 	public void AnimateAllCardsToPosition(float distance, bool isRaise) 
 	{
+		GD.Print($"Animating cards for isRaise {isRaise}");
 		for (int i = 0; i < _cardLimit; i++)
 		{
 			if (_cardList[i] == null) { continue; }

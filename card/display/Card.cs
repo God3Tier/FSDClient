@@ -11,6 +11,7 @@ public partial class Card : Node2D
 	[Signal] public delegate void AttackedEventHandler(Card card);
 
 	public Vector2 StartingPosition { get; set; }
+	public Tween MoveTween { get; set; }
 	private int Health { get; set; }
 	public int Attack { get; set; }
 	private bool BattleMode { get; set; } = false;
