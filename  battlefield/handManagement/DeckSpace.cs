@@ -12,9 +12,9 @@ public partial class DeckSpace : HandControl
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		this._cardList = new Card[8];
-		this._slotList = new DeckSlot[8];
 		this._cardLimit = 8;
+		this._cardList = new Card[_cardLimit];
+		this._slotList = new DeckSlot[_cardLimit];
 		foreach (Node child in GetChildren()) {
 			string childName = child.Name.ToString();
 			DeckSlot slot = (DeckSlot) child;
@@ -22,9 +22,8 @@ public partial class DeckSpace : HandControl
 			_slotList[lastInt] = slot;
 		}
 		
-		foreach (Slot slot in _slotList) {
-			GD.Print(slot);
-		}
+		base._Ready();
+		
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.

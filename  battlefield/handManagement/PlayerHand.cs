@@ -11,15 +11,18 @@ public partial class PlayerHand : HandControl
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		this._cardList = new Card[4];
-		this._slotList = new HandSlot[4];
 		this._cardLimit = 4;
+		this._cardList = new Card[_cardLimit];
+		this._slotList = new HandSlot[_cardLimit];
+		
 		foreach (Node child in GetChildren()) {
 			string childName = child.Name.ToString();
 			HandSlot slot = (HandSlot) child;
 			int lastInt = (int)(childName[^1] - '1');
 			_slotList[lastInt] = slot;
 		}
+		
+		base._Ready();
 	}
 	
 	// This will allow all cards to be placed into the battlefield

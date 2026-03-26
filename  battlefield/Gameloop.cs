@@ -113,7 +113,6 @@ public partial class Gameloop : Node2D
 		TestCard("Card7");
 		TestCard("Card8");
 		HandArea.RaiseDeck();
-		
 		GD.Print("Completed everything without a problem");
 	}
 

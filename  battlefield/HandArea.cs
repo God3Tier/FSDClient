@@ -37,11 +37,11 @@ public partial class HandArea : Control
 		_raiseDuration);
 		
 		if (_playerHand != null) {
-			_playerHand.AnimateAllCardsToPosition(_raiseDistance/128, true);
+			_playerHand.AnimateAllCardsToPosition(true);
 			GD.Print("raise playerHand");
 		}
 		if (_deckSpace != null) {
-			_deckSpace.AnimateAllCardsToPosition(_raiseDistance, true);
+			_deckSpace.AnimateAllCardsToPosition(true);
 			GD.Print("raise deckSpace");
 		}
 		
@@ -57,11 +57,11 @@ public partial class HandArea : Control
 		_startPos,
 		_raiseDuration);
 		if (_playerHand != null) {
-			_playerHand.AnimateAllCardsToPosition(_raiseDistance, false);
+			_playerHand.AnimateAllCardsToPosition(false);
 			GD.Print("Lower playerHand");
 		}
 		if (_deckSpace != null) {
-			_deckSpace.AnimateAllCardsToPosition(_raiseDistance/64, false);
+			_deckSpace.AnimateAllCardsToPosition(false);
 			GD.Print("Lower deckSpace");
 		}
 	}

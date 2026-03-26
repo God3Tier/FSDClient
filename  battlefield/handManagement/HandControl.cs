@@ -9,10 +9,13 @@ public partial class HandControl : Control
 {
 	public Card[] _cardList { get; protected set; }
 	public Slot[] _slotList { get; protected set; }
+	protected Vector2[] _slotBasePositions;
 	protected int _cardCount = 0;
 	protected int _cardLimit;
 	protected float _normalSpeed = 0.3f;
 	protected float _deckSpeed = 0.3f;
+	protected float _offset = 470f;
+	protected bool _isRaised = true;
 	
 	// Add card to this hand control provided there is enough space
 	public void AddCard(Card card)
@@ -85,7 +88,6 @@ public partial class HandControl : Control
 	// To animate 1 card back to its position
 	public void AnimateCardToPosition(Card card, Vector2 position, float speed) 
 	{
-		GD.Print($"{card.Name} called with {position}");
 		if (card.MoveTween != null && card.MoveTween.IsRunning())
 		{
 			card.MoveTween.Kill();
@@ -100,39 +102,50 @@ public partial class HandControl : Control
 	// To animate all cards back to its position
 	public void UpdateCardPositions()
 	{
+		GD.Print($"Updating the cards in {this.Name}");
 		for (int i = 0; i < _cardLimit; i++)
 		{
 			if (_cardList[i] == null) { continue; }
-			var newPosition = _slotList[i].GlobalPosition;
+			var basePosition = _slotBasePositions[i];
+			var newPosition = this._isRaised ? basePosition - new Vector2(0, _offset) : basePosition;
 			var card = _cardList[i];
 			card.StartingPosition = newPosition;
+			if (_isRaised)
+			{
+				GD.Print($"{card.Name} is raised, moving to {card.StartingPosition}");
+			}
+			else
+			{
+				GD.Print($"{card.Name} is not raised, moving to {card.StartingPosition}");
+			}
 			AnimateCardToPosition(card, newPosition, _normalSpeed);
 		}
 	}
 	
 	// To move all cards with the whole area
-	public void AnimateAllCardsToPosition(float distance, bool isRaise) 
+	public void AnimateAllCardsToPosition(bool isRaised) 
 	{
-		GD.Print($"Animating cards for isRaise {isRaise}");
-		for (int i = 0; i < _cardLimit; i++)
-		{
-			if (_cardList[i] == null) { continue; }
-			var card = _cardList[i];
-			if (isRaise) {
-				var newPosition = card.StartingPosition - new Vector2(0, distance);
-				AnimateCardToPosition(card, newPosition, _deckSpeed);
-			}
-			else {
-				var newPosition = card.StartingPosition + new Vector2(0, distance);
-				AnimateCardToPosition(card, newPosition, _deckSpeed);
-			}
-		}
+		this._isRaised = isRaised;
+		UpdateCardPositions();
 	}
 	
+	// For debugging the _slotBasePositions
+	public void _debugSlot()
+	{
+		for (int i = 0; i < _cardLimit; i++)
+		{
+		GD.Print($"{_slotList[i].Name} - {_slotBasePositions[i]}");
+		}
+	}
 	
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
+		_slotBasePositions = new Vector2[_cardLimit];
+		for (int i = 0; i < _cardLimit; i++)
+			{
+				_slotBasePositions[i] = _slotList[i].GlobalPosition;
+			}
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
