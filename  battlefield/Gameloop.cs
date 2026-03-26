@@ -7,13 +7,40 @@ using FSDClient.battlefield.handManagement;
 using FSDClient.autoLoad;
 using System.Threading;
 using System.Collections.Concurrent;
+using System.Text.Json.Serialization;
+using System;
+using System.Text.Json;
 
 namespace FSDClient.battlefield;
 
+public class Response
+{
+	[JsonPropertyName("message_type")]
+	public string MessageType;
+	[JsonPropertyName("action")]
+	public string Action;
+	[JsonPropertyName("result")]
+	public string Result;
+	[JsonPropertyName("state_view")]
+	public string StateView;
+	[JsonPropertyName("sequence_number")]
+	public int SequenceNumber;
+	[JsonPropertyName("timestamp")]
+	public DateTime Timestamp;
+	
+	
+}
 
 public partial class Gameloop : Node2D
 {
 	public static readonly string BASE_WEBSOCKET_URL = "ws://localhost:8083/ws?session_id=SESSIONID&user_id=USERID&username=USERNAME";
+	public static readonly string INITIAL_MESSAGE = @"{
+    ""action"": ""JOIN_GAME"",
+    ""params"": {},
+    ""state_hash_after"": 0,
+    ""sequence_number"": 0
+3}";
+
 	public static readonly double MAX_ELIXER = 8;
 	public static readonly double ROUND_TIMER = 5.0;
 	public static readonly double PAUSE_TIMER = 5.0;
@@ -54,6 +81,8 @@ public partial class Gameloop : Node2D
 	{
 
 		Socket.ConnectToUrl(ConstructWebsocketUrl());
+		WriteToServer(INITIAL_MESSAGE);
+
 		HandArea = GetNode<HandArea>("HandArea");
 		HandArea.RaiseDeck();
 
@@ -197,8 +226,10 @@ public partial class Gameloop : Node2D
 
 	private void HandleInputFromServer()
 	{
-		if (readQueue.TryDequeue(out string msg))
+		while (readQueue.TryDequeue(out string msg))
 		{
+			var Data = JsonSerializer.Deserialize<Response>(msg);
+			
 			// Here, we somehow parse said information about card and then mess around with it. But to continue, I need to settle card Dictionary
 		}
 	}
