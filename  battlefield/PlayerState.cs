@@ -5,7 +5,7 @@ using System.Text;
 using System.IO.Hashing;
 using System;
 
-public class PlayerView
+public class PlayerState
 {
 	[JsonPropertyName("session_id")]
 	public string SessionID { get; set; }
