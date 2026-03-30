@@ -20,6 +20,7 @@ config/icon="uid://cedlkakda2e78"
 GameStateManager="*uid://5p8jvukstm3j"
 PlayerStateManager="*res://autoLoad/PlayerStateManager.cs"
 NetworkManager="*uid://bbwqfw7nmkams"
+ResourceManager="*uid://dn687fc81jpef"
 
 [display]
 

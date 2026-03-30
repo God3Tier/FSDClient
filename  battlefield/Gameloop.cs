@@ -5,6 +5,7 @@ using FSDClient.card.display;
 using FSDClient.card;
 using FSDClient.battlefield.handManagement;
 using FSDClient.autoLoad;
+using FSDClient.battlefield.responseType;
 using System.Threading;
 using System.Collections.Concurrent;
 using System.Text.Json.Serialization;
@@ -12,6 +13,15 @@ using System;
 using System.Text.Json;
 
 namespace FSDClient.battlefield;
+
+enum MessageType
+{
+	JOIN_GAME,
+	CARD_PLACED,
+	END_TURN,
+	CARD_DEAD
+
+}
 
 public class Response
 {
@@ -27,18 +37,18 @@ public class Response
 	public int SequenceNumber;
 	[JsonPropertyName("timestamp")]
 	public DateTime Timestamp;
-	
-	
+
+
 }
 
 public partial class Gameloop : Node2D
 {
 	public static readonly string BASE_WEBSOCKET_URL = "ws://localhost:8083/ws?session_id=SESSIONID&user_id=USERID&username=USERNAME";
 	public static readonly string INITIAL_MESSAGE = @"{
-    ""action"": ""JOIN_GAME"",
-    ""params"": {},
-    ""state_hash_after"": 0,
-    ""sequence_number"": 0
+	""action"": ""JOIN_GAME"",
+	""params"": {},
+	""state_hash_after"": 0,
+	""sequence_number"": 0
 3}";
 
 	public static readonly double MAX_ELIXER = 8;
@@ -51,6 +61,7 @@ public partial class Gameloop : Node2D
 	// Unsure to keep this as the state manager or make it it's own individual player data. TBD on a later date
 	public PlayerStateManager MainPlayer { get; set; }
 	public PlayerData IncomingPlayer { get; set; }
+	public PlayerState PlayerState { get; set; }
 
 	// Deal with card placement and card movement
 	private Card[][] Board { get; set; } = new Card[2][];
@@ -229,7 +240,39 @@ public partial class Gameloop : Node2D
 		while (readQueue.TryDequeue(out string msg))
 		{
 			var Data = JsonSerializer.Deserialize<Response>(msg);
-			
+			var msgType = Enum.Parse(typeof(MessageType), Data.MessageType);
+
+			switch (msgType)
+			{
+				case MessageType.JOIN_GAME:
+					{
+						PlayerState = JsonSerializer.Deserialize<PlayerState>(Data.StateView);
+						break;
+					}
+				case MessageType.CARD_PLACED:
+					{
+						var NewInputData = JsonSerializer.Deserialize<CardPlacementResponse>(Data.StateView);
+						if (!NewInputData.ValidInput) {
+
+							// Do some false Response
+							break;
+						}
+						var ResourceState = GetNode<ResourceManager>("res://autoLoad/ResourceManager");
+						var CardInformation = ResourceState.CardStatsTable.cardInfo[NewInputData.CardID];
+						var CardViewData = Builder.BuildCard(CardInformation);
+						OpponentBoard[NewInputData.YPos][NewInputData.XPos].LoadDataTexture(CardViewData);
+						OpponentBoard[NewInputData.YPos][NewInputData.XPos].EnterBattlefield();
+						break;
+					}
+				case MessageType.CARD_DEAD:
+					{
+						break;
+					}
+				default:
+					{
+						break;
+					}
+			}
 			// Here, we somehow parse said information about card and then mess around with it. But to continue, I need to settle card Dictionary
 		}
 	}
@@ -305,8 +348,10 @@ public partial class Gameloop : Node2D
 	{
 		GameStateManager.Instance.ChangeGameState(GameState.HOMESCREEN);
 	}
+}
 
-	// I'll leave this here temporarily because it has all our mocking information and what not
+/*
+// I'll leave this here temporarily because it has all our mocking information and what not
 	public void StartGameLoop()
 	{
 		// TODO: Should be obvious
@@ -355,6 +400,4 @@ public partial class Gameloop : Node2D
 
 		ReturnToHomeScreen();
 	}
-
-
-}
+*/

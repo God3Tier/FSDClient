@@ -1,4 +1,4 @@
-namespace FSDClient.battlefield;
+namespace FSDClient.battlefield.responseType;
 
 using System.Text.Json.Serialization;
 using System.Text;
@@ -33,6 +33,7 @@ public class PlayerState
 	public bool OpponentConnected { get; set; }
 	[JsonPropertyName("opponent_game_data")]
 	public string OpponentGameData { get; set; }
+
 
 
 	private void WriteByte(XxHash64 hash, byte[] bytes)
