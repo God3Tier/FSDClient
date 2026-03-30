@@ -153,7 +153,7 @@ public partial class LoginMenu : Control
 		GD.Print(System.Text.Encoding.UTF8.GetString(body));
 		if (result != 201 || responseCode != 201)
 		{
-			// This one would be some sort of server fail or some sort of conluding error
+			// This one would be some sort of server fail or some sort of conluding error 
 			return;
 		}
 		// If successful, swithc back to login mode
