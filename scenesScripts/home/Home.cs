@@ -303,7 +303,7 @@ public partial class Home : Control
 
 
 		var Packs = GetNode<HFlowContainer>("Packs");
-		
+
 		// update to actual ASYNC function call
 		PackData["Pack1"] = "Legendary";
 		PackData["Pack2"] = "Common";
