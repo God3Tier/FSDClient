@@ -115,8 +115,7 @@ public partial class CardManagement : Control
 	}
 	
 	// When a Card is being pressed
-	private void OnCardPressed(string Location, int CardID){
-		Vector2 pos;
+	private void OnCardPressed(string Location, int CardID, Vector2 pos){
 		Control ButtonContainer;
 		Panel AllCardsContainer;
 		if(Location == "Collection"){
@@ -131,18 +130,7 @@ public partial class CardManagement : Control
 		FlowContainer CardFlowContainer = Scroll.GetChild(SelectedDeck) as HFlowContainer;
 		VBoxContainer CardContainer = null;
 		
-		// figure out with card location is it in using card ID
-		for(int i = 0; i < CardFlowContainer.GetChildCount(); i++){
-			VBoxContainer TempCardContainer = CardFlowContainer.GetChild(i) as VBoxContainer;
-			GD.Print("Pressed:"+CardID);
-			GD.Print("Name"+i + ":" + TempCardContainer.Name);
-			if(TempCardContainer.Name == "" + CardID){
-				CardContainer = TempCardContainer;
-				break;
-			}
-		}
-		
-		pos = CardContainer.Position;
+
 		ButtonContainer = Scroll.GetNode<Control>("ButtonContainer");	
 		
 		// Check if card button exists
@@ -246,7 +234,7 @@ public partial class CardManagement : Control
 		if(Location == "Collection"){
 			AddOrRemoveDeckButton.Pressed += () => AddIntoDeck(CardID);
 		}else{
-			AddOrRemoveDeckButton.Pressed += () => RemoveFromDeck(CardID);
+			AddOrRemoveDeckButton.Pressed += () => RemoveFromDeck(CardID, X, Y);
 		}
 		
 		ButtonSet.AddChild(InfoButton);
@@ -385,7 +373,7 @@ public partial class CardManagement : Control
 		CardButtonOverlay.AddThemeStyleboxOverride("focus", Transparent);
 		CardButtonOverlay.AddThemeStyleboxOverride("disabled", Transparent);
 
-		CardButtonOverlay.Pressed += () => OnCardPressed(Location, CardID);
+		CardButtonOverlay.Pressed += () => OnCardPressed(Location, CardID, CardContainer.Position);
 		CardControl.AddChild(CardButtonOverlay);
 			
 		// Add the card into the container
@@ -431,19 +419,17 @@ public partial class CardManagement : Control
 		
 		// Reset buttons if not it will be out of position
 		RemoveButtonContainers();
-		
-		GD.Print("ADDED:" + CardID);
 	}
 	
-	private void RemoveFromDeck(int CardID){
+	private void RemoveFromDeck(int CardID, float X, float Y){
 		// Remove card from deck
 		ScrollContainer DeckScrollContainer = GetNode<ScrollContainer>("MainCardContainer/DeckContainer/DeckColorContainer/ScrollContainer");
 		HFlowContainer DeckContainer = DeckScrollContainer.GetChild(SelectedDeck) as HFlowContainer;
 		VBoxContainer CardContainer;
 		for(int i = 0; i < DeckContainer.GetChildCount(); i++){
 			CardContainer = DeckContainer.GetChild(i) as VBoxContainer;
-			
-			if(CardContainer.Name == "" + CardID){
+			Vector2 pos = CardContainer.Position;
+			if(pos.X == X && pos.Y == Y){
 				// remove from cardID
 				Decks[SelectedDeck].CardIDs.Remove(Decks[SelectedDeck].CardIDs[i]);
 				// remove from Cards
@@ -451,8 +437,6 @@ public partial class CardManagement : Control
 				// queuefree
 				CardContainer.QueueFree();
 				
-				// since can have more than 1 card of same cardID, so just remove first instance
-				break;
 			}
 		}
 		
@@ -491,9 +475,9 @@ public partial class CardManagement : Control
 		
 		// Reset buttons if not it will be out of position
 		RemoveButtonContainers();
-		GD.Print("Remove:" + CardID);
+
 	}
-	
+
 	// create dynamic amount of tabs based on deck count
 	private void CreateDynamicTabs()
 	{
