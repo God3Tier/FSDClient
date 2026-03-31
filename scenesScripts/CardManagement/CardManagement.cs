@@ -4,10 +4,37 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
 	
+public class Collection
+	{
+		public List<CardQuantity> Cards { get; set; } = new();
+	}
+
+public class CardQuantity
+	{
+		public int CardID { get; set; } = new();
+		public int Quantity { get; set; } = new();
+	}
+
+public class Deck
+	{
+		public int DeckID { get; set; }
+		public string Name { get; set; } = "";
+		public List<int> CardIDs { get; set; } = new();
+		public List<CardInfo> Cards { get; set; } = new();
+	}
+
+public class CardInfo
+	{
+		public int CardID { get; set; }
+		public int Position { get; set; }
+	}
+	
 public partial class CardManagement : Control
 {
 	private PackedScene CardScene = GD.Load<PackedScene>("res://scenes/gameComponents/Card.tscn");
-	private List<FlowContainer> Decks = new List<FlowContainer>();
+	private List<Deck> Decks;
+	private List<Collection> Collections;
+	private int SelectedDeck = 0;
 	
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
@@ -17,114 +44,113 @@ public partial class CardManagement : Control
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
+		Collections = FetchCollections();
 		GenerateCollection();
+		Decks = FetchDecks();
 		GenerateDecks();
+	}
+	
+	// Function to fetch collections from backend
+	private List<Collection> FetchCollections(){
+		var Collections = new List<Collection>
+		{
+			new Collection
+			{
+				Cards = new List<CardQuantity>
+				{
+					new CardQuantity { CardID = 2, Quantity = 3 },
+					new CardQuantity { CardID = 3, Quantity = 3 }
+				}
+			},
+
+			new Collection
+			{
+				Cards = new List<CardQuantity>
+				{
+					new CardQuantity { CardID = 2, Quantity = 1 },
+					new CardQuantity { CardID = 3, Quantity = 2 }
+				}
+			}
+		};
+		
+		return Collections;
 	}
 	
 	// Function to generate card collection
 	public void GenerateCollection()
 	{
-		// insert cards into collection
-		var CollectionContainer = GetNode<FlowContainer>("MainCardContainer/CollectionContainer/CollectionColorContainer/ScrollContainer/CollectionContainer");
-		
-		// Generate 13 items
-		for (int i = 0; i < 13; i++)
+		// Generate decks
+		for (int j = 0; j < Collections.Count; j++)
 		{
-			// to pass the values over to any functions (passing i will always pass max)
-			int index = i;
+			int CollectionIndex = j;
+			var CollectionContainer = new HFlowContainer();
+			CollectionContainer.CustomMinimumSize = new Vector2(1000, 650);
+			CollectionContainer.Name = "CollectionContainer";
 			
-			var CardContainer = new VBoxContainer();
+			// Generate collection cards
+			for (int i = 0; i < Collections[j].Cards.Count; i++)
+			{
+				// to pass the values over to any functions (passing i will always pass max)
+				int CardIndex = i;
 				
-			// Create control that gives the card its size
-			var CardControl = new Control();
-			CardControl.Name = "CardControl";
-			CardControl.CustomMinimumSize = new Vector2(190, 200);
+				var CardContainer =  CreateCardWithLabel("Collection", Collections[CollectionIndex].Cards[CardIndex].CardID, Collections[j].Cards[i].Quantity);
+				
+				// Add the card into the main container
+				CollectionContainer.AddChild(CardContainer);
+			}
 			
-			// Create the card itself
-			var Card = CardScene.Instantiate<Node2D>();
-			Card.Position = new Vector2(95, 100);
-			CardControl.AddChild(Card);
+			// First Collection for deck 1 will be visible, rest won't
+			if (j != 0){
+				CollectionContainer.Visible = false;
+			}
 			
-			// Add card button overlay
-			var CardButtonOverlay = new Button();
-			CardButtonOverlay.CustomMinimumSize = new Vector2(170, 200);
-			CardButtonOverlay.Position = new Vector2(10, 0);
-			CardButtonOverlay.ZIndex = 2;
-			CardButtonOverlay.MouseDefaultCursorShape = Control.CursorShape.PointingHand;
+			// load it all in
+			ScrollContainer CollectionsScrollContainer = GetNode<ScrollContainer>("MainCardContainer/CollectionContainer/CollectionColorContainer/ScrollContainer");
+			CollectionsScrollContainer.AddChild(CollectionContainer);
 			
-			// Make all states fully transparent
-			var Transparent = new StyleBoxFlat();
-			Transparent.BgColor = new Color(0, 0, 0, 0); // RGBA, alpha = 0 (transparent)
-
-			CardButtonOverlay.AddThemeStyleboxOverride("normal", Transparent);
-			CardButtonOverlay.AddThemeStyleboxOverride("hover", Transparent);
-			CardButtonOverlay.AddThemeStyleboxOverride("pressed", Transparent);
-			CardButtonOverlay.AddThemeStyleboxOverride("focus", Transparent);
-			CardButtonOverlay.AddThemeStyleboxOverride("disabled", Transparent);
-
-			// Connect pressed to a function
-			CardButtonOverlay.Pressed += () => OnCardPressed(index, "Collection");
-			CardControl.AddChild(CardButtonOverlay);
-			
-			// Add the card into the container
-			CardContainer.AddChild(CardControl);
-			
-			var CardCount = new Label();
-			CardCount.Text = "X1";
-			CardCount.AddThemeFontSizeOverride("font_size", 23);
-			CardCount.AddThemeColorOverride("font_color", new Color(0, 0, 0));
-			CardCount.HorizontalAlignment = HorizontalAlignment.Center;
-			
-			// Add the card count label into the container
-			CardContainer.AddChild(CardCount);
-			
-			// Add the card into the main container
-			CollectionContainer.AddChild(CardContainer);
-			
-		}
+			// the button container must always be below in the tree so that its button will be overlayed on top
+			Control ButtonContainer = CollectionsScrollContainer.GetNode<Control>("ButtonContainer");
+			CollectionsScrollContainer.MoveChild(ButtonContainer, CollectionsScrollContainer.GetChildCount() - 1);
+		}	
 	}
 	
 	// When a Card is being pressed
-	private void OnCardPressed(int index, string location){
+	private void OnCardPressed(string Location, int CardID){
 		Vector2 pos;
 		Control ButtonContainer;
 		Panel AllCardsContainer;
-		if(location == "Collection"){
+		if(Location == "Collection"){
 			AllCardsContainer = GetNode<Panel>("MainCardContainer/CollectionContainer/CollectionColorContainer");
-			FlowContainer CardFlowContainer = AllCardsContainer.GetNode<FlowContainer>("ScrollContainer/CollectionContainer");
-			VBoxContainer CardContainer = CardFlowContainer.GetChild(index) as VBoxContainer;
-			pos = CardContainer.Position;
-			
-			ButtonContainer = AllCardsContainer.GetNode<Control>("ScrollContainer/ButtonContainer");
-		}else if(location == "Deck"){
-			AllCardsContainer = GetNode<Panel>("MainCardContainer/DeckContainer/DeckColorContainer");
-			
-			// Find the cards being displayed (as decks have multiple but only 1 displayed) (i-1 to account for button overlays)
-			ScrollContainer Scroll = AllCardsContainer.GetNode<ScrollContainer>("ScrollContainer");
-			FlowContainer CardFlowContainer = null;
-			for (int i = 0; i < Scroll.GetChildCount() - 1; i++){
-				CardFlowContainer = Scroll.GetChild(i) as HFlowContainer;
-			
-				if(CardFlowContainer.Visible == true){
-					break;
-				}
-			}
-			
-			Control CardControl = CardFlowContainer.GetChild(index) as Control;
-			pos = CardControl.Position;
-			
-			ButtonContainer = Scroll.GetNode<Control>("ButtonContainer");
 		}else{
-			return;
+			AllCardsContainer = GetNode<Panel>("MainCardContainer/DeckContainer/DeckColorContainer");
 		}
 		
-			
+		
+		// Find the cards being displayed (as decks have multiple but only 1 displayed)
+		ScrollContainer Scroll = AllCardsContainer.GetNode<ScrollContainer>("ScrollContainer");
+		FlowContainer CardFlowContainer = Scroll.GetChild(SelectedDeck) as HFlowContainer;
+		VBoxContainer CardContainer = null;
+		
+		// figure out with card location is it in using card ID
+		for(int i = 0; i < CardFlowContainer.GetChildCount(); i++){
+			VBoxContainer TempCardContainer = CardFlowContainer.GetChild(i) as VBoxContainer;
+			GD.Print("Pressed:"+CardID);
+			GD.Print("Name"+i + ":" + TempCardContainer.Name);
+			if(TempCardContainer.Name == "" + CardID){
+				CardContainer = TempCardContainer;
+				break;
+			}
+		}
+		
+		pos = CardContainer.Position;
+		ButtonContainer = Scroll.GetNode<Control>("ButtonContainer");	
+		
 		// Check if card button exists
 		int ButtonIndex = CheckCardButton(pos.X, pos.Y, ButtonContainer);
 		// Button does not exist yet
 		if(ButtonIndex == -1){
 			// Create button
-			CreateCardButton(pos.X, pos.Y, index, location, ButtonContainer);
+			CreateCardButton(pos.X, pos.Y, CardID, Location, ButtonContainer);
 			RefreshScrollbar(AllCardsContainer);
 		}else{
 			// Else deletes it
@@ -137,14 +163,9 @@ public partial class CardManagement : Control
 		ScrollContainer Scroll = AllCardsContainer.GetNode<ScrollContainer>("ScrollContainer");
 		HFlowContainer Content = null;
 		
-		// Find the cards being displayed (as decks have multiple but only 1 displayed) (i-1 to account for button overlays)
-		for (int i = 0; i < Scroll.GetChildCount() - 1; i++){
-			Content = Scroll.GetChild(i) as HFlowContainer;
+		// Find the cards being displayed (as decks have multiple but only 1 displayed)
+		Content = Scroll.GetChild(SelectedDeck) as HFlowContainer;
 			
-			if(Content.Visible == true){
-				break;
-			}
-		}
 
 		// Calculate total Content height
 		float TotalHeight = 0;
@@ -179,7 +200,7 @@ public partial class CardManagement : Control
 	}
 	
 	// Function to create the 2 buttons
-	private void CreateCardButton(float X, float Y, int index, string location, Control ButtonContainer){
+	private void CreateCardButton(float X, float Y, int CardID, string Location, Control ButtonContainer){
 		var ButtonSet = new Control();
 		ButtonSet.Position = new Vector2(X + 10, Y + 200);
 		
@@ -197,9 +218,9 @@ public partial class CardManagement : Control
 			
 		AddOrRemoveDeckButton.CustomMinimumSize = new Vector2(170, 40);
 		AddOrRemoveDeckButton.Position = new Vector2(0, 40);
-		if(location == "Collection"){
+		if(Location == "Collection"){
 			AddOrRemoveDeckButton.Text = "Add";
-		}else if(location == "Deck"){
+		}else if(Location == "Deck"){
 			AddOrRemoveDeckButton.Text = "Remove";
 		}
 		AddOrRemoveDeckButton.ZIndex = 3;
@@ -220,14 +241,13 @@ public partial class CardManagement : Control
 		AddOrRemoveDeckButton.AddThemeStyleboxOverride("pressed", ButtonPressed);
 			
 		// Connect pressed to a function
-		InfoButton.Pressed += () => OpenCardPopup(index);
+		InfoButton.Pressed += () => OpenCardPopup(CardID);
 		
-		if(location == "Collection"){
-			AddOrRemoveDeckButton.Pressed += () => OpenCardPopup(index);
-		}else if(location == "Deck"){
-			AddOrRemoveDeckButton.Pressed += () => OpenCardPopup(index);
+		if(Location == "Collection"){
+			AddOrRemoveDeckButton.Pressed += () => AddIntoDeck(CardID);
+		}else{
+			AddOrRemoveDeckButton.Pressed += () => RemoveFromDeck(CardID);
 		}
-		AddOrRemoveDeckButton.Pressed += () => OpenCardPopup(index);
 		
 		ButtonSet.AddChild(InfoButton);
 		ButtonSet.AddChild(AddOrRemoveDeckButton);
@@ -235,55 +255,61 @@ public partial class CardManagement : Control
 		ButtonContainer.AddChild(ButtonSet);
 	}
 	
+	// Function to fetch deck from backend
+	private List<Deck> FetchDecks(){
+		var Decks = new List<Deck>
+			{
+				new Deck
+				{
+					DeckID = 1,
+					Name = "name1",
+					CardIDs = new List<int> { 1, 2 },
+					Cards = new List<CardInfo>
+					{
+						new CardInfo { CardID = 1, Position = 1 },
+						new CardInfo { CardID = 2, Position = 2 }
+					}
+				},
+				new Deck
+				{
+					DeckID = 2,
+					Name = "name2",
+					CardIDs = new List<int> { 1, 2, 3 },
+					Cards = new List<CardInfo>
+					{
+						new CardInfo { CardID = 1, Position = 1 },
+						new CardInfo { CardID = 2, Position = 2 },
+						new CardInfo { CardID = 3, Position = 3 }
+					}
+				}
+			};
+		
+		return Decks;
+	}
+	
 	// Function to generate Decks
 	private async Task GenerateDecks()
 	{
-		// Generate 3 decks
-		for (int j = 0; j < 3; j++)
+		// Generate decks
+		for (int j = 0; j < Decks.Count; j++)
 		{
+			int DeckIndex = j;
 			// insert cards into deck
 			var DeckContainer = new HFlowContainer();
 			DeckContainer.CustomMinimumSize = new Vector2(610, 660);
 			DeckContainer.Name = "DeckContainer";
 			
-			// Generate 12 items
-			for (int i = 0; i < 10 + j; i++)
+			// Generate Cards
+			for (int i = 0; i < Decks[j].Cards.Count; i++)
 			{
 				// to pass the values over to any functions (passing i will always pass max)
-				int index = i;
+				int CardIndex = i;
+				
 				// Create control that gives the card its size
-				var CardControl = new Control();
-				CardControl.CustomMinimumSize = new Vector2(190, 200);
+				var CardContainer = CreateCard("Deck", Decks[DeckIndex].Cards[CardIndex].CardID);
 				
-				// Create the card itself
-				var Card = CardScene.Instantiate<Node2D>();
-				Card.Position = new Vector2(95, 100);
-				CardControl.AddChild(Card);
-				
-				
-				// Add card button overlay
-				var CardButtonOverlay = new Button();
-				CardButtonOverlay.CustomMinimumSize = new Vector2(170, 200);
-				CardButtonOverlay.Position = new Vector2(10, 0);
-				CardButtonOverlay.ZIndex = 2;
-				CardButtonOverlay.MouseDefaultCursorShape = Control.CursorShape.PointingHand;
-				
-				// Make all states fully transparent
-				var Transparent = new StyleBoxFlat();
-				Transparent.BgColor = new Color(0, 0, 0, 0); // RGBA, alpha = 0 (transparent)
-
-				CardButtonOverlay.AddThemeStyleboxOverride("normal", Transparent);
-				CardButtonOverlay.AddThemeStyleboxOverride("hover", Transparent);
-				CardButtonOverlay.AddThemeStyleboxOverride("pressed", Transparent);
-				CardButtonOverlay.AddThemeStyleboxOverride("focus", Transparent);
-				CardButtonOverlay.AddThemeStyleboxOverride("disabled", Transparent);
-
-				// Connect pressed to a function
-				CardButtonOverlay.Pressed += () => OnCardPressed(index, "Deck");
-				CardControl.AddChild(CardButtonOverlay);
-			
 				// Add the card into the main container
-				DeckContainer.AddChild(CardControl);
+				DeckContainer.AddChild(CardContainer);
 			}
 			
 			
@@ -299,12 +325,173 @@ public partial class CardManagement : Control
 			// the button container must always be below in the tree so that its button will be overlayed on top
 			Control ButtonContainer = GetNode<Control>("MainCardContainer/DeckContainer/DeckColorContainer/ScrollContainer/ButtonContainer");
 			DecksScrollContainer.MoveChild(ButtonContainer, DecksScrollContainer.GetChildCount() - 1);
-			
-			Decks.Add(DeckContainer);
 		}
 		
 		// Chain to tabs AFTER decks finish (main thread safe)
 		CallDeferred(MethodName.CreateDynamicTabs);
+	}
+	
+	// Create Card with count (For collection)
+	private VBoxContainer CreateCardWithLabel(string Location, int CardID, int Quantity)
+	{
+		var CardContainer = CreateCard(Location, CardID);
+		
+		var CardCount = new Label();
+		CardCount.Name = "CardCount";
+		CardCount.Text = "X" + Quantity;
+		CardCount.AddThemeFontSizeOverride("font_size", 23);
+		CardCount.AddThemeColorOverride("font_color", new Color(0, 0, 0));
+		CardCount.HorizontalAlignment = HorizontalAlignment.Center;
+		
+		// Add the card count label into the container
+		CardContainer.AddChild(CardCount);
+		
+		return CardContainer;
+	}
+	
+	// Create just Card
+	private VBoxContainer CreateCard(string Location, int CardID)
+	{
+		// Create control that gives the card its size
+		var CardContainer = new VBoxContainer();
+		CardContainer.CustomMinimumSize = new Vector2(190, 200);
+		CardContainer.Name = "" + CardID;
+		
+		// Create control that gives the card its size
+		var CardControl = new Control();
+		CardControl.CustomMinimumSize = new Vector2(190, 200);
+		CardControl.Name = "CardControl";
+				
+		// Create the card itself
+		var Card = CardScene.Instantiate<Node2D>();
+		Card.Position = new Vector2(95, 100);
+		CardControl.AddChild(Card);
+				
+				
+		// Add card button overlay
+		var CardButtonOverlay = new Button();
+		CardButtonOverlay.CustomMinimumSize = new Vector2(170, 200);
+		CardButtonOverlay.Position = new Vector2(10, 0);
+		CardButtonOverlay.ZIndex = 2;
+		CardButtonOverlay.MouseDefaultCursorShape = Control.CursorShape.PointingHand;
+				
+		// Make all states fully transparent
+		var Transparent = new StyleBoxFlat();
+		Transparent.BgColor = new Color(0, 0, 0, 0); // RGBA, alpha = 0 (transparent)
+
+		CardButtonOverlay.AddThemeStyleboxOverride("normal", Transparent);
+		CardButtonOverlay.AddThemeStyleboxOverride("hover", Transparent);
+		CardButtonOverlay.AddThemeStyleboxOverride("pressed", Transparent);
+		CardButtonOverlay.AddThemeStyleboxOverride("focus", Transparent);
+		CardButtonOverlay.AddThemeStyleboxOverride("disabled", Transparent);
+
+		CardButtonOverlay.Pressed += () => OnCardPressed(Location, CardID);
+		CardControl.AddChild(CardButtonOverlay);
+			
+		// Add the card into the container
+		CardContainer.AddChild(CardControl);
+		
+		
+		return CardContainer;
+	}
+	
+	// function to add a card into deck (called by button)
+	private void AddIntoDeck(int CardID)
+	{
+		// Remove collection		
+		ScrollContainer CollectionScrollContainer = GetNode<ScrollContainer>("MainCardContainer/CollectionContainer/CollectionColorContainer/ScrollContainer");
+		HFlowContainer CollectionContainer = CollectionScrollContainer.GetChild(SelectedDeck) as HFlowContainer;
+		VBoxContainer CardContainer;
+		for(int i = 0; i < CollectionContainer.GetChildCount(); i++){
+			CardContainer = CollectionContainer.GetChild(i) as VBoxContainer;
+			
+			if(CardContainer.Name == "" + CardID){
+				Collections[SelectedDeck].Cards[i].Quantity -= 1;
+				// No more in collection
+				if(Collections[SelectedDeck].Cards[i].Quantity <= 0){
+					CardContainer.QueueFree();
+					Collections[SelectedDeck].Cards.Remove(Collections[SelectedDeck].Cards[i]);
+				}else{
+				// just update count
+					Label CardCount = CardContainer.GetNode<Label>("CardCount");
+					CardCount.Text = "X" + Collections[SelectedDeck].Cards[i].Quantity;
+				}
+			}
+		}
+		
+		// Add into deck data
+		Decks[SelectedDeck].CardIDs.Add(CardID);
+		Decks[SelectedDeck].Cards.Add(new CardInfo {CardID = CardID, Position = Decks[SelectedDeck].Cards.Count});
+		
+		// Add visually
+		ScrollContainer DeckScrollContainer = GetNode<ScrollContainer>("MainCardContainer/DeckContainer/DeckColorContainer/ScrollContainer");
+		HFlowContainer DeckContainer = DeckScrollContainer.GetChild(SelectedDeck) as HFlowContainer;
+		CardContainer = CreateCard("Deck", CardID);
+		DeckContainer.AddChild(CardContainer);
+		
+		// Reset buttons if not it will be out of position
+		RemoveButtonContainers();
+		
+		GD.Print("ADDED:" + CardID);
+	}
+	
+	private void RemoveFromDeck(int CardID){
+		// Remove card from deck
+		ScrollContainer DeckScrollContainer = GetNode<ScrollContainer>("MainCardContainer/DeckContainer/DeckColorContainer/ScrollContainer");
+		HFlowContainer DeckContainer = DeckScrollContainer.GetChild(SelectedDeck) as HFlowContainer;
+		VBoxContainer CardContainer;
+		for(int i = 0; i < DeckContainer.GetChildCount(); i++){
+			CardContainer = DeckContainer.GetChild(i) as VBoxContainer;
+			
+			if(CardContainer.Name == "" + CardID){
+				// remove from cardID
+				Decks[SelectedDeck].CardIDs.Remove(Decks[SelectedDeck].CardIDs[i]);
+				// remove from Cards
+				Decks[SelectedDeck].Cards.Remove(Decks[SelectedDeck].Cards[i]);
+				// queuefree
+				CardContainer.QueueFree();
+				
+				// since can have more than 1 card of same cardID, so just remove first instance
+				break;
+			}
+		}
+		
+		
+		// insert into collection
+		ScrollContainer CollectionScrollContainer = GetNode<ScrollContainer>("MainCardContainer/CollectionContainer/CollectionColorContainer/ScrollContainer");
+		HFlowContainer CollectionContainer = CollectionScrollContainer.GetChild(SelectedDeck) as HFlowContainer;
+		
+		// To check if card is in collection
+		var CardExist = false;
+		for(int i = 0; i < CollectionContainer.GetChildCount(); i++){
+			CardContainer = CollectionContainer.GetChild(i) as VBoxContainer;
+			
+			// If there is atleast 1 still in collection
+			if(CardContainer.Name == "" + CardID){
+				Collections[SelectedDeck].Cards[i].Quantity += 1;
+				
+				// Update count
+				Label CardCount = CardContainer.GetNode<Label>("CardCount");
+				CardCount.Text = "X" + Collections[SelectedDeck].Cards[i].Quantity;
+				
+				CardExist = true;
+				
+			}
+		}
+		
+		// if card did not exist in collection
+		if(!CardExist){
+			// insert into collection data
+			Collections[SelectedDeck].Cards.Add(new CardQuantity {CardID = CardID, Quantity = 1});
+			
+			// Insert visually
+			CardContainer = CreateCardWithLabel("Collection", CardID, 1);
+			CollectionContainer.AddChild(CardContainer);
+		}
+		
+		// Reset buttons if not it will be out of position
+		RemoveButtonContainers();
+		GD.Print("Remove:" + CardID);
 	}
 	
 	// create dynamic amount of tabs based on deck count
@@ -323,17 +510,40 @@ public partial class CardManagement : Control
 	// handle changing of tabs for decks
 	private void OnTabChanged(long tabIndex)
 	{
+		ScrollContainer DecksScrollContainer = GetNode<ScrollContainer>("MainCardContainer/DeckContainer/DeckColorContainer/ScrollContainer");
+		ScrollContainer CollectionsScrollContainer = GetNode<ScrollContainer>("MainCardContainer/CollectionContainer/CollectionColorContainer/ScrollContainer");
 		// Show/hide content based on tab
 		for(int i = 0; i < Decks.Count; i++)
 		{
-			Decks[i].Visible = (i == tabIndex);
+			HFlowContainer CollectionContainer = CollectionsScrollContainer.GetChild(i) as HFlowContainer;
+			HFlowContainer DeckContainer = DecksScrollContainer.GetChild(i) as HFlowContainer;
+			// make to visible if its selected
+			CollectionContainer.Visible = (i == tabIndex);
+			DeckContainer.Visible = (i == tabIndex);
+
 		}
 		
 		// Delete all past Card Buttons ("Info, "Remove") as there should not be any in new decks
-		Control ButtonContainer = GetNode<Control>("MainCardContainer/DeckContainer/DeckColorContainer/ScrollContainer/ButtonContainer");
+		RemoveButtonContainers();
 		
-		for(int i = 0; i < ButtonContainer.GetChildCount(); i++){
-			ButtonContainer.GetChild(i).QueueFree();
+		// Update the main variable
+		SelectedDeck = (int) tabIndex;
+	}
+
+	// Function to delete  all past Card Buttons ("Info, "Remove") as there should not be any
+	public void RemoveButtonContainers()
+	{
+		ScrollContainer DecksScrollContainer = GetNode<ScrollContainer>("MainCardContainer/DeckContainer/DeckColorContainer/ScrollContainer");
+		ScrollContainer CollectionsScrollContainer = GetNode<ScrollContainer>("MainCardContainer/CollectionContainer/CollectionColorContainer/ScrollContainer");
+		Control DeckButtonContainer = DecksScrollContainer.GetNode<Control>("ButtonContainer");
+		Control CollectionButtonContainer = CollectionsScrollContainer.GetNode<Control>("ButtonContainer");
+		
+		for(int i = 0; i < DeckButtonContainer.GetChildCount(); i++){
+			DeckButtonContainer.GetChild(i).QueueFree();
+		}
+		
+		for(int i = 0; i < CollectionButtonContainer.GetChildCount(); i++){
+			CollectionButtonContainer.GetChild(i).QueueFree();
 		}
 	}
 
@@ -353,7 +563,7 @@ public partial class CardManagement : Control
 		CloseCardPopup();
 	}	
 	
-	private void OpenCardPopup(int index)
+	private void OpenCardPopup(int CardID)
 	{
 		Control CardPopupContainerNode = GetNode<Control>("CardPopupContainer");
 		

@@ -265,13 +265,6 @@ offset_top = 25.0
 offset_right = 1025.0
 offset_bottom = 825.0
 
-[node name="CollectionContainer" type="HFlowContainer" parent="MainCardContainer/CollectionContainer/CollectionColorContainer/ScrollContainer" unique_id=200672664]
-clip_contents = true
-custom_minimum_size = Vector2(1000, 650)
-layout_mode = 2
-theme_override_constants/h_separation = 60
-theme_override_constants/v_separation = 15
-
 [node name="ButtonContainer" type="Control" parent="MainCardContainer/CollectionContainer/CollectionColorContainer/ScrollContainer" unique_id=1742349117]
 layout_mode = 2
 
