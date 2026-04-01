@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="CardStats" format=3 uid="uid://d7c5dentbaca"]
+
+[ext_resource type="Script" uid="uid://b2r5pcvph5drw" path="res://resource/CardStats.cs" id="1_o1s1m"]
+
+[resource]
+script = ExtResource("1_o1s1m")
+id = 31
+Name = "Lazy Chick"
+Colour = "Yellow"
+Rarity = "common"
+Cost = 2
+Attack = 0
+Health = 30
+Effect = "summon: 1/2048 chance to set its attack speed to 0"
+Summon = "basic"
+OnAttack = "basic"
+OnDamaged = "basic"
+OnDeath = "basic"

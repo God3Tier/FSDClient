@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="CardStats" format=3 uid="uid://bngsixttgnkrn"]
+
+[ext_resource type="Texture2D" uid="uid://bb8qvvcd17o0g" path="res://assets/characters/Traitor.png" id="1_kp8du"]
+[ext_resource type="Script" uid="uid://b2r5pcvph5drw" path="res://resource/CardStats.cs" id="2_luyxm"]
+
+[resource]
+script = ExtResource("2_luyxm")
+id = 26
+Image = ExtResource("1_kp8du")
+Name = "Traitor"
+Colour = "Purple"
+Rarity = "common"
+Cost = 2
+Attack = 20
+Health = 20
+Effect = "on death: deal 20 damage to your leader"
+Summon = "basic"
+OnAttack = "basic"
+OnDamaged = "basic"
+OnDeath = "basic"

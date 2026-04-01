@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="CardStats" format=3 uid="uid://b1mabyyhw624x"]
+
+[ext_resource type="Texture2D" uid="uid://qjj0bxlkvrj2" path="res://assets/characters/Plague_Doctor.png" id="1_k6hfa"]
+[ext_resource type="Script" uid="uid://b2r5pcvph5drw" path="res://resource/CardStats.cs" id="2_o3e23"]
+
+[resource]
+script = ExtResource("2_o3e23")
+id = 27
+Image = ExtResource("1_k6hfa")
+Name = "Plague Doctor"
+Colour = "Purple"
+Rarity = "rare"
+Cost = 5
+Attack = 5
+Health = 10
+Effect = "summon: give enemy units in the back row -15/-10"
+Summon = "opponent_stats_change"
+OnAttack = "basic"
+OnDamaged = "basic"
+OnDeath = "basic"

@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="CardStats" format=3 uid="uid://b68ewc1rmorrd"]
+
+[ext_resource type="Texture2D" uid="uid://chi7qfb0ymavb" path="res://assets/characters/Alpha_Wolf.png" id="1_dvon1"]
+[ext_resource type="Script" uid="uid://b2r5pcvph5drw" path="res://resource/CardStats.cs" id="2_s2uyo"]
+
+[resource]
+script = ExtResource("2_s2uyo")
+id = 23
+Image = ExtResource("1_dvon1")
+Name = "Alpha Wolf"
+Colour = "Green"
+Rarity = "epic"
+Cost = 5
+Attack = 15
+Health = 15
+Effect = "summon: summon 2 15/15 wolves on your board"
+Summon = "summon_wolves"
+OnAttack = "basic"
+OnDamaged = "basic"
+OnDeath = "basic"

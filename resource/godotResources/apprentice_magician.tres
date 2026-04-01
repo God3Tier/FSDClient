@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="CardStats" format=3 uid="uid://d2tp38enm230i"]
+
+[ext_resource type="Texture2D" uid="uid://biwq2uf5byav2" path="res://assets/characters/Apprentice_Magician.png" id="1_s6fao"]
+[ext_resource type="Script" uid="uid://b2r5pcvph5drw" path="res://resource/CardStats.cs" id="2_nmcsd"]
+
+[resource]
+script = ExtResource("2_nmcsd")
+id = 14
+Image = ExtResource("1_s6fao")
+Name = "Apprentice Magician"
+Colour = "Blue"
+Rarity = "common"
+Cost = 3
+Attack = 20
+Health = 15
+Effect = "Attacks a random enemy unit or leader"
+Summon = "basic"
+OnAttack = "random_enemy"
+OnDamaged = "basic"
+OnDeath = "basic"

@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="CardStats" format=3 uid="uid://cd6u7goi32ltx"]
+
+[ext_resource type="Texture2D" uid="uid://myem08xswwv7" path="res://assets/characters/Town_Hero.png" id="1_osaq5"]
+[ext_resource type="Script" uid="uid://b2r5pcvph5drw" path="res://resource/CardStats.cs" id="2_k0l56"]
+
+[resource]
+script = ExtResource("2_k0l56")
+id = 5
+Image = ExtResource("1_osaq5")
+Name = "Town Hero"
+Colour = "Grey"
+Rarity = "epic"
+Cost = 5
+Attack = 25
+Health = 25
+Effect = "summon: destroy all with same colour and get +5/+5 for each card destroyed"
+Summon = "destroy_same_colour"
+OnAttack = "basic"
+OnDamaged = "basic"
+OnDeath = "basic"

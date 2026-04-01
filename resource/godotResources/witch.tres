@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="CardStats" format=3 uid="uid://lkwtnkw1auwg"]
+
+[ext_resource type="Texture2D" uid="uid://cql0m27b6d2il" path="res://assets/characters/Witch.png" id="1_nevug"]
+[ext_resource type="Script" uid="uid://b2r5pcvph5drw" path="res://resource/CardStats.cs" id="2_nd76q"]
+
+[resource]
+script = ExtResource("2_nd76q")
+id = 28
+Image = ExtResource("1_nevug")
+Name = "Witch"
+Colour = "Purple"
+Rarity = "rare"
+Cost = 3
+Attack = 15
+Health = 15
+Effect = "on death: destroy a random enemy unit"
+Summon = "basic"
+OnAttack = "basic"
+OnDamaged = "basic"
+OnDeath = "dest_rand"

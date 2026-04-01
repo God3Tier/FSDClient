@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="CardStats" format=3 uid="uid://c8sv01m7pvgk7"]
+
+[ext_resource type="Script" uid="uid://b2r5pcvph5drw" path="res://resource/CardStats.cs" id="1_70ni5"]
+
+[resource]
+script = ExtResource("1_70ni5")
+id = 32
+Name = "Angel"
+Colour = "Yellow"
+Rarity = "common"
+Cost = 3
+Attack = 5
+Health = 5
+Effect = "summon: give vertically adjacent unit 0/+10"
+Summon = "vertical_stats_change"
+OnAttack = "basic"
+OnDamaged = "basic"
+OnDeath = "basic"
