@@ -61,7 +61,14 @@ public partial class CardManagement : Control
 				Cards = new List<CardQuantity>
 				{
 					new CardQuantity { CardID = 2, Quantity = 3 },
-					new CardQuantity { CardID = 3, Quantity = 3 }
+					new CardQuantity { CardID = 3, Quantity = 3 },
+					new CardQuantity { CardID = 4, Quantity = 2 },
+					new CardQuantity { CardID = 5, Quantity = 2 },
+					new CardQuantity { CardID = 6, Quantity = 2 },
+					new CardQuantity { CardID = 7, Quantity = 2 },
+					new CardQuantity { CardID = 8, Quantity = 2 },
+					new CardQuantity { CardID = 9, Quantity = 2 },
+					new CardQuantity { CardID = 10, Quantity = 2 }
 				}
 			},
 
@@ -70,7 +77,14 @@ public partial class CardManagement : Control
 				Cards = new List<CardQuantity>
 				{
 					new CardQuantity { CardID = 2, Quantity = 1 },
-					new CardQuantity { CardID = 3, Quantity = 2 }
+					new CardQuantity { CardID = 3, Quantity = 2 },
+					new CardQuantity { CardID = 4, Quantity = 2 },
+					new CardQuantity { CardID = 5, Quantity = 2 },
+					new CardQuantity { CardID = 6, Quantity = 2 },
+					new CardQuantity { CardID = 7, Quantity = 2 },
+					new CardQuantity { CardID = 8, Quantity = 2 },
+					new CardQuantity { CardID = 9, Quantity = 2 },
+					new CardQuantity { CardID = 10, Quantity = 2 }
 				}
 			}
 		};
@@ -605,26 +619,54 @@ public partial class CardManagement : Control
 	// When pressing save button
 	private void _OnSaveButtonPressed()
 	{
-		// Validate if theres 12 cards
-		bool Error = false;
-		
 		for (int i = 0; i < Decks.Count; i++){
-			if(Decks[i].Cards.Count != 12){
-				Control ErrorPopupContainer = GetNode<Control>("ErrorPopupContainer");
-				Label ErrorLabel = ErrorPopupContainer.GetNode<Label>("ErrorBackgroundContainer/ErrorMargin/ErrorLabel");
-				ErrorPopupContainer.Visible = true;
-				ErrorLabel.Text = $"  Deck {Decks[i].Name} does not have 12 cards";
+			// Validate if theres 12 cards
+			if(Decks[i].CardIDs.Count != 12){
+				SetErrorPopup($"Deck {Decks[i].Name} does not have 12 cards");
+				return;
+			}
+			
+			// Validate max 2 unique cards
+			if(!HasNoMoreThanTwoDuplicates(Decks[i].CardIDs)){
+				SetErrorPopup($"Deck {Decks[i].Name} have more than 2 duplicate cards");
+				return;
 			}
 		}
-		
-		// TODO: Validate max 2 unique cards
-		
 		// TODO: fetch to save
 		
 		// Make save button invisible
 		SetSaveButtonVisibility(false);
 	}
 	
+	// Checks that theres atmost 2 of the same card in the deck
+	public bool HasNoMoreThanTwoDuplicates(List<int> cardIDs)
+	{
+		// use dictionary to check count of each item
+		var counts = new Dictionary<int, int>();
+
+		foreach (int id in cardIDs)
+		{
+			if (!counts.ContainsKey(id))
+				counts[id] = 0;
+
+			counts[id]++;
+
+			if (counts[id] > 2)
+				return false;
+		}
+
+		return true;
+	}
+
+	// function to make error popup visible and set the text
+	private void SetErrorPopup(string Text)
+	{
+		Control ErrorPopupContainer = GetNode<Control>("ErrorPopupContainer");
+		Label ErrorLabel = ErrorPopupContainer.GetNode<Label>("ErrorBackgroundContainer/MarginErrorContainer/ErrorLabel");
+		ErrorPopupContainer.Visible = true;
+		ErrorLabel.Text = Text;
+	}
+
 	// When pressing the "Active" OR "Set Active" Button
 	private void _OnIsActiveButtonPressed()
 	{
