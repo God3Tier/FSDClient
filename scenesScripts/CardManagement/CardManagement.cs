@@ -21,6 +21,7 @@ public class Deck
 		public string Name { get; set; } = "";
 		public List<int> CardIDs { get; set; } = new();
 		public List<CardInfo> Cards { get; set; } = new();
+		public bool IsActive { get; set; } = false;
 	}
 
 public class CardInfo
@@ -48,9 +49,10 @@ public partial class CardManagement : Control
 		GenerateCollection();
 		Decks = FetchDecks();
 		GenerateDecks();
+		UpdateActiveButton();
 	}
 	
-	// Function to fetch collections from backend
+	// TODO: Function to fetch collections from backend
 	private List<Collection> FetchCollections(){
 		var Collections = new List<Collection>
 		{
@@ -243,7 +245,7 @@ public partial class CardManagement : Control
 		ButtonContainer.AddChild(ButtonSet);
 	}
 	
-	// Function to fetch deck from backend
+	// TODO: Function to fetch deck from backend
 	private List<Deck> FetchDecks(){
 		var Decks = new List<Deck>
 			{
@@ -256,7 +258,8 @@ public partial class CardManagement : Control
 					{
 						new CardInfo { CardID = 1, Position = 1 },
 						new CardInfo { CardID = 2, Position = 2 }
-					}
+					},
+					IsActive = false,
 				},
 				new Deck
 				{
@@ -268,7 +271,8 @@ public partial class CardManagement : Control
 						new CardInfo { CardID = 1, Position = 1 },
 						new CardInfo { CardID = 2, Position = 2 },
 						new CardInfo { CardID = 3, Position = 3 }
-					}
+					},
+					IsActive = true,
 				}
 			};
 		
@@ -417,6 +421,9 @@ public partial class CardManagement : Control
 		CardContainer = CreateCard("Deck", CardID);
 		DeckContainer.AddChild(CardContainer);
 		
+		// Make save button visible
+		SetSaveButtonVisibility(true);
+		
 		// Reset buttons if not it will be out of position
 		RemoveButtonContainers();
 	}
@@ -473,6 +480,9 @@ public partial class CardManagement : Control
 			CollectionContainer.AddChild(CardContainer);
 		}
 		
+		// Make save button visible
+		SetSaveButtonVisibility(true);
+		
 		// Reset buttons if not it will be out of position
 		RemoveButtonContainers();
 
@@ -481,7 +491,7 @@ public partial class CardManagement : Control
 	// create dynamic amount of tabs based on deck count
 	private void CreateDynamicTabs()
 	{
-	 	var DeckTab = GetNode<TabBar>("MainCardContainer/DeckContainer/DeckTab");
+	 	var DeckTab = GetNode<TabBar>("MainCardContainer/DeckContainer/TabRow/DeckTab");
 		
 		// Create tabs
 		for(int i = 0; i < Decks.Count; i++){
@@ -512,6 +522,35 @@ public partial class CardManagement : Control
 		
 		// Update the main variable
 		SelectedDeck = (int) tabIndex;
+		
+		// Change Active button
+		UpdateActiveButton();
+	}
+
+	// function used to update active button visuals to be active/Set active
+	private void UpdateActiveButton()
+	{
+		Button IsActiveButton = GetNode<Button>("MainCardContainer/DeckContainer/TabRow/IsActiveButton");
+		if(Decks[SelectedDeck].IsActive){
+			StyleBox ButtonSuccess = GD.Load<StyleBox>("res://styles/button_success.tres");
+			StyleBox ButtonSuccessHover = GD.Load<StyleBox>("res://styles/button_success_hover.tres");
+			StyleBox ButtonSuccessPressed = GD.Load<StyleBox>("res://styles/button_success_pressed.tres");
+
+			IsActiveButton.AddThemeStyleboxOverride("normal", ButtonSuccess);
+			IsActiveButton.AddThemeStyleboxOverride("hover", ButtonSuccessHover);
+			IsActiveButton.AddThemeStyleboxOverride("pressed", ButtonSuccessPressed);
+			IsActiveButton.Text = "Active";
+		}else{
+			StyleBox ButtonDanger = GD.Load<StyleBox>("res://styles/button_danger.tres");
+			StyleBox ButtonDangerHover = GD.Load<StyleBox>("res://styles/button_danger_hover.tres");
+			StyleBox ButtonDangerPressed = GD.Load<StyleBox>("res://styles/button_danger_pressed.tres");
+
+			IsActiveButton.AddThemeStyleboxOverride("normal", ButtonDanger);
+			IsActiveButton.AddThemeStyleboxOverride("hover", ButtonDangerHover);
+			IsActiveButton.AddThemeStyleboxOverride("pressed", ButtonDangerPressed);
+			IsActiveButton.Text = "Set Active";
+		}	
+		
 	}
 
 	// Function to delete  all past Card Buttons ("Info, "Remove") as there should not be any
@@ -562,4 +601,53 @@ public partial class CardManagement : Control
 		// Turn it OFF (make visible false)
 		CardPopupContainerNode.Visible = false;
 	}	
+	
+	// When pressing save button
+	private void _OnSaveButtonPressed()
+	{
+		// Validate if theres 12 cards
+		bool Error = false;
+		
+		for (int i = 0; i < Decks.Count; i++){
+			if(Decks[i].Cards.Count != 12){
+				Control ErrorPopupContainer = GetNode<Control>("ErrorPopupContainer");
+				Label ErrorLabel = ErrorPopupContainer.GetNode<Label>("ErrorBackgroundContainer/ErrorMargin/ErrorLabel");
+				ErrorPopupContainer.Visible = true;
+				ErrorLabel.Text = $"  Deck {Decks[i].Name} does not have 12 cards";
+			}
+		}
+		
+		// TODO: Validate max 2 unique cards
+		
+		// TODO: fetch to save
+		
+		// Make save button invisible
+		SetSaveButtonVisibility(false);
+	}
+	
+	// When pressing the "Active" OR "Set Active" Button
+	private void _OnIsActiveButtonPressed()
+	{
+		for(int i = 0; i < Decks.Count; i++){
+			Decks[i].IsActive = i==SelectedDeck;
+		}
+		
+		// Make save button visible
+		SetSaveButtonVisibility(true);
+		
+		// Update Active button visuals
+		UpdateActiveButton();
+	}
+	
+	// Update save button visible
+	private void SetSaveButtonVisibility(bool visible)
+	{
+		Button SaveButton = GetNode<Button>("MainCardContainer/DeckContainer/DeckColorContainer/SaveButton");
+		SaveButton.Visible = visible;
+	}
+	
+	private void _OnErrorPopupBackgroundPressed(){
+		Control ErrorPopupContainer = GetNode<Control>("ErrorPopupContainer");
+		ErrorPopupContainer.Visible = false;
+	}
 }
