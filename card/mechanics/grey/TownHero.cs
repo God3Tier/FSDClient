@@ -31,8 +31,8 @@ public partial class TownHero : Card
         battleslot.Card.Health += amountGrey * 5;
         ((RichTextLabel)battleslot.Card.FindChild("Health", true)).Text = battleslot.Card.Health.ToString();
 
-        Board[battleslot.x][battleslot.y] = battleslot.Card;
-        battleslot.Card.EnterBattlefield();
+        base.SpawnCard(OpponentBoard, Board, battleslot, ref player1Health, ref player2Health);
+
     }
 
 }

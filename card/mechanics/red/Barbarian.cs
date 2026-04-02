@@ -21,10 +21,12 @@ public partial class Barbarian : Card
 
     public void SpawnCard(Card[][] OpponentBoard, Card[][] Board, BattleSlot battleslot, ref int player1Health, ref int player2Health)
     {
-        Board[battleslot.x][battleslot.y] = battleslot.Card;
-        if (Transformed) {
+        if (Transformed)
+        {
             battleslot.Card.TimeToAttack /= 2;
         }
+        base.SpawnCard(OpponentBoard, Board, battleslot, ref player1Health, ref player2Health);
+
     }
 
 }

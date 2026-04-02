@@ -181,7 +181,7 @@ public partial class Card : Node2D
     public void SpawnCard(Card[][] OpponentBoard, Card[][] Board, BattleSlot battleslot, ref int player1Health, ref int player2Health)
     {
         GD.Print("Updating Board");
-        Board[battleslot.x][battleslot.y] = battleslot.Card;
+        Board[battleslot.x][battleslot.y] = this;
         battleslot.Card.EnterBattlefield();
     }
 
@@ -190,7 +190,7 @@ public partial class Card : Node2D
         Board[ActiveX][ActiveY] = null;
     }
 
-    public void OnDamage(Card[][] OpponentBoard, Card[][] Board, int damageTaken)
+    public void OnDamaged(Card[][] OpponentBoard, Card[][] Board, int damageTaken)
     {
         Board[ActiveX][ActiveY].Health -= damageTaken;
         if (Board[ActiveX][ActiveY].Health <= 0) {
