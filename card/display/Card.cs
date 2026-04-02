@@ -11,7 +11,8 @@ public partial class Card : Node2D
     [Signal] public delegate void AttackedEventHandler(Card card);
 
     public Vector2 StartingPosition { get; set; }
-    private int Health { get; set; }
+    public int Health { get; set; }
+    public string Colour { get; set; }
     public int Attack { get; set; }
     private bool BattleMode { get; set; } = false;
     private double TimeToAttack { get; set; }
@@ -193,7 +194,7 @@ public partial class Card : Node2D
     {
         Board[ActiveX][ActiveY].Health -= damageTaken;
         if (Board[ActiveX][ActiveY].Health <= 0) {
-            Board[ActiveX][ActiveY].OnDeath(OpponentBoard, Board)
+            Board[ActiveX][ActiveY].OnDeath(OpponentBoard, Board);
         }
     }
 
