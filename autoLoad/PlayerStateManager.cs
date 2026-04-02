@@ -17,11 +17,12 @@ public partial class PlayerStateManager : Node
 	public static PlayerStateManager Instance { get; private set; }
 	public PlayerData PlayerData { get; private set; }
 	public List<CardData> DeckCardDatas { get; set; }
-	public int Level { get; set; }
-	public int Crystal { get; set; }
-	public int Gold { get; set; }
-	public string SessionId { get; set;}
-	public string Token { get; set; } = null;
+	public int UserId { get; private set; }
+	public int Level { get; private set; }
+	public int Crystal { get; private set; }
+	public int Gold { get;  private set; }
+	public string SessionId { get;  set;}
+	public string Token { get; private set; } = null;
 	
 	public override void _Ready()
 	{
@@ -35,6 +36,7 @@ public partial class PlayerStateManager : Node
 	public void SetPlayerData(LoginResponse loginResponse)
 	{
 		GD.Print("Intitialisiing with ", loginResponse.ToString() + " end of line");
+		
 		Token = loginResponse.Token;
 		Level = loginResponse.Level;
 		Crystal = loginResponse.Crystal;
