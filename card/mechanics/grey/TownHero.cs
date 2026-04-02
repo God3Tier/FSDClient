@@ -7,7 +7,7 @@ using Godot;
 public partial class TownHero : Card
 {
 
-    public void SpawnCard(Card[][] OpponentBoard, Card[][] Board, BattleSlot battleslot)
+    public void SpawnCard(Card[][] OpponentBoard, Card[][] Board, BattleSlot battleslot, ref int player1Health, ref int player2Health)
     {
         GD.Print("Updating Board");
         int amountGrey = 0;

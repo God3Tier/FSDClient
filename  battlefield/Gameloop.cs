@@ -63,8 +63,11 @@ public partial class Gameloop : Node2D
 	public PlayerData IncomingPlayer { get; set; }
 	public PlayerState PlayerState { get; set; }
 
-	// Deal with card placement and card movement
-	private Card[][] Board { get; set; } = new Card[2][];
+    // Deal with active gameplay
+    public int Player1Health;
+    public int Player2Health;
+    // Deal with card placement and card movement
+    private Card[][] Board { get; set; } = new Card[2][];
 	private Card[][] OpponentBoard { get; set; } = new Card[2][];
 	private CardManager CardManager;
 	private HandArea HandArea;
@@ -171,8 +174,12 @@ public partial class Gameloop : Node2D
 
 
 	private void OnAttacked(Card card)
-	{
-        card.AttackOpponent(OpponentBoard, Board);
+    {
+        int player1Copy = Player1Health;
+        int player2Copy = Player2Health;
+        card.AttackOpponent(OpponentBoard, Board, ref player1Copy, ref player2Copy);
+        Player1Health = player1Copy;
+        Player2Health = player2Copy;
 	}
 
 	// This function is a proof of concept
@@ -185,7 +192,12 @@ public partial class Gameloop : Node2D
         battleslot.Card.ActiveY = battleslot.y;
         battleslot.Card.ActiveX = battleslot.x;
         battleslot.Card.Attacked += OnAttacked;
-        battleslot.Card.SpawnCard(OpponentBoard, Board, battleslot);
+        
+        int player1Copy = Player1Health;
+        int player2Copy = Player2Health;
+        battleslot.Card.SpawnCard(OpponentBoard, Board, battleslot, ref player1Copy, ref player2Copy);
+        Player1Health = player1Copy;
+        Player2Health = player2Copy;
 
 	}
 

@@ -15,8 +15,8 @@ public partial class Card : Node2D
     public string Colour { get; set; }
     public int Attack { get; set; }
     private bool BattleMode { get; set; } = false;
-    private double TimeToAttack { get; set; }
-    private double Timer { get; set; }
+    public double TimeToAttack { get; set; }
+    public double Timer { get; set; }
     public int ActiveY { get; set; }
     public int ActiveX { get; set; }
     // hi
@@ -153,7 +153,7 @@ public partial class Card : Node2D
         }
     }
 
-    public void AttackOpponent(Card[][] OpponentBoard, Card[][] Board)
+    public void AttackOpponent(Card[][] OpponentBoard, Card[][] Board, ref int player1Health, ref int player2Health)
     {
         if (OpponentBoard[0][ActiveY] == null && OpponentBoard[0][ActiveY] == null)
         {
@@ -178,7 +178,7 @@ public partial class Card : Node2D
         }
     }
 
-    public void SpawnCard(Card[][] OpponentBoard, Card[][] Board, BattleSlot battleslot)
+    public void SpawnCard(Card[][] OpponentBoard, Card[][] Board, BattleSlot battleslot, ref int player1Health, ref int player2Health)
     {
         GD.Print("Updating Board");
         Board[battleslot.x][battleslot.y] = battleslot.Card;
