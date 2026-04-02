@@ -226,6 +226,7 @@ public partial class Gameloop : Node2D
 		{
 			GD.Print("Pause Ended");
 			HandArea.LowerDeck();
+			CardManager.UnstuckCard();
 			CardManager._playerHand.ActivateCardsInHand();
 			TurnPause = false;
 			PauseTimer = 0;
@@ -241,6 +242,7 @@ public partial class Gameloop : Node2D
 			// TODO: Trigger secondary draw card event
 			TurnPause = true;
 			HandArea.RaiseDeck();
+			CardManager.UnstuckCard();
 			CardManager._playerHand.PauseCardsInHand();
 		}
 

@@ -51,6 +51,15 @@ public partial class CardManager : Node2D
 		}
 	}
 	
+	// When the timer is out, call stop drag if we are still dragging a card
+	public void UnstuckCard()
+	{
+		if (cardBeingDragged != null)
+		{
+			StopDrag();
+		}
+	}
+	
 	// debug printer
 	public void CheckHandAndDeck()
 	{
