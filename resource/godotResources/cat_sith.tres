@@ -1,10 +1,12 @@
 [gd_resource type="Resource" script_class="CardStats" format=3 uid="uid://cjbhjceiw2jbj"]
 
+[ext_resource type="Texture2D" uid="uid://ctk4oo4sy2kn7" path="res://assets/characters/Cat_Sith.png" id="1_011dl"]
 [ext_resource type="Script" uid="uid://b2r5pcvph5drw" path="res://resource/CardStats.cs" id="1_hft3x"]
 
 [resource]
 script = ExtResource("1_hft3x")
 id = 34
+Image = ExtResource("1_011dl")
 Name = "Cat Sith"
 Colour = "Yellow"
 Rarity = "rare"
