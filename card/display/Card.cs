@@ -17,6 +17,7 @@ public partial class Card : Node2D
     private double TimeToAttack { get; set; }
     private double Timer { get; set; }
     public int ActiveY { get; set; }
+    public int ActiveX { get; set; }
     // hi
 
     // Called when the node enters the scene tree for the first time.
@@ -161,10 +162,18 @@ public partial class Card : Node2D
         else if (OpponentBoard[0][ActiveY] == null)
         {
             OpponentBoard[1][ActiveY].UpdateHealth(Attack);
+            if (OpponentBoard[1][ActiveY].Health == 0)
+            {
+                OpponentBoard[1][ActiveY].EmptyTexture();
+            }
         }
         else
         {
             OpponentBoard[0][ActiveY].UpdateHealth(Attack);
+            if (OpponentBoard[0][ActiveY].Health == 0)
+            {
+                OpponentBoard[0][ActiveY].EmptyTexture();
+            }
         }
     }
 
@@ -173,6 +182,19 @@ public partial class Card : Node2D
         GD.Print("Updating Board");
         Board[battleslot.x][battleslot.y] = battleslot.Card;
         battleslot.Card.EnterBattlefield();
+    }
+
+    public void OnDeath(Card[][] OpponentBoard, Card[][] Board)
+    {
+        Board[ActiveX][ActiveY] = null;
+    }
+
+    public void OnDamage(Card[][] OpponentBoard, Card[][] Board, int damageTaken)
+    {
+        Board[ActiveX][ActiveY].Health -= damageTaken;
+        if (Board[ActiveX][ActiveY].Health <= 0) {
+            Board[ActiveX][ActiveY].OnDeath(OpponentBoard, Board)
+        }
     }
 
 }

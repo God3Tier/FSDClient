@@ -127,7 +127,6 @@ public partial class Gameloop : Node2D
 			{
 				GD.Print("Found opponent card removing texture it");
 				c.EmptyTexture();
-				// c.Scale =  -> Set scale
 			}
 		}
 
@@ -183,7 +182,8 @@ public partial class Gameloop : Node2D
 		WriteToServer("");
 		// Simulate delay of card
 		Thread.Sleep(1);
-	    battleslot.Card.ActiveY = battleslot.y;
+        battleslot.Card.ActiveY = battleslot.y;
+        battleslot.Card.ActiveX = battleslot.x;
         battleslot.Card.Attacked += OnAttacked;
         battleslot.Card.SpawnCard(OpponentBoard, Board, battleslot);
 
