@@ -173,20 +173,7 @@ public partial class Gameloop : Node2D
 
 	private void OnAttacked(Card card)
 	{
-		int ActiveY = card.ActiveY;
-		if (OpponentBoard[0][ActiveY] == null && OpponentBoard[0][ActiveY] == null)
-		{
-			// Handle logic for player getting attacked and opponent getting counterAttack
-			GD.Print("Counter attack succesful");
-		}
-		else if (OpponentBoard[0][ActiveY] == null)
-		{
-			OpponentBoard[1][ActiveY].UpdateHealth(card.Attack);
-		}
-		else
-		{
-			OpponentBoard[0][ActiveY].UpdateHealth(card.Attack);
-		}
+        card.AttackOpponent(OpponentBoard, Board);
 	}
 
 	// This function is a proof of concept
@@ -196,11 +183,9 @@ public partial class Gameloop : Node2D
 		WriteToServer("");
 		// Simulate delay of card
 		Thread.Sleep(1);
-		GD.Print("Updating Board");
-		Board[battleslot.x][battleslot.y] = battleslot.Card;
-		battleslot.Card.ActiveY = battleslot.y;
-		battleslot.Card.Attacked += OnAttacked;
-		battleslot.Card.EnterBattlefield();
+	    battleslot.Card.ActiveY = battleslot.y;
+        battleslot.Card.Attacked += OnAttacked;
+        battleslot.Card.SpawnCard(OpponentBoard, Board, battleslot);
 
 	}
 
