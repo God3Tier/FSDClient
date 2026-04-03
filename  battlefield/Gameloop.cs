@@ -5,15 +5,52 @@ using FSDClient.card.display;
 using FSDClient.card;
 using FSDClient.battlefield.handManagement;
 using FSDClient.autoLoad;
+using FSDClient.battlefield.responseType;
 using System.Threading;
 using System.Collections.Concurrent;
+using System.Text.Json.Serialization;
+using System;
+using System.Text.Json;
 
 namespace FSDClient.battlefield;
 
+enum MessageType
+{
+	JOIN_GAME,
+	CARD_PLACED,
+	END_TURN,
+	CARD_DEAD
+
+}
+
+public class Response
+{
+	[JsonPropertyName("message_type")]
+	public string MessageType;
+	[JsonPropertyName("action")]
+	public string Action;
+	[JsonPropertyName("result")]
+	public string Result;
+	[JsonPropertyName("state_view")]
+	public string StateView;
+	[JsonPropertyName("sequence_number")]
+	public int SequenceNumber;
+	[JsonPropertyName("timestamp")]
+	public DateTime Timestamp;
+
+
+}
 
 public partial class Gameloop : Node2D
 {
-	public static readonly string WEBSOCKET_URL = "";
+	public static readonly string BASE_WEBSOCKET_URL = "ws://localhost:8083/ws?session_id=SESSIONID&user_id=USERID&username=USERNAME";
+	public static readonly string INITIAL_MESSAGE = @"{
+	""action"": ""JOIN_GAME"",
+	""params"": {},
+	""state_hash_after"": 0,
+	""sequence_number"": 0
+3}";
+
 	public static readonly double MAX_ELIXER = 8;
 	public static readonly double ROUND_TIMER = 10.0;
 	public static readonly double PAUSE_TIMER = 5.0;
@@ -31,6 +68,12 @@ public partial class Gameloop : Node2D
 	private CardManager CardManager;
 	private HandArea HandArea;
 	private DeckSpace DeckSpace;
+  private HandArea HandArea;
+	
+  // Deal with active gameplay
+  public int Player1Health;
+  public int Player2Health;
+	public PlayerState PlayerState { get; set; }
 
 	// Parameters for game state to be managed
 	private int Elixir { get; set; }
@@ -40,6 +83,7 @@ public partial class Gameloop : Node2D
 	private bool TurnPause { get; set; } = true;
 	private double PauseTimer { get; set; } = 0;
 	private int TurnRound = 1;
+	private bool GameEnd { get; set; } = false;
 
 	// Websocket Connection and managing concurrency
 	private WebSocketPeer Socket = new WebSocketPeer();
@@ -130,6 +174,20 @@ public partial class Gameloop : Node2D
 		CardManager._deckSpace.AddCard(CardTemp);
 	}
 
+  private string ConstructWebsocketUrl()
+	{
+		var session = PlayerStateManager.Instance.SessionId;
+		string BaseUrl = BASE_WEBSOCKET_URL.Replace("SESSIONID", session);
+
+		var userId = PlayerStateManager.Instance.UserId; ;
+		BaseUrl = BaseUrl.Replace("USERID", userId.ToString());
+
+		var username = PlayerStateManager.Instance.PlayerData.Username;
+		BaseUrl = BaseUrl.Replace("USERNAME", username);
+
+		GD.Print(BaseUrl);
+		return BaseUrl;
+	}
 
 	private void OnAttacked(Card card)
 	{
@@ -147,6 +205,11 @@ public partial class Gameloop : Node2D
 		{
 			OpponentBoard[0][ActiveY].UpdateHealth(card.Attack);
 		}
+    int player1Copy = Player1Health;
+    int player2Copy = Player2Health;
+    card.AttackOpponent(OpponentBoard, Board, ref player1Copy, ref player2Copy);
+    Player1Health = player1Copy;
+    Player2Health = player2Copy;
 	}
 
 	// This function is a proof of concept
@@ -156,18 +219,15 @@ public partial class Gameloop : Node2D
 		WriteToServer("");
 		// Simulate delay of card
 		Thread.Sleep(1);
-		GD.Print("Updating Board");
-		Board[battleslot.x][battleslot.y] = battleslot.Card;
-		battleslot.Card.ActiveY = battleslot.y;
-		battleslot.Card.Attacked += OnAttacked;
-		battleslot.Card.EnterBattlefield();
-		for (int x = 0; x < 2; x++) {
-			for (int y = 0; y < 3; y++) {
-				if (Board[x][y] is Card card) {
-					GD.Print($"ZIndex {card.ZIndex} for card[{x}][{y}]");
-				}
-			}
-		}
+        battleslot.Card.ActiveY = battleslot.y;
+        battleslot.Card.ActiveX = battleslot.x;
+        battleslot.Card.Attacked += OnAttacked;
+        
+        int player1Copy = Player1Health;
+        int player2Copy = Player2Health;
+        battleslot.Card.SpawnCard(OpponentBoard, Board, battleslot, ref player1Copy, ref player2Copy);
+        Player1Health = player1Copy;
+        Player2Health = player2Copy;
 
 	}
 
@@ -186,6 +246,7 @@ public partial class Gameloop : Node2D
 
 		if (Socket.GetReadyState() != WebSocketPeer.State.Open)
 		{
+			// Do Some connection error and try to rehandle
 			return;
 		}
 
@@ -200,11 +261,45 @@ public partial class Gameloop : Node2D
 		}
 
 	}
-	
+
 	private void HandleInputFromServer()
 	{
-		if (readQueue.TryDequeue(out string msg))
+		while (readQueue.TryDequeue(out string msg))
 		{
+			var Data = JsonSerializer.Deserialize<Response>(msg);
+			var msgType = Enum.Parse(typeof(MessageType), Data.MessageType);
+
+			switch (msgType)
+			{
+				case MessageType.JOIN_GAME:
+					{
+						PlayerState = JsonSerializer.Deserialize<PlayerState>(Data.StateView);
+						break;
+					}
+				case MessageType.CARD_PLACED:
+					{
+						var NewInputData = JsonSerializer.Deserialize<CardPlacementResponse>(Data.StateView);
+						if (!NewInputData.ValidInput) {
+
+							// Do some false Response
+							break;
+						}
+						var ResourceState = GetNode<ResourceManager>("res://autoLoad/ResourceManager");
+						var CardInformation = ResourceState.CardStatsTable.cardInfo[NewInputData.CardID];
+						var CardViewData = Builder.BuildCard(CardInformation);
+						OpponentBoard[NewInputData.YPos][NewInputData.XPos].LoadDataTexture(CardViewData);
+						OpponentBoard[NewInputData.YPos][NewInputData.XPos].EnterBattlefield();
+						break;
+					}
+				case MessageType.CARD_DEAD:
+					{
+						break;
+					}
+				default:
+					{
+						break;
+					}
+			}
 			// Here, we somehow parse said information about card and then mess around with it. But to continue, I need to settle card Dictionary
 		}
 	}
@@ -283,8 +378,10 @@ public partial class Gameloop : Node2D
 	{
 		GameStateManager.Instance.ChangeGameState(GameState.HOMESCREEN);
 	}
+}
 
-	// I'll leave this here temporarily because it has all our mocking information and what not
+/*
+// I'll leave this here temporarily because it has all our mocking information and what not
 	public void StartGameLoop()
 	{
 		// TODO: Should be obvious
@@ -331,6 +428,4 @@ public partial class Gameloop : Node2D
 
 		ReturnToHomeScreen();
 	}
-
-
-}
+*/

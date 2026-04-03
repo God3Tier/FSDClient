@@ -1,13 +1,13 @@
 [gd_scene format=3 uid="uid://bbgm8t1esyy3b"]
 
-[ext_resource type="Texture2D" uid="uid://ck8ljvmae8tna" path="res://assets/battlefield/background/background_test_box.png" id="1_48th5"]
+[ext_resource type="Texture2D" uid="uid://dgjjaj7pbhqff" path="res://assets/battlefield/background/background_test_box.png" id="1_48th5"]
 [ext_resource type="Script" uid="uid://dm13dy71mnwhb" path="res://scenesScripts/home/Home.cs" id="1_y784y"]
-[ext_resource type="Texture2D" uid="uid://c2kpgy8a80p5i" path="res://assets/header/banner.png" id="4_eyscv"]
-[ext_resource type="Texture2D" uid="uid://vgu2lfiihps" path="res://assets/cards/pack.png" id="4_pl3n4"]
-[ext_resource type="Texture2D" uid="uid://rmnf1w71t133" path="res://assets/header/crystal_colored.png" id="5_y784y"]
-[ext_resource type="Texture2D" uid="uid://dgkp2pd0i8muq" path="res://assets/header/gold_Colored.png" id="6_6n0se"]
-[ext_resource type="Texture2D" uid="uid://bbhxir2lxdc61" path="res://assets/header/rank.png" id="7_6fqk1"]
-[ext_resource type="Texture2D" uid="uid://dxpaodnd52vgh" path="res://assets/heros/purple_hero.png" id="7_s07j5"]
+[ext_resource type="Texture2D" uid="uid://tl43u2wwetbq" path="res://assets/header/banner.png" id="4_eyscv"]
+[ext_resource type="Texture2D" uid="uid://k3uu1nfrcl6k" path="res://assets/cards/pack.png" id="4_pl3n4"]
+[ext_resource type="Texture2D" uid="uid://pu52dbw7egqc" path="res://assets/header/crystal_colored.png" id="5_y784y"]
+[ext_resource type="Texture2D" uid="uid://nkdqwj6g8mqc" path="res://assets/header/gold_Colored.png" id="6_6n0se"]
+[ext_resource type="Texture2D" uid="uid://cnboeuly7ue15" path="res://assets/header/rank.png" id="7_6fqk1"]
+[ext_resource type="Texture2D" uid="uid://bif2ng1aadtnc" path="res://assets/heros/purple_hero.png" id="7_s07j5"]
 [ext_resource type="StyleBox" uid="uid://bikhijk3kb8s0" path="res://styles/button.tres" id="9_vfej2"]
 [ext_resource type="StyleBox" uid="uid://bkiusl8wj1xvr" path="res://styles/button_hover.tres" id="10_46c81"]
 [ext_resource type="Texture2D" uid="uid://d0517xwkwglh3" path="res://assets/home/loading/1.png" id="11_73yef"]
@@ -101,6 +101,9 @@ corner_radius_top_left = 1000
 corner_radius_top_right = 1000
 corner_radius_bottom_right = 1000
 corner_radius_bottom_left = 1000
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ek566"]
+bg_color = Color(0.3019608, 0.3019608, 0.3019608, 0.6666667)
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_g7oq7"]
 
@@ -287,19 +290,19 @@ animations = [{
 }]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_g0575"]
-bg_color = Color(0, 0, 0, 0.75686276)
+bg_color = Color(1, 0, 0, 0)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ep48t"]
-bg_color = Color(0, 0, 0, 0.75686276)
+bg_color = Color(0, 0, 0, 0)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4krx0"]
-bg_color = Color(0, 0, 0, 0.75686276)
+bg_color = Color(0, 0, 0, 0)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sihaw"]
-bg_color = Color(0, 0, 0, 0.75686276)
+bg_color = Color(0, 0, 0, 0)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gqply"]
-bg_color = Color(0, 0, 0, 0.75686276)
+bg_color = Color(0, 0, 0, 0)
 
 [node name="Home" type="Control" unique_id=413107585]
 layout_mode = 3
@@ -505,13 +508,15 @@ grow_horizontal = 2
 grow_vertical = 0
 theme_override_constants/h_separation = 30
 
-[node name="ColorRect" type="ColorRect" parent="Packs" unique_id=4191471]
+[node name="PackSlot1" type="Button" parent="Packs" unique_id=1401106176]
 custom_minimum_size = Vector2(210, 300)
 layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
 mouse_default_cursor_shape = 2
-color = Color(0.30200383, 0.30200386, 0.30200377, 0.6666667)
+theme_override_styles/normal = SubResource("StyleBoxFlat_ek566")
 
-[node name="TextureRect" type="TextureRect" parent="Packs/ColorRect" unique_id=1082623625]
+[node name="PackImage" type="TextureRect" parent="Packs/PackSlot1" unique_id=1082623625]
 layout_mode = 0
 offset_top = 61.0
 offset_right = 211.20001
@@ -519,13 +524,15 @@ offset_bottom = 237.0
 texture = ExtResource("4_pl3n4")
 expand_mode = 3
 
-[node name="ColorRect2" type="ColorRect" parent="Packs" unique_id=1765294642]
+[node name="PackSlot2" type="Button" parent="Packs" unique_id=1176534121]
 custom_minimum_size = Vector2(210, 300)
 layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
 mouse_default_cursor_shape = 2
-color = Color(0.30200383, 0.30200386, 0.30200377, 0.6666667)
+theme_override_styles/normal = SubResource("StyleBoxFlat_ek566")
 
-[node name="TextureRect" type="TextureRect" parent="Packs/ColorRect2" unique_id=1712244655]
+[node name="PackImage" type="TextureRect" parent="Packs/PackSlot2" unique_id=1537845730]
 layout_mode = 0
 offset_top = 61.0
 offset_right = 211.20001
@@ -533,13 +540,15 @@ offset_bottom = 237.0
 texture = ExtResource("4_pl3n4")
 expand_mode = 3
 
-[node name="ColorRect3" type="ColorRect" parent="Packs" unique_id=1411925447]
+[node name="PackSlot3" type="Button" parent="Packs" unique_id=1056700358]
 custom_minimum_size = Vector2(210, 300)
 layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
 mouse_default_cursor_shape = 2
-color = Color(0.30200383, 0.30200386, 0.30200377, 0.6666667)
+theme_override_styles/normal = SubResource("StyleBoxFlat_ek566")
 
-[node name="TextureRect" type="TextureRect" parent="Packs/ColorRect3" unique_id=765236761]
+[node name="PackImage" type="TextureRect" parent="Packs/PackSlot3" unique_id=675486411]
 layout_mode = 0
 offset_top = 61.0
 offset_right = 211.20001
@@ -547,13 +556,15 @@ offset_bottom = 237.0
 texture = ExtResource("4_pl3n4")
 expand_mode = 3
 
-[node name="ColorRect4" type="ColorRect" parent="Packs" unique_id=873535625]
+[node name="PackSlot4" type="Button" parent="Packs" unique_id=1063073778]
 custom_minimum_size = Vector2(210, 300)
 layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
 mouse_default_cursor_shape = 2
-color = Color(0.30200383, 0.30200386, 0.30200377, 0.6666667)
+theme_override_styles/normal = SubResource("StyleBoxFlat_ek566")
 
-[node name="TextureRect" type="TextureRect" parent="Packs/ColorRect4" unique_id=18669302]
+[node name="PackImage" type="TextureRect" parent="Packs/PackSlot4" unique_id=402978131]
 layout_mode = 0
 offset_top = 61.0
 offset_right = 211.20001
@@ -639,6 +650,7 @@ mouse_default_cursor_shape = 2
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 80
 theme_override_styles/normal = ExtResource("9_vfej2")
+theme_override_styles/pressed = ExtResource("11_grv6n")
 theme_override_styles/hover = ExtResource("10_46c81")
 theme_override_styles/disabled = SubResource("StyleBoxEmpty_g7oq7")
 theme_override_styles/focus = SubResource("StyleBoxEmpty_4u8u5")
@@ -717,9 +729,52 @@ text = "1. A
 3. C
 "
 
-[connection signal="pressed" from="FriendButton" to="." method="_on_friend_button_pressed"]
-[connection signal="pressed" from="VBoxContainer/BattleButton" to="." method="_on_battle_button_pressed"]
-[connection signal="pressed" from="VBoxContainer/CardButton" to="." method="_on_card_button_pressed"]
-[connection signal="pressed" from="Loading/CancelButton" to="." method="_on_cancel_button_pressed"]
-[connection signal="pressed" from="FriendPopupContainer/FriendPopupBackground" to="." method="_on_friend_popup_background_pressed"]
-[connection signal="pressed" from="FriendPopupContainer/FriendPopupBox/CloseFriendButton" to="." method="_on_close_friend_button_pressed"]
+[node name="PacksPopupContainer" type="ColorRect" parent="." unique_id=582498593]
+visible = false
+z_index = 1
+custom_minimum_size = Vector2(1920, 1080)
+layout_mode = 0
+offset_right = 1920.0
+offset_bottom = 1080.0
+color = Color(0, 0, 0, 0.75686276)
+
+[node name="IndivCardContainer" type="Control" parent="PacksPopupContainer" unique_id=917149613]
+anchors_preset = 0
+offset_left = 847.0
+offset_top = 367.0
+offset_right = 1073.0
+offset_bottom = 713.0
+
+[node name="FinalCardResult" type="HFlowContainer" parent="PacksPopupContainer" unique_id=157741870]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -576.0
+offset_top = -289.5
+offset_right = 576.0
+offset_bottom = 289.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PacksPopupBackground" type="Button" parent="PacksPopupContainer" unique_id=68219895]
+z_index = 2
+layout_mode = 0
+offset_right = 1920.0
+offset_bottom = 1080.0
+mouse_default_cursor_shape = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_g0575")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_ep48t")
+theme_override_styles/hover = SubResource("StyleBoxFlat_4krx0")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_sihaw")
+theme_override_styles/focus = SubResource("StyleBoxFlat_gqply")
+
+[connection signal="pressed" from="FriendButton" to="." method="_OnFriendButtonPressed"]
+[connection signal="pressed" from="VBoxContainer/BattleButton" to="." method="_OnBattleButtonPressed"]
+[connection signal="pressed" from="VBoxContainer/CardButton" to="." method="_OnCardButtonPressed"]
+[connection signal="pressed" from="Loading/CancelButton" to="." method="_OnCancelButtonPressed"]
+[connection signal="pressed" from="FriendPopupContainer/FriendPopupBackground" to="." method="_OnFriendPopupBackgroundPressed"]
+[connection signal="pressed" from="FriendPopupContainer/FriendPopupBox/CloseFriendButton" to="." method="_OnCloseFriendButtonPressed"]
+[connection signal="pressed" from="PacksPopupContainer/PacksPopupBackground" to="." method="_OnPacksPopupBackgroundPressed"]

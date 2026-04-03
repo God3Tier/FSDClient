@@ -10,14 +10,18 @@ using HttpRequestCompletedHandler = Godot.HttpRequest.RequestCompletedEventHandl
 // Also I do not want to learn network code yet so....
 public partial class NetworkManager : Node
 {
-    public static readonly string BASE_URL = "http://localhost:8000/";
+    // These are the constants used for all network stuff
+    public static readonly string BASE_URL = "http://localhost";
+    public static readonly string AUTH = ":8000";
+    public static readonly string MATCHMAKING = ":8001";
+    public static readonly string GAMEPLAY = ":8002";
+    public static readonly string FRIENDLIST = ":8003";
+    public static readonly string REPLAY = ":8003";    
     public static NetworkManager Instance { get; set; }
     private readonly Queue<HttpRequestData> httpRequestQueue = new();
 
     public override void _Ready()
-
     {
-
         Instance = this;
     }
 
@@ -46,13 +50,14 @@ public partial class NetworkManager : Node
                 }
                 httpRequest.QueueFree();
             };
-
+            GD.Print("Attempting to Request method");
             httpRequest.Request(
                 request.Url,
                 request.Headers,
                 request.Method,
                 request.Json
             );
+            GD.Print("Successfully to Received method");
 
         }
     }
@@ -65,6 +70,13 @@ public partial class NetworkManager : Node
         string[] headers = null
     )
     {
+        if (headers == null)
+        {
+            headers = new string[1] { "Content-Type: application/json" };
+        } else {
+            headers[0] = "Content-Type: application/json";
+        }
+        
         httpRequestQueue.Enqueue(new HttpRequestData(
             url,
             headers,

@@ -1,9 +1,9 @@
 [gd_scene format=3 uid="uid://c7leg11ys58mp"]
 
 [ext_resource type="Script" uid="uid://bppiwtv57cawo" path="res://scenesScripts/login/LoginMenu.cs" id="1_u8sew"]
-[ext_resource type="Texture2D" uid="uid://ck8ljvmae8tna" path="res://assets/battlefield/background/background_test_box.png" id="2_hhelq"]
-[ext_resource type="Texture2D" uid="uid://dxpaodnd52vgh" path="res://assets/heros/purple_hero.png" id="3_twuvq"]
-[ext_resource type="Texture2D" uid="uid://04c72owvjhq5" path="res://assets/heros/grey_hero.png" id="4_4hsiq"]
+[ext_resource type="Texture2D" uid="uid://dgjjaj7pbhqff" path="res://assets/battlefield/background/background_test_box.png" id="2_hhelq"]
+[ext_resource type="Texture2D" uid="uid://bif2ng1aadtnc" path="res://assets/heros/purple_hero.png" id="3_twuvq"]
+[ext_resource type="Texture2D" uid="uid://dqy1b78rbalrw" path="res://assets/heros/grey_hero.png" id="4_4hsiq"]
 [ext_resource type="StyleBox" uid="uid://bcc8641wxsiam" path="res://styles/form.tres" id="4_x2epc"]
 [ext_resource type="StyleBox" uid="uid://btymgymew14qs" path="res://styles/form_button.tres" id="5_4hsiq"]
 
@@ -107,7 +107,7 @@ theme_override_fonts/font = SubResource("FontFile_x2epc")
 theme_override_font_sizes/font_size = 50
 text = "Welcome back"
 
-[node name="UsernameInput" type="TextEdit" parent="RightPanel" unique_id=1515806500]
+[node name="UsernameInput" type="LineEdit" parent="RightPanel" unique_id=1548967841]
 layout_mode = 0
 offset_left = 229.0
 offset_top = 374.0
@@ -116,9 +116,9 @@ offset_bottom = 429.0
 theme_override_font_sizes/font_size = 25
 theme_override_styles/normal = ExtResource("4_x2epc")
 placeholder_text = "Username"
-tab_input_mode = false
+emoji_menu_enabled = false
 
-[node name="PasswordInput" type="TextEdit" parent="RightPanel" unique_id=1662331780]
+[node name="PasswordInput" type="LineEdit" parent="RightPanel" unique_id=68006410]
 layout_mode = 0
 offset_left = 229.0
 offset_top = 461.0
@@ -127,7 +127,7 @@ offset_bottom = 516.0
 theme_override_font_sizes/font_size = 25
 theme_override_styles/normal = ExtResource("4_x2epc")
 placeholder_text = "Password"
-tab_input_mode = false
+emoji_menu_enabled = false
 
 [node name="SendInformation" type="Button" parent="RightPanel" unique_id=1486221930]
 layout_mode = 0

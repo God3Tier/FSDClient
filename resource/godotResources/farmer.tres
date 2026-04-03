@@ -4,6 +4,7 @@
 
 [resource]
 script = ExtResource("1_7glc2")
+CardId = 1
 Health = 50
 Attack = 20
 CardColour = "blue"

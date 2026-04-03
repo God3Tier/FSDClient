@@ -18,6 +18,8 @@ public partial class Card : Node2D
 	private double TimeToAttack { get; set; }
 	private double Timer { get; set; }
 	public int ActiveY { get; set; }
+  public int ActiveX { get; set; }
+  public bool IsEmpty { get; set; } = true;
 	// hi
 	public enum SlotStatus 
 	{
@@ -28,7 +30,9 @@ public partial class Card : Node2D
 		Hand,
 		Battle
 	}
+  
 	public SlotStatus CurrentSlotStatus { get; set; }
+  // hi
 	
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -75,7 +79,7 @@ public partial class Card : Node2D
 		var ProgressBar = (ProgressBar)FindChild("ProgressBar");
 		ProgressBar.Value = Timer;
 	}
-
+  
 	public void LoadDataTexture(CardViewTextures cardViewTextures)
 	{
 		GD.Print("Creating card");
@@ -125,14 +129,15 @@ public partial class Card : Node2D
 		}
 	}
 
-	public void EnterBattlefield()
-	{
-		var ElixirCost = (RichTextLabel)FindChild("ElixirCost");
-		ElixirCost.Text = "";
-		BattleMode = true;
-		// var
-	}
-
+  public void EnterBattlefield()
+  {
+      var ElixirCost = (RichTextLabel)FindChild("ElixirCost");
+      ElixirCost.Text = "";
+      BattleMode = true;
+      IsEmpty = false; 
+      // var
+  }
+  
 	public void OnMouseEntered()
 	{
 		EmitSignal(SignalName.Hovered, this);
@@ -161,5 +166,51 @@ public partial class Card : Node2D
 			}
 		}
 	}
+
+    public void AttackOpponent(Card[][] OpponentBoard, Card[][] Board, ref int player1Health, ref int player2Health)
+    {
+        if (OpponentBoard[0][ActiveY] == null && OpponentBoard[0][ActiveY] == null)
+        {
+            // Handle logic for player getting attacked and opponent getting counterAttack
+            player2Health -= Attack;
+            Health -= 5; 
+        }
+        else if (OpponentBoard[0][ActiveY] == null)
+        {
+            OpponentBoard[1][ActiveY].UpdateHealth(Attack);
+            if (OpponentBoard[1][ActiveY].Health <= 0)
+            {
+                OpponentBoard[1][ActiveY].EmptyTexture();
+            }
+        }
+        else
+        {
+            OpponentBoard[0][ActiveY].UpdateHealth(Attack);
+            if (OpponentBoard[0][ActiveY].Health <= 0)
+            {
+                OpponentBoard[0][ActiveY].EmptyTexture();
+            }
+        }
+    }
+
+    public void SpawnCard(Card[][] OpponentBoard, Card[][] Board, BattleSlot battleslot, ref int player1Health, ref int player2Health)
+    {
+        GD.Print("Updating Board");
+        Board[battleslot.x][battleslot.y] = this;
+        battleslot.Card.EnterBattlefield();
+    }
+
+    public void OnDeath(Card[][] OpponentBoard, Card[][] Board)
+    {
+        Board[ActiveX][ActiveY] = null;
+    }
+
+    public void OnDamaged(Card[][] OpponentBoard, Card[][] Board, int damageTaken, int attackX, int attackY)
+    {
+        Board[ActiveX][ActiveY].Health -= damageTaken;
+        if (Board[ActiveX][ActiveY].Health <= 0) {
+            Board[ActiveX][ActiveY].OnDeath(OpponentBoard, Board);
+        }
+    }
 
 }
