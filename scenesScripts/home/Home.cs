@@ -58,7 +58,6 @@ public partial class Home : Control
 	private volatile bool _searching = false;
 	private PlayerStateManager CurrentPlayer { get; set; }
 	private NetworkManager Network { get; set; }
-	private string[] Header { get; } = new string[2];
 	private Dictionary<string, Texture2D> PackTextures = new Dictionary<string, Texture2D>
 	{
 		{"None", GD.Load<Texture2D>("res://assets/cards/pack.png")},
@@ -97,8 +96,6 @@ public partial class Home : Control
 		{
 			GD.PrintErr("Whoops ", e);
 		}
-		var token = CurrentPlayer.Token;
-		Header[1] = $"Authorization: Bearer {token}";
 
 		try
 		{
@@ -151,7 +148,7 @@ public partial class Home : Control
 	{
 		ColorRect loadingNode = GetNode<ColorRect>("Loading");
 		// 1. Add player to queue
-		Network.SendRequest(NetworkManager.BASE_URL + NetworkManager.MATCHMAKING + "/matchmaking/join", Godot.HttpClient.Method.Post, "", MatchCheckResponse, Header);
+		Network.SendRequestWithToken(NetworkManager.BASE_URL + NetworkManager.MATCHMAKING + "/matchmaking/join", Godot.HttpClient.Method.Post, "", MatchCheckResponse);
 
 		// start animation
 		AnimatedSprite2D LoadingSprite = GetNode<AnimatedSprite2D>("Loading/LoadingAnimation");
@@ -169,12 +166,12 @@ public partial class Home : Control
 			await ToSignal(GetTree().CreateTimer(1.0f), "timeout");
 
 			// 2. Check if the player has been matched
-			Network.SendRequest(NetworkManager.BASE_URL + NetworkManager.MATCHMAKING + "/matchmaking/match", Godot.HttpClient.Method.Get, "", MatchCheckResponse, Header);
+			Network.SendRequestWithToken(NetworkManager.BASE_URL + NetworkManager.MATCHMAKING + "/matchmaking/match", Godot.HttpClient.Method.Get, "", MatchCheckResponse);
 		}
 
 
 		// 3. Accept the match and proceed
-		Network.SendRequest(NetworkManager.BASE_URL + NetworkManager.MATCHMAKING + "/matchmaking/accept", Godot.HttpClient.Method.Post, "", AcceptMatchResponse, Header);
+		Network.SendRequestWithToken(NetworkManager.BASE_URL + NetworkManager.MATCHMAKING + "/matchmaking/accept", Godot.HttpClient.Method.Post, "", AcceptMatchResponse);
 
 	}
 
@@ -189,7 +186,7 @@ public partial class Home : Control
 	public void _OnCancelButtonPressed()
 	{
 		// Send request to cancel the game connection
-		Network.SendRequest(NetworkManager.BASE_URL + NetworkManager.MATCHMAKING + "/matchmaking/leave", Godot.HttpClient.Method.Post, "", CancelMatchResponse, Header);
+		Network.SendRequestWithToken(NetworkManager.BASE_URL + NetworkManager.MATCHMAKING + "/matchmaking/leave", Godot.HttpClient.Method.Post, "", CancelMatchResponse);
 
 		_searching = false;
 		Control loadingNode = GetNode<ColorRect>("Loading");
