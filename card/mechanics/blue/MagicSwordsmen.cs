@@ -3,7 +3,7 @@ namespace FSDClient.card.mechanics.blue;
 using FSDClient.card.display;
 using FSDClient.battlefield.handManagement;
 
-public partial class MagicSwordsmen : Card {
+public partial class MagicSwordman : Card {
     
     public void SpawnCard(Card[][] OpponentBoard, Card[][] Board, BattleSlot battleslot, ref int player1Health, ref int player2Health)
     {

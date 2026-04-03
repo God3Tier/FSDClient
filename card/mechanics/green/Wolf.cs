@@ -3,7 +3,7 @@ namespace FSDClient.card.mechanics.green;
 
 using FSDClient.card.display;
 
-public partial class LivingTree : Card
+public partial class Wolf : Card
 {
     
 }

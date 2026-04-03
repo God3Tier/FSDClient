@@ -4,7 +4,7 @@ using FSDClient.card.display;
 using FSDClient.battlefield.handManagement;
 using Godot;
 
-public partial class Drayad : Card
+public partial class Dryad : Card
 {
     public void SpawnCard(Card[][] OpponentBoard, Card[][] Board, BattleSlot battleslot, ref int player1Health, ref int player2Health)
     {

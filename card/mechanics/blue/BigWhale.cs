@@ -2,7 +2,7 @@ namespace FSDClient.card.mechanics.blue;
 
 using FSDClient.card.display;
 
-public partial class BlueWhale : Card
+public partial class BigWhale : Card
 {
     public void OnDamaged(Card[][] OpponentBoard, Card[][] Board, int damageTaken,  int attackX, int attackY)
     {
