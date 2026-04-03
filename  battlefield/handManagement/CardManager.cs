@@ -2,6 +2,7 @@ namespace FSDClient.battlefield.handManagement;
 
 using Godot;
 using System;
+using System.Linq; // For the Contains method
 using FSDClient.card.display;
 
 
@@ -18,7 +19,7 @@ public partial class CardManager : Node2D
 	private uint COLLISION_MASK_CARD = 1;
 	private uint COLLISION_MASK_CARD_SLOT = 2;
 	public PlayerHand _playerHand  { get; set; }
-	public Control _deck { get; set; }
+	public DeckSpace _deckSpace { get; set; }
 	private PlayerHand handReference;
 
 	// For handling game input
@@ -30,13 +31,16 @@ public partial class CardManager : Node2D
 			// Check if it was left button
 			if (mouseEvent.ButtonIndex == MouseButton.Left)
 			{
-
 				if (mouseEvent.IsPressed())
 				{
 					Card card = _raycastCheckForCard();
 					if (card != null)
 					{
 						StartDrag(card);
+					}
+					else
+					{
+						return;
 					}
 				}
 				else
@@ -46,7 +50,41 @@ public partial class CardManager : Node2D
 			}
 		}
 	}
-
+	
+	// When the timer is out, call stop drag if we are still dragging a card
+	public void UnstuckCard()
+	{
+		if (cardBeingDragged != null)
+		{
+			StopDrag();
+		}
+	}
+	
+	// debug printer
+	public void CheckHandAndDeck()
+	{
+		foreach (Slot slot in _playerHand._slotList) {
+			if (slot != null && slot.CardInSlot)
+			{
+				GD.Print($"{slot.Name}: {slot.Card.Name}");
+			}
+			else if (slot != null)
+			{
+			GD.Print($"{slot.Name}: none");
+			}
+		}
+		
+		foreach (Slot slot in _deckSpace._slotList) {
+			if (slot != null && slot.CardInSlot)
+			{
+				GD.Print($"{slot.Name}: {slot.Card.Name}");
+			}
+			else if (slot != null)
+			{
+			GD.Print($"{slot.Name}: none");
+			}
+		}
+	}
 	// To start drag
 	private void StartDrag(Card card)
 	{
@@ -59,31 +97,78 @@ public partial class CardManager : Node2D
 	private void StopDrag()
 	{
 		cardBeingDragged.Scale = new Vector2(1.005f, 1.005f);
-		var battleSlotFound = _raycastCheckForBattleSlot();
-
+		var slotFound = _raycastCheckForSlot();
+		GD.Print(cardBeingDragged.CurrentSlotStatus);
 		// Put the signal here for nonsence in gameloop
 		// TODO: DO it
-		if (battleSlotFound != null && !battleSlotFound.CardInSlot)
+		// First check if the slot is a BattleSlot,
+		// then check if there is a card in the slot already,
+		// then check if the card is currently allowed to be added
+		if (slotFound is BattleSlot battleSlotFound &&
+			!battleSlotFound.CardInSlot &&
+			cardBeingDragged.CurrentSlotStatus == Card.SlotStatus.Hand)
 		{
-			cardBeingDragged.Position = battleSlotFound.Position;
-			cardBeingDragged.ZIndex = 1;
-			GD.Print(battleSlotFound.Position);
-			GD.Print(cardBeingDragged.Position);
-
-			GD.Print(dragOffset);
-			battleSlotFound.CardInSlot = true;
-			var collisionShape = cardBeingDragged.GetNode<CollisionShape2D>("Area2D/CollisionShape2D");
-			collisionShape.Disabled = true;
-			battleSlotFound.Card = (Card)cardBeingDragged;
-
-			EmitSignal(SignalName.CardDropped, battleSlotFound);
+			IntoBattleSlot(battleSlotFound);
+		}
+		else if (slotFound is HandSlot handSlotFound && 
+				!handSlotFound.CardInSlot && 
+				cardBeingDragged.CurrentSlotStatus == Card.SlotStatus.Deck)
+		{
+			IntoHandSlot(handSlotFound);
+		}
+		else if (slotFound is DeckSlot deckSlotFound &&
+				cardBeingDragged.CurrentSlotStatus == Card.SlotStatus.HandTemp)
+		{
+			ReturnToDeckSlot(deckSlotFound);
+		}
+		else if (_playerHand._cardList.Contains(cardBeingDragged))
+		{
+			_playerHand.AddCard((Card)cardBeingDragged);
 		}
 		else
 		{
-			_playerHand.AddCardToHand((Card)cardBeingDragged);
+			_deckSpace.AddCard((Card)cardBeingDragged);
 		}
 		cardBeingDragged = null;
 
+	}
+
+	// To handle the logic of a card entering a battle slot
+	private void IntoBattleSlot(BattleSlot battleSlotFound) {
+		// Set the card's position to the batte slot
+		cardBeingDragged.Position = battleSlotFound.Position;
+		cardBeingDragged.ZIndex = 2;
+		// To ensure another card cannot go into the battle slot
+		battleSlotFound.AddCard(cardBeingDragged);
+		// To deactivate interactions with the card that entered the battle slot
+		var collisionShape = cardBeingDragged.GetNode<CollisionShape2D>("Area2D/CollisionShape2D");
+		collisionShape.Disabled = true;
+		cardBeingDragged.CurrentSlotStatus = Card.SlotStatus.Battle;
+		// To remove the card from the players hand and free up a slot
+		_playerHand.RemoveCard((Card)cardBeingDragged);
+		EmitSignal(SignalName.CardDropped, battleSlotFound);
+	}
+	
+	private void BounceBattleSlot(BattleSlot slot) {
+		slot.RemoveCard();
+		// TODO: Once card generation is a thing
+		//_playerHand.AddCard(<INSERT_CARD_HERE>)
+	}
+	
+	// For putting a card into the hand
+	private void IntoHandSlot(HandSlot handSlotFound) 
+	{
+		cardBeingDragged.CurrentSlotStatus = Card.SlotStatus.HandTemp;
+		_deckSpace.RemoveCard(cardBeingDragged);
+		_playerHand.AddCard(cardBeingDragged, handSlotFound);
+	}
+	
+	// For returning a card back into the deck between rounds
+	private void ReturnToDeckSlot(DeckSlot deckSlotFound)
+	{
+		cardBeingDragged.CurrentSlotStatus = Card.SlotStatus.Deck;
+		_playerHand.RemoveCard(cardBeingDragged);
+		_deckSpace.AddCard(cardBeingDragged, deckSlotFound);
 	}
 
 	// For the hover effect
@@ -96,6 +181,7 @@ public partial class CardManager : Node2D
 	// Hover Card effect
 	public void OnHoverOverCard(Card card)
 	{
+		if (card.CurrentSlotStatus == Card.SlotStatus.Battle) {return;}
 		if (!highlighting)
 		{
 			highlighting = true;
@@ -106,6 +192,7 @@ public partial class CardManager : Node2D
 	// Hover off Card effect
 	public void OnHoverOffCard(Card card)
 	{
+		if (card.CurrentSlotStatus == Card.SlotStatus.Battle) {return;}
 		if (cardBeingDragged == null)
 		{
 			HighlightCard(card, false);
@@ -132,7 +219,7 @@ public partial class CardManager : Node2D
 		else
 		{
 			card.Scale = new Vector2(0.95f, 0.95f);
-			card.ZIndex = 4; // TODO: This will likely cause problems with the hand later
+			card.ZIndex = 5;
 		}
 	}
 
@@ -161,7 +248,7 @@ public partial class CardManager : Node2D
 	}
 
 	// To return what is under our cursor when clicking
-	public BattleSlot? _raycastCheckForBattleSlot()
+	public Slot? _raycastCheckForSlot()
 	{
 		var spaceState = GetWorld2D().DirectSpaceState;
 		var parameters = new PhysicsPointQueryParameters2D
@@ -174,27 +261,30 @@ public partial class CardManager : Node2D
 		var result = spaceState.IntersectPoint(parameters);
 		if (result.Count > 0)
 		{
-			var collider = (Area2D)result[0]["collider"];
-			var cardParent = collider.GetParent<BattleSlot>();
-			return cardParent;
+			var slot = GetHighestZIndex(result);
+			if (slot is Slot) {
+				return (Slot) slot;
+			}
+
 		}
 		return null;
 	}
 
+	// To retrieve the node that is rendered at the top
 	private Node2D GetHighestZIndex(Godot.Collections.Array<Godot.Collections.Dictionary> result)
 	{
 		var HighestZCollider = (Area2D)result[0]["collider"];
-		var HighestZCard = HighestZCollider.GetParent<Node2D>();
+		var HighestZNode = HighestZCollider.GetParent<Node2D>();
 		for (int i = 0; i < result.Count; i++)
 		{
 			var collider = (Area2D)result[i]["collider"];
-			var card = collider.GetParent<Node2D>();
-			if (card.ZIndex > HighestZCard.ZIndex)
+			var node = collider.GetParent<Node2D>();
+			if (node.ZIndex > HighestZNode.ZIndex)
 			{
-				HighestZCard = card;
+				HighestZNode = node;
 			}
 		}
-		return HighestZCard;
+		return HighestZNode;
 	}
 
 	// Called when the node enters the scene tree for the first time.

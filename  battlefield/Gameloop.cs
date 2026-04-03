@@ -52,7 +52,7 @@ public partial class Gameloop : Node2D
 3}";
 
 	public static readonly double MAX_ELIXER = 8;
-	public static readonly double ROUND_TIMER = 5.0;
+	public static readonly double ROUND_TIMER = 10.0;
 	public static readonly double PAUSE_TIMER = 5.0;
 	public static readonly double SECONDS_PER_ELIXIR = 3f;
 	public static readonly int BASE_ELIXIR = 4;
@@ -61,26 +61,28 @@ public partial class Gameloop : Node2D
 	// Unsure to keep this as the state manager or make it it's own individual player data. TBD on a later date
 	public PlayerStateManager MainPlayer { get; set; }
 	public PlayerData IncomingPlayer { get; set; }
-	public PlayerState PlayerState { get; set; }
 
-    // Deal with active gameplay
-    public int Player1Health;
-    public int Player2Health;
-    // Deal with card placement and card movement
-    private Card[][] Board { get; set; } = new Card[2][];
+	// Deal with card placement and card movement
+	private Card[][] Board { get; set; } = new Card[2][];
 	private Card[][] OpponentBoard { get; set; } = new Card[2][];
 	private CardManager CardManager;
 	private HandArea HandArea;
+	private DeckSpace DeckSpace;
+  private HandArea HandArea;
+	
+  // Deal with active gameplay
+  public int Player1Health;
+  public int Player2Health;
+	public PlayerState PlayerState { get; set; }
 
 	// Parameters for game state to be managed
 	private int Elixir { get; set; }
 	private int RoundNumber { get; set; }
 	private double GameTimer { get; set; } = 0;
 	private double RegenInterval { get; set; } = 1;
-	private bool TurnPause { get; set; } = false;
+	private bool TurnPause { get; set; } = true;
 	private double PauseTimer { get; set; } = 0;
 	private int TurnRound = 1;
-
 	private bool GameEnd { get; set; } = false;
 
 	// Websocket Connection and managing concurrency
@@ -93,12 +95,9 @@ public partial class Gameloop : Node2D
 	// We put this in gameloop later
 	public override void _Ready()
 	{
-
-		Socket.ConnectToUrl(ConstructWebsocketUrl());
-		WriteToServer(INITIAL_MESSAGE);
-
+		Socket.ConnectToUrl(WEBSOCKET_URL);
 		HandArea = GetNode<HandArea>("HandArea");
-		HandArea.RaiseDeck();
+		
 
 		for (int i = 0; i < 2; i++)
 		{
@@ -130,6 +129,7 @@ public partial class Gameloop : Node2D
 			{
 				GD.Print("Found opponent card removing texture it");
 				c.EmptyTexture();
+				// c.Scale =  -> Set scale
 			}
 		}
 
@@ -139,15 +139,42 @@ public partial class Gameloop : Node2D
 		// IncomingPlayer = new PlayerData("Placeholder", "Placeholder", [], false);
 		CardManager = (CardManager)FindChild("CardManager", true);
 		CardManager._playerHand = GetNode<PlayerHand>("HandArea/PlayerHand");
-		CardManager._deck = GetNode<Control>("HandArea/Deck");
+		CardManager._deckSpace = GetNode<DeckSpace>("HandArea/DeckSpace");
 		CardManager.CardDropped += OnCardDropped;
+		// Testing the HandArea
+		HandArea = GetNode<HandArea>("HandArea");
+		HandArea._playerHand = CardManager._playerHand;
+		HandArea._deckSpace = CardManager._deckSpace;
+		GD.Print(HandArea);
 		GD.Print(CardManager._playerHand.Name);
-
-		TestCard();
+		
+		TestCard("Card1");
+		TestCard("Card2");
+		TestCard("Card3");
+		TestCard("Card4");
+		TestCard("Card5");
+		TestCard("Card6");
+		TestCard("Card7");
+		TestCard("Card8");
+		HandArea.RaiseDeck();
 		GD.Print("Completed everything without a problem");
 	}
 
-	private string ConstructWebsocketUrl()
+	private void TestCard(string Name)
+	{
+		var TestCard = new CardData(10, "farmer", Colour.RED, 100, 10, 5);
+		var CardTexture = Builder.BuildCard(TestCard);
+		var CardScene = GD.Load<PackedScene>("res://scenes/gameComponents/Card.tscn");
+		var CardTemp = CardScene.Instantiate<Card>();
+		CardTemp.Name = Name;
+		CardTemp.CurrentSlotStatus = Card.SlotStatus.Deck;
+		CardTemp.ZIndex = 4;
+		CardTemp.LoadDataTexture(CardTexture);
+		CardManager.AddChild(CardTemp);
+		CardManager._deckSpace.AddCard(CardTemp);
+	}
+
+  private string ConstructWebsocketUrl()
 	{
 		var session = PlayerStateManager.Instance.SessionId;
 		string BaseUrl = BASE_WEBSOCKET_URL.Replace("SESSIONID", session);
@@ -162,24 +189,27 @@ public partial class Gameloop : Node2D
 		return BaseUrl;
 	}
 
-	private void TestCard()
-	{
-		var TestCard = new CardData(10, "farmer", Colour.RED, 100, 10, 5);
-		var CardTexture = Builder.BuildCard(TestCard);
-		var CardScene = GD.Load<PackedScene>("res://scenes/gameComponents/Card.tscn");
-		var CardTemp = CardScene.Instantiate<Card>();
-		CardTemp.LoadDataTexture(CardTexture);
-		CardManager.AddChild(CardTemp);
-	}
-
-
 	private void OnAttacked(Card card)
-    {
-        int player1Copy = Player1Health;
-        int player2Copy = Player2Health;
-        card.AttackOpponent(OpponentBoard, Board, ref player1Copy, ref player2Copy);
-        Player1Health = player1Copy;
-        Player2Health = player2Copy;
+	{
+		int ActiveY = card.ActiveY;
+		if (OpponentBoard[0][ActiveY] == null && OpponentBoard[0][ActiveY] == null)
+		{
+			// Handle logic for player getting attacked and opponent getting counterAttack
+			GD.Print("Counter attack succesful");
+		}
+		else if (OpponentBoard[0][ActiveY] == null)
+		{
+			OpponentBoard[1][ActiveY].UpdateHealth(card.Attack);
+		}
+		else
+		{
+			OpponentBoard[0][ActiveY].UpdateHealth(card.Attack);
+		}
+    int player1Copy = Player1Health;
+    int player2Copy = Player2Health;
+    card.AttackOpponent(OpponentBoard, Board, ref player1Copy, ref player2Copy);
+    Player1Health = player1Copy;
+    Player2Health = player2Copy;
 	}
 
 	// This function is a proof of concept
@@ -291,6 +321,8 @@ public partial class Gameloop : Node2D
 		{
 			GD.Print("Pause Ended");
 			HandArea.LowerDeck();
+			CardManager.UnstuckCard();
+			CardManager._playerHand.ActivateCardsInHand();
 			TurnPause = false;
 			PauseTimer = 0;
 			TurnRound += 1;
@@ -302,10 +334,11 @@ public partial class Gameloop : Node2D
 		if (GameTimer >= ROUND_TIMER * TurnRound && !TurnPause)
 		{
 			GD.Print("Round updated");
-
 			// TODO: Trigger secondary draw card event
 			TurnPause = true;
 			HandArea.RaiseDeck();
+			CardManager.UnstuckCard();
+			CardManager._playerHand.PauseCardsInHand();
 		}
 
 		if (RegenInterval >= SECONDS_PER_ELIXIR)
@@ -367,9 +400,7 @@ public partial class Gameloop : Node2D
 		// CardTemp.LoadDataTexture(CardTexture);
 		// CardManager.AddChild(CardTemp);
 
-		// Testing the HandArea
-		HandArea = GetNode<HandArea>("HandArea");
-		GD.Print(HandArea);
+		
 
 		// Testing attack phase -> Call this function when you somehow detect a card is played on the field
 		// CardTemp.EnterBattlefield();
