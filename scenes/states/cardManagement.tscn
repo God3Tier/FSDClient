@@ -16,7 +16,7 @@
 [ext_resource type="StyleBox" uid="uid://c2qfhim47uhhm" path="res://styles/button_danger_pressed.tres" id="12_0dskt"]
 [ext_resource type="StyleBox" uid="uid://cg7xt7j6ukctr" path="res://styles/popup.tres" id="12_v80jo"]
 [ext_resource type="Texture2D" uid="uid://cqlpljo3fyehv" path="res://assets/popup/xmark.png" id="13_bdlf1"]
-[ext_resource type="Texture2D" uid="uid://de1xve7wh1kwa" path="res://assets/characters/Farmer.png" id="14_vn7bd"]
+[ext_resource type="Texture2D" uid="uid://c5dab32ltaqbv" path="res://assets/characters/Farmer.png" id="14_vn7bd"]
 [ext_resource type="Texture2D" uid="uid://cng6okaxx3fyt" path="res://assets/symbols/energy.png" id="15_fh2y4"]
 [ext_resource type="Texture2D" uid="uid://bqe7flm7kyijb" path="res://assets/symbols/attack_symbol.png" id="16_knx5m"]
 [ext_resource type="Texture2D" uid="uid://u0l0s1ftn71l" path="res://assets/symbols/defence_symbol.png" id="17_mg07r"]
@@ -648,14 +648,14 @@ theme_override_styles/hover = ExtResource("9_knx5m")
 text = "Level up
 10"
 
-[node name="ErrorPopupContainer" type="Control" parent="." unique_id=704309261]
+[node name="TextPopupContainer" type="Control" parent="." unique_id=704309261]
 visible = false
 z_index = 4
 anchors_preset = 0
 offset_right = 1920.0
 offset_bottom = 1080.0
 
-[node name="ErrorBackgroundContainer" type="PanelContainer" parent="ErrorPopupContainer" unique_id=2122403922]
+[node name="TextBackgroundContainer" type="PanelContainer" parent="TextPopupContainer" unique_id=2122403922]
 z_index = 2
 layout_mode = 1
 anchors_preset = 8
@@ -671,13 +671,13 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_b5wql")
 
-[node name="MarginErrorContainer" type="MarginContainer" parent="ErrorPopupContainer/ErrorBackgroundContainer" unique_id=538776216]
+[node name="MarginTextContainer" type="MarginContainer" parent="TextPopupContainer/TextBackgroundContainer" unique_id=538776216]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 5
 theme_override_constants/margin_left = 10
 
-[node name="ErrorLabel" type="Label" parent="ErrorPopupContainer/ErrorBackgroundContainer/MarginErrorContainer" unique_id=1388549792]
+[node name="TextLabel" type="Label" parent="TextPopupContainer/TextBackgroundContainer/MarginTextContainer" unique_id=1388549792]
 custom_minimum_size = Vector2(1100, 0)
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
@@ -685,7 +685,7 @@ theme_override_fonts/font = SubResource("FontVariation_2etno")
 theme_override_font_sizes/font_size = 60
 autowrap_mode = 3
 
-[node name="ErrorPopupBackground" type="Button" parent="ErrorPopupContainer" unique_id=1342228359]
+[node name="TextPopupBackground" type="Button" parent="TextPopupContainer" unique_id=1342228359]
 z_index = 1
 layout_mode = 0
 offset_right = 1920.0
@@ -702,4 +702,4 @@ theme_override_styles/focus = SubResource("StyleBoxFlat_x8dtt")
 [connection signal="pressed" from="MainCardContainer/DeckContainer/DeckColorContainer/SaveButton" to="." method="_OnSaveButtonPressed"]
 [connection signal="pressed" from="CardPopupContainer/CardPopupBackground" to="." method="_OnCardPopupBackgroundPressed"]
 [connection signal="pressed" from="CardPopupContainer/CardPopupBox/CloseCardButton" to="." method="_OnCloseCardButtonPressed"]
-[connection signal="pressed" from="ErrorPopupContainer/ErrorPopupBackground" to="." method="_OnErrorPopupBackgroundPressed"]
+[connection signal="pressed" from="TextPopupContainer/TextPopupBackground" to="." method="_OnTextPopupBackgroundPressed"]

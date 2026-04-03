@@ -44,13 +44,13 @@ public class GetDecksResponse
 public class Deck
 {
 	[JsonPropertyName("deck_id")]
-	public int DeckID { get; set; }
+	public int DeckId { get; set; }
 	
 	[JsonPropertyName("name")]
 	public string Name { get; set; } = "";
 	
 	[JsonPropertyName("card_ids")]
-	public List<int> CardIDs { get; set; } = new();
+	public List<int> CardIds { get; set; } = new();
 	
 	[JsonPropertyName("cards")]
 	public List<CardInfo> Cards { get; set; } = new();
@@ -455,7 +455,7 @@ public partial class CardManagement : Control
 		}
 		
 		// Add into deck data
-		Decks[SelectedDeck].CardIDs.Add(CardId);
+		Decks[SelectedDeck].CardIds.Add(CardId);
 		Decks[SelectedDeck].Cards.Add(new CardInfo {CardId = CardId, Position = Decks[SelectedDeck].Cards.Count});
 		
 		// Add visually
@@ -481,7 +481,7 @@ public partial class CardManagement : Control
 			Vector2 pos = CardContainer.Position;
 			if(pos.X == X && pos.Y == Y){
 				// remove from cardID
-				Decks[SelectedDeck].CardIDs.Remove(Decks[SelectedDeck].CardIDs[i]);
+				Decks[SelectedDeck].CardIds.Remove(Decks[SelectedDeck].CardIds[i]);
 				// remove from Cards
 				Decks[SelectedDeck].Cards.Remove(Decks[SelectedDeck].Cards[i]);
 				// queuefree
@@ -634,7 +634,7 @@ public partial class CardManagement : Control
 	{
 		Control CardPopupContainerNode = GetNode<Control>("CardPopupContainer");
 		
-		// Turn it OFF (make visible false)
+		// Turn it On (make visible true)
 		CardPopupContainerNode.Visible = true;
 	}	
 	
@@ -649,32 +649,61 @@ public partial class CardManagement : Control
 	// When pressing save button
 	private void _OnSaveButtonPressed()
 	{
+				
 		for (int i = 0; i < Decks.Count; i++){
 			// Validate if theres 12 cards
-			if(Decks[i].CardIDs.Count != 12){
-				SetErrorPopup($"Deck {Decks[i].Name} does not have 12 cards");
+			if(Decks[i].CardIds.Count != 12){
+				SetTextPopup($"Deck {Decks[i].Name} does not have 12 cards");
 				return;
 			}
 			
 			// Validate max 2 unique cards
-			if(!HasNoMoreThanTwoDuplicates(Decks[i].CardIDs)){
-				SetErrorPopup($"Deck {Decks[i].Name} have more than 2 duplicate cards");
+			if(!HasNoMoreThanTwoDuplicates(Decks[i].CardIds)){
+				SetTextPopup($"Deck {Decks[i].Name} have more than 2 duplicate cards");
 				return;
 			}
 		}
+
 		// TODO: fetch to save
+		var jsonObj = new
+		{
+			deck_id = Decks[0].DeckId,
+			name = Decks[0].Name,
+			card_ids = Decks[0].CardIds
+		};
 		
+		var jsonString = JsonSerializer.Serialize(jsonObj);
+		GD.Print("Sending the update deck method");
+		Network.SendRequestWithToken(NetworkManager.BASE_URL + NetworkManager.DECK + "/deck/update", Godot.HttpClient.Method.Put, jsonString, UpdateDecksResponse);
+
 		// Make save button invisible
 		SetSaveButtonVisibility(false);
 	}
 	
+	private void UpdateDecksResponse(long result, long responseCode, string[] headers, byte[] body)
+	{
+		string json = System.Text.Encoding.UTF8.GetString(body);
+		GD.Print(responseCode);
+		GD.Print(json);
+		if (result != 200 && responseCode != 200)
+		{
+			GD.PrintErr("Failed to get a successful response when updating decks");
+			GD.PrintErr(json);
+			return;
+		}
+
+		// success
+		SetTextPopup("Deck has been updated successfully!");
+
+	}
+
 	// Checks that theres atmost 2 of the same card in the deck
-	public bool HasNoMoreThanTwoDuplicates(List<int> cardIDs)
+	public bool HasNoMoreThanTwoDuplicates(List<int> cardIds)
 	{
 		// use dictionary to check count of each item
 		var counts = new Dictionary<int, int>();
 
-		foreach (int id in cardIDs)
+		foreach (int id in cardIds)
 		{
 			if (!counts.ContainsKey(id))
 				counts[id] = 0;
@@ -688,13 +717,13 @@ public partial class CardManagement : Control
 		return true;
 	}
 
-	// function to make error popup visible and set the text
-	private void SetErrorPopup(string Text)
+	// function to make text popup visible and set the text
+	private void SetTextPopup(string Text)
 	{
-		Control ErrorPopupContainer = GetNode<Control>("ErrorPopupContainer");
-		Label ErrorLabel = ErrorPopupContainer.GetNode<Label>("ErrorBackgroundContainer/MarginErrorContainer/ErrorLabel");
-		ErrorPopupContainer.Visible = true;
-		ErrorLabel.Text = Text;
+		Control TextPopupContainer = GetNode<Control>("TextPopupContainer");
+		Label TextLabel = TextPopupContainer.GetNode<Label>("TextBackgroundContainer/MarginTextContainer/TextLabel");
+		TextPopupContainer.Visible = true;
+		TextLabel.Text = Text;
 	}
 
 	// When pressing the "Active" OR "Set Active" Button
@@ -718,8 +747,8 @@ public partial class CardManagement : Control
 		SaveButton.Visible = visible;
 	}
 	
-	private void _OnErrorPopupBackgroundPressed(){
-		Control ErrorPopupContainer = GetNode<Control>("ErrorPopupContainer");
-		ErrorPopupContainer.Visible = false;
+	private void _OnTextPopupBackgroundPressed(){
+		Control TextPopupContainer = GetNode<Control>("TextPopupContainer");
+		TextPopupContainer.Visible = false;
 	}
 }
