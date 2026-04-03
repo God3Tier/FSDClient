@@ -149,6 +149,13 @@ public partial class CardManager : Node2D
 		EmitSignal(SignalName.CardDropped, battleSlotFound);
 	}
 	
+	private void BounceBattleSlot(BattleSlot slot) {
+		slot.RemoveCard();
+		// TODO: Once card generation is a thing
+		//_playerHand.AddCard(<INSERT_CARD_HERE>)
+	}
+	
+	// For putting a card into the hand
 	private void IntoHandSlot(HandSlot handSlotFound) 
 	{
 		cardBeingDragged.CurrentSlotStatus = Card.SlotStatus.HandTemp;
@@ -156,6 +163,7 @@ public partial class CardManager : Node2D
 		_playerHand.AddCard(cardBeingDragged, handSlotFound);
 	}
 	
+	// For returning a card back into the deck between rounds
 	private void ReturnToDeckSlot(DeckSlot deckSlotFound)
 	{
 		cardBeingDragged.CurrentSlotStatus = Card.SlotStatus.Deck;
