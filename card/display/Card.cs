@@ -158,7 +158,8 @@ public partial class Card : Node2D
         if (OpponentBoard[0][ActiveY] == null && OpponentBoard[0][ActiveY] == null)
         {
             // Handle logic for player getting attacked and opponent getting counterAttack
-            GD.Print("Counter attack succesful");
+            player2Health -= Attack;
+            Health -= 5; 
         }
         else if (OpponentBoard[0][ActiveY] == null)
         {
@@ -190,7 +191,7 @@ public partial class Card : Node2D
         Board[ActiveX][ActiveY] = null;
     }
 
-    public void OnDamaged(Card[][] OpponentBoard, Card[][] Board, int damageTaken)
+    public void OnDamaged(Card[][] OpponentBoard, Card[][] Board, int damageTaken, int attackX, int attackY)
     {
         Board[ActiveX][ActiveY].Health -= damageTaken;
         if (Board[ActiveX][ActiveY].Health <= 0) {

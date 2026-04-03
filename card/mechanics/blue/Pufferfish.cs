@@ -1,16 +1,19 @@
 namespace FSDClient.card.mechanics.blue;
+
 using FSDClient.card.display;
 using FSDClient.battlefield.handManagement;
 
-public partial class Penguin : Card
+public partial class Pufferfish : Card
 {
     public void SpawnCard(Card[][] OpponentBoard, Card[][] Board, BattleSlot battleslot, ref int player1Health, ref int player2Health)
     {
-        for (int i = 0; i < OpponentBoard.Length; i++) {
-            if (OpponentBoard[i][battleslot.y] != null) {
-                OpponentBoard[i][battleslot.y].Attack -= 10;   
-            }
+        if (OpponentBoard[0][battleslot.y] != null) {
+            // Bounce card back into hand 
+        } else if (OpponentBoard[1][battleslot.y] != null) {
+            // Logic to bounce back into hand 
         }
+        
         base.SpawnCard(OpponentBoard, Board, battleslot, ref player1Health, ref player2Health);
+
     }
 }

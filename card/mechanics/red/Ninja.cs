@@ -1,18 +1,16 @@
-namespace FSDClient.card.red.mechanics;
+
+namespace FSDClient.card.mechanics.red;
 
 using FSDClient.card.display;
 using FSDClient.battlefield.handManagement;
-using System;
-using Godot;
 
 public partial class Ninja : Card
 {
 
-    public void OnDamaged(Card[][] OpponentBoard, Card[][] Board, int damageTaken)
+    public void SpawnCard(Card[][] OpponentBoard, Card[][] Board, BattleSlot battleslot, ref int player1Health, ref int player2Health)
     {
-        Attack += 10;
-        ((RichTextLabel)FindChild("Attack", true)).Text = Attack.ToString();
-        base.OnDamaged(OpponentBoard, Board, damageTaken);
+        battleslot.Card.Timer /= 2;
+        base.SpawnCard(OpponentBoard, Board, battleslot, ref player1Health, ref player2Health);
     }
 
 }
