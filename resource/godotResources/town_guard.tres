@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="CardStats" format=3 uid="uid://ew648vdvrtoo"]
+
+[ext_resource type="Texture2D" uid="uid://dtnigljhytw1d" path="res://assets/characters/Town_Guard.png" id="1_lqoa3"]
+[ext_resource type="Script" uid="uid://b2r5pcvph5drw" path="res://resource/CardStats.cs" id="2_vagp6"]
+
+[resource]
+script = ExtResource("2_vagp6")
+id = 4
+Image = ExtResource("1_lqoa3")
+Name = "Town Guard"
+Colour = "Grey"
+Rarity = "rare"
+Cost = 4
+Attack = 20
+Health = 20
+Effect = "No effect"
+Summon = "basic"
+OnAttack = "basic"
+OnDamaged = "basic"
+OnDeath = "basic"

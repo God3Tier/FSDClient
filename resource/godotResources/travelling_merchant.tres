@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="CardStats" format=3 uid="uid://b3hsb4ymkahgi"]
+
+[ext_resource type="Texture2D" uid="uid://qrauyl5yyhiu" path="res://assets/characters/Travelling_Merchant.png" id="1_68oas"]
+[ext_resource type="Script" uid="uid://b2r5pcvph5drw" path="res://resource/CardStats.cs" id="2_j6ddo"]
+
+[resource]
+script = ExtResource("2_j6ddo")
+id = 6
+Image = ExtResource("1_68oas")
+Name = "Travelling Merchant"
+Colour = "Grey"
+Rarity = "legendary"
+Cost = 6
+Attack = 10
+Health = 10
+Effect = "summon: +5/+5 for each colour in your deck"
+Summon = "self_stats_change"
+OnAttack = "basic"
+OnDamaged = "basic"
+OnDeath = "basic"

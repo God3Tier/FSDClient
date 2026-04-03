@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="CardStats" format=3 uid="uid://cggpa3qbn6ek6"]
+
+[ext_resource type="Texture2D" uid="uid://bbwwhr7n61vc8" path="res://assets/characters/Dwarf.png" id="1_abb87"]
+[ext_resource type="Script" uid="uid://b2r5pcvph5drw" path="res://resource/CardStats.cs" id="2_lkpve"]
+
+[resource]
+script = ExtResource("2_lkpve")
+id = 8
+Image = ExtResource("1_abb87")
+Name = "Dwarf"
+Colour = "Red"
+Rarity = "common"
+Cost = 3
+Attack = 5
+Health = 5
+Effect = "summon: give vertically adjacent unit +10/0"
+Summon = "vertical_stats_change"
+OnAttack = "basic"
+OnDamaged = "basic"
+OnDeath = "basic"

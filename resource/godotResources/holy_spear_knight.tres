@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="CardStats" format=3 uid="uid://cg5mq80w4pxwt"]
+
+[ext_resource type="Texture2D" uid="uid://67d0x4kvynv5" path="res://assets/characters/Holy_Spear_Knight.png" id="1_7hyl4"]
+[ext_resource type="Script" uid="uid://b2r5pcvph5drw" path="res://resource/CardStats.cs" id="1_25i7g"]
+
+[resource]
+script = ExtResource("1_25i7g")
+id = 33
+Image = ExtResource("1_7hyl4")
+Name = "Holy Spear Knight"
+Colour = "Yellow"
+Rarity = "rare"
+Cost = 4
+Attack = 15
+Health = 15
+Effect = "Ignore the front row of enemy units when attacking"
+Summon = "basic"
+OnAttack = "back_row"
+OnDamaged = "basic"
+OnDeath = "basic"

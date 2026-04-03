@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="CardStats" format=3 uid="uid://ctq03ij4yns6c"]
+
+[ext_resource type="Texture2D" uid="uid://df6p3gt82ad6g" path="res://assets/characters/Wolf.png" id="1_a6hsg"]
+[ext_resource type="Script" uid="uid://b2r5pcvph5drw" path="res://resource/CardStats.cs" id="2_3ohpt"]
+
+[resource]
+script = ExtResource("2_3ohpt")
+id = 38
+Image = ExtResource("1_a6hsg")
+Name = "Wolf"
+Colour = "Green"
+Rarity = "token"
+Cost = 3
+Attack = 15
+Health = 15
+Effect = "No effect"
+Summon = "basic"
+OnAttack = "basic"
+OnDamaged = "basic"
+OnDeath = "basic"

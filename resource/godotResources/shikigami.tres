@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="CardStats" format=3 uid="uid://6o8m1yxqth0s"]
+
+[ext_resource type="Texture2D" uid="uid://brb4ge3nkj7rn" path="res://assets/characters/Shikigami.png" id="1_vmkbr"]
+[ext_resource type="Script" uid="uid://b2r5pcvph5drw" path="res://resource/CardStats.cs" id="2_orjj2"]
+
+[resource]
+script = ExtResource("2_orjj2")
+id = 30
+Image = ExtResource("1_vmkbr")
+Name = "Shikigami"
+Colour = "Purple"
+Rarity = "legendary"
+Cost = 3
+Attack = 15
+Health = 100
+Effect = "summon: set all units hp to 1"
+Summon = "set_all_hp_1"
+OnAttack = "basic"
+OnDamaged = "basic"
+OnDeath = "basic"

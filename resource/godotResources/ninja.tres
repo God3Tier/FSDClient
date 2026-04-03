@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="CardStats" format=3 uid="uid://ccwh23o37ddrs"]
+
+[ext_resource type="Texture2D" uid="uid://cy4cq3dgr6jhb" path="res://assets/characters/Ninja.png" id="1_1t62r"]
+[ext_resource type="Script" uid="uid://b2r5pcvph5drw" path="res://resource/CardStats.cs" id="2_12m6t"]
+
+[resource]
+script = ExtResource("2_12m6t")
+id = 10
+Image = ExtResource("1_1t62r")
+Name = "Ninja"
+Colour = "Red"
+Rarity = "rare"
+Cost = 3
+Attack = 20
+Health = 10
+Effect = "summon: doubles its own attack speed"
+Summon = "double_attack_speed"
+OnAttack = "basic"
+OnDamaged = "basic"
+OnDeath = "basic"

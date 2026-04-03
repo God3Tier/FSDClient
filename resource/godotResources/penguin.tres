@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="CardStats" format=3 uid="uid://db7rwlwu3iu6s"]
+
+[ext_resource type="Texture2D" uid="uid://bj06poyiu43ut" path="res://assets/characters/Penguin.png" id="1_t06vy"]
+[ext_resource type="Script" uid="uid://b2r5pcvph5drw" path="res://resource/CardStats.cs" id="2_xrj6a"]
+
+[resource]
+script = ExtResource("2_xrj6a")
+id = 13
+Image = ExtResource("1_t06vy")
+Name = "Penguin"
+Colour = "Blue"
+Rarity = "common"
+Cost = 3
+Attack = 5
+Health = 5
+Effect = "summon: give enemy units in the same column -10/0"
+Summon = "opponent_stats_change"
+OnAttack = "basic"
+OnDamaged = "basic"
+OnDeath = "basic"
