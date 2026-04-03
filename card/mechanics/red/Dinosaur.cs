@@ -11,7 +11,10 @@ public partial class Dinosaur : Card
         {
             for (int j = 0; j < OpponentBoard.Length; j++)
             {
-                OpponentBoard[i][j]?.OnDamaged(OpponentBoard, Board, 15, battleslot.x, battleslot.y);
+                if (OpponentBoard[i][j].IsEmpty)
+                {
+                    OpponentBoard[i][j]?.OnDamaged(OpponentBoard, Board, 15, battleslot.x, battleslot.y);
+                }
                 Board[i][j]?.OnDamaged(OpponentBoard, Board, 15, battleslot.x, battleslot.y);
             }
         }

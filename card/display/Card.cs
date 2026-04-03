@@ -19,6 +19,7 @@ public partial class Card : Node2D
     public double Timer { get; set; }
     public int ActiveY { get; set; }
     public int ActiveX { get; set; }
+    public bool IsEmpty { get; set; } = true;
     // hi
 
     // Called when the node enters the scene tree for the first time.
@@ -121,6 +122,7 @@ public partial class Card : Node2D
         var ElixirCost = (RichTextLabel)FindChild("ElixirCost");
         ElixirCost.Text = "";
         BattleMode = true;
+        IsEmpty = false; 
         // var
     }
 

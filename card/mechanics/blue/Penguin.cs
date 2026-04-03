@@ -7,7 +7,7 @@ public partial class Penguin : Card
     public void SpawnCard(Card[][] OpponentBoard, Card[][] Board, BattleSlot battleslot, ref int player1Health, ref int player2Health)
     {
         for (int i = 0; i < OpponentBoard.Length; i++) {
-            if (OpponentBoard[i][battleslot.y] != null) {
+            if (OpponentBoard[i][battleslot.y].IsEmpty) {
                 OpponentBoard[i][battleslot.y].Attack -= 10;   
             }
         }

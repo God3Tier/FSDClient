@@ -7,9 +7,9 @@ public partial class Pufferfish : Card
 {
     public void SpawnCard(Card[][] OpponentBoard, Card[][] Board, BattleSlot battleslot, ref int player1Health, ref int player2Health)
     {
-        if (OpponentBoard[0][battleslot.y] != null) {
+        if (OpponentBoard[0][battleslot.y].IsEmpty) {
             // Bounce card back into hand 
-        } else if (OpponentBoard[1][battleslot.y] != null) {
+        } else if (OpponentBoard[1][battleslot.y].IsEmpty) {
             // Logic to bounce back into hand 
         }
         
