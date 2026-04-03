@@ -97,7 +97,6 @@ public partial class NetworkManager : Node
 	{
 		if (headers == null)
 		{
-			GD.Print(PlayerStateManager.Instance.Token);
 			headers = new string[2] { "Content-Type: application/json", "Authorization: Bearer " + PlayerStateManager.Instance.Token };
 		} else {
 			headers[0] = "Content-Type: application/json";

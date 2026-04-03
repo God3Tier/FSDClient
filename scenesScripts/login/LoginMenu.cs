@@ -163,7 +163,7 @@ public partial class LoginMenu : Control
 
 	private void LoginResponse(long result, long responseCode, string[] headers, byte[] body)
 	{
-		GD.Print(responseCode); ;
+		GD.Print(responseCode);
 		string json = System.Text.Encoding.UTF8.GetString(body);
 		GD.Print(json);
 		if (result != (long)HttpRequest.Result.Success || responseCode != 200)

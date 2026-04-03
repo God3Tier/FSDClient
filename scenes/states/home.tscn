@@ -508,7 +508,7 @@ grow_horizontal = 2
 grow_vertical = 0
 theme_override_constants/h_separation = 30
 
-[node name="PackSlot1" type="Button" parent="Packs" unique_id=1401106176]
+[node name="PackSlot0" type="Button" parent="Packs" unique_id=1401106176]
 custom_minimum_size = Vector2(210, 300)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -516,7 +516,7 @@ size_flags_vertical = 4
 mouse_default_cursor_shape = 2
 theme_override_styles/normal = SubResource("StyleBoxFlat_ek566")
 
-[node name="PackImage" type="TextureRect" parent="Packs/PackSlot1" unique_id=1082623625]
+[node name="PackImage" type="TextureRect" parent="Packs/PackSlot0" unique_id=1082623625]
 layout_mode = 0
 offset_top = 61.0
 offset_right = 211.20001
@@ -524,7 +524,7 @@ offset_bottom = 237.0
 texture = ExtResource("4_pl3n4")
 expand_mode = 3
 
-[node name="PackSlot2" type="Button" parent="Packs" unique_id=1176534121]
+[node name="PackSlot1" type="Button" parent="Packs" unique_id=1176534121]
 custom_minimum_size = Vector2(210, 300)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -532,7 +532,7 @@ size_flags_vertical = 4
 mouse_default_cursor_shape = 2
 theme_override_styles/normal = SubResource("StyleBoxFlat_ek566")
 
-[node name="PackImage" type="TextureRect" parent="Packs/PackSlot2" unique_id=1537845730]
+[node name="PackImage" type="TextureRect" parent="Packs/PackSlot1" unique_id=1537845730]
 layout_mode = 0
 offset_top = 61.0
 offset_right = 211.20001
@@ -540,7 +540,7 @@ offset_bottom = 237.0
 texture = ExtResource("4_pl3n4")
 expand_mode = 3
 
-[node name="PackSlot3" type="Button" parent="Packs" unique_id=1056700358]
+[node name="PackSlot2" type="Button" parent="Packs" unique_id=1056700358]
 custom_minimum_size = Vector2(210, 300)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -548,7 +548,7 @@ size_flags_vertical = 4
 mouse_default_cursor_shape = 2
 theme_override_styles/normal = SubResource("StyleBoxFlat_ek566")
 
-[node name="PackImage" type="TextureRect" parent="Packs/PackSlot3" unique_id=675486411]
+[node name="PackImage" type="TextureRect" parent="Packs/PackSlot2" unique_id=675486411]
 layout_mode = 0
 offset_top = 61.0
 offset_right = 211.20001
@@ -556,7 +556,7 @@ offset_bottom = 237.0
 texture = ExtResource("4_pl3n4")
 expand_mode = 3
 
-[node name="PackSlot4" type="Button" parent="Packs" unique_id=1063073778]
+[node name="PackSlot3" type="Button" parent="Packs" unique_id=1063073778]
 custom_minimum_size = Vector2(210, 300)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -564,7 +564,7 @@ size_flags_vertical = 4
 mouse_default_cursor_shape = 2
 theme_override_styles/normal = SubResource("StyleBoxFlat_ek566")
 
-[node name="PackImage" type="TextureRect" parent="Packs/PackSlot4" unique_id=402978131]
+[node name="PackImage" type="TextureRect" parent="Packs/PackSlot3" unique_id=402978131]
 layout_mode = 0
 offset_top = 61.0
 offset_right = 211.20001
@@ -745,22 +745,7 @@ offset_top = 367.0
 offset_right = 1073.0
 offset_bottom = 713.0
 
-[node name="FinalCardResult" type="HFlowContainer" parent="PacksPopupContainer" unique_id=157741870]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -576.0
-offset_top = -289.5
-offset_right = 576.0
-offset_bottom = 289.5
-grow_horizontal = 2
-grow_vertical = 2
-
 [node name="PacksPopupBackground" type="Button" parent="PacksPopupContainer" unique_id=68219895]
-z_index = 2
 layout_mode = 0
 offset_right = 1920.0
 offset_bottom = 1080.0
@@ -770,6 +755,26 @@ theme_override_styles/pressed = SubResource("StyleBoxFlat_ep48t")
 theme_override_styles/hover = SubResource("StyleBoxFlat_4krx0")
 theme_override_styles/disabled = SubResource("StyleBoxFlat_sihaw")
 theme_override_styles/focus = SubResource("StyleBoxFlat_gqply")
+
+[node name="FinalCardsResultScroll" type="ScrollContainer" parent="PacksPopupContainer/PacksPopupBackground" unique_id=1481186639]
+z_index = 1
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -576.0
+offset_top = -350.0
+offset_right = 576.0
+offset_bottom = 350.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_default_cursor_shape = 2
+
+[node name="FinalCardsResult" type="HFlowContainer" parent="PacksPopupContainer/PacksPopupBackground/FinalCardsResultScroll" unique_id=157741870]
+custom_minimum_size = Vector2(1152, 700)
+layout_mode = 2
 
 [connection signal="pressed" from="FriendButton" to="." method="_OnFriendButtonPressed"]
 [connection signal="pressed" from="VBoxContainer/BattleButton" to="." method="_OnBattleButtonPressed"]
