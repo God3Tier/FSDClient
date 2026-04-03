@@ -163,7 +163,7 @@ public partial class Card : Node2D
         else if (OpponentBoard[0][ActiveY] == null)
         {
             OpponentBoard[1][ActiveY].UpdateHealth(Attack);
-            if (OpponentBoard[1][ActiveY].Health == 0)
+            if (OpponentBoard[1][ActiveY].Health <= 0)
             {
                 OpponentBoard[1][ActiveY].EmptyTexture();
             }
@@ -171,7 +171,7 @@ public partial class Card : Node2D
         else
         {
             OpponentBoard[0][ActiveY].UpdateHealth(Attack);
-            if (OpponentBoard[0][ActiveY].Health == 0)
+            if (OpponentBoard[0][ActiveY].Health <= 0)
             {
                 OpponentBoard[0][ActiveY].EmptyTexture();
             }
