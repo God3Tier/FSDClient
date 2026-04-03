@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="CardStats" format=3 uid="uid://bqdd7mq5nigw"]
+
+[ext_resource type="Texture2D" uid="uid://djgt40xmohe8w" path="res://assets/characters/Mercenary.png" id="1_p484h"]
+[ext_resource type="Script" uid="uid://b2r5pcvph5drw" path="res://resource/CardStats.cs" id="2_bh3qq"]
+
+[resource]
+script = ExtResource("2_bh3qq")
+id = 3
+Image = ExtResource("1_p484h")
+Name = "Mercenary"
+Colour = "Grey"
+Rarity = "rare"
+Cost = 3
+Attack = 15
+Health = 15
+Effect = "No effect"
+Summon = "basic"
+OnAttack = "basic"
+OnDamaged = "basic"
+OnDeath = "basic"

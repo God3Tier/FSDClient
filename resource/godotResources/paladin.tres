@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="CardStats" format=3 uid="uid://dbqbhq37wyfsd"]
+
+[ext_resource type="Script" uid="uid://b2r5pcvph5drw" path="res://resource/CardStats.cs" id="1_c1it7"]
+[ext_resource type="Texture2D" uid="uid://bm23dl63ftlhk" path="res://assets/characters/Paladin.png" id="1_hq6sf"]
+
+[resource]
+script = ExtResource("1_c1it7")
+id = 35
+Image = ExtResource("1_hq6sf")
+Name = "Paladin"
+Colour = "Yellow"
+Rarity = "epic"
+Cost = 5
+Attack = 15
+Health = 25
+Effect = "whenever this unit takes damage, reduce it by 10"
+Summon = "basic"
+OnAttack = "basic"
+OnDamaged = "shield"
+OnDeath = "basic"

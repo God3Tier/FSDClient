@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="CardStats" format=3 uid="uid://dnk130of17wno"]
+
+[ext_resource type="Texture2D" uid="uid://d0wjmvl7t45fn" path="res://assets/characters/Dullahan.png" id="1_61c8r"]
+[ext_resource type="Script" uid="uid://b2r5pcvph5drw" path="res://resource/CardStats.cs" id="2_a7dr5"]
+
+[resource]
+script = ExtResource("2_a7dr5")
+id = 29
+Image = ExtResource("1_61c8r")
+Name = "Dullahan"
+Colour = "Purple"
+Rarity = "epic"
+Cost = 6
+Attack = 20
+Health = 20
+Effect = "summon: destroy an enemy in front of it"
+Summon = "destroy_enemy_infront"
+OnAttack = "basic"
+OnDamaged = "basic"
+OnDeath = "basic"

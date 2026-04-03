@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="CardStats" format=3 uid="uid://20nw8ihxyu3n"]
+
+[ext_resource type="Texture2D" uid="uid://o8py3nap5nq4" path="res://assets/characters/Dinosaur.png" id="1_gt2bf"]
+[ext_resource type="Script" uid="uid://b2r5pcvph5drw" path="res://resource/CardStats.cs" id="2_4rue6"]
+
+[resource]
+script = ExtResource("2_4rue6")
+id = 12
+Image = ExtResource("1_gt2bf")
+Name = "Dinosaur"
+Colour = "Red"
+Rarity = "legendary"
+Cost = 8
+Attack = 50
+Health = 30
+Effect = "summon: deal 15 to all units on battlefield"
+Summon = "deal_damage"
+OnAttack = "basic"
+OnDamaged = "basic"
+OnDeath = "basic"

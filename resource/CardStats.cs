@@ -6,25 +6,61 @@ using Godot;
 public partial class CardStats : Resource
 {
 	[Export]
-	public int Health;
-
+	public int id;
+	
+	[Export]
+	public Texture2D Image;
+	
+	[Export]
+	public string Name;
+	
+	[Export]
+	public string Colour;
+	
+	[Export]
+	public string Rarity;
+	
+	[Export]
+	public int Cost;
+	
 	[Export]
 	public int Attack;
-
+	
 	[Export]
-	public string CardColour;
-
+	public int Health;
+	
 	[Export]
-	public string IconName;
+	public string Effect;
+	
+	[Export]
+	public string Summon;
+	
+	[Export]
+	public string OnAttack;
+	
+	[Export]
+	public string OnDamaged;
+	
+	[Export]
+	public string OnDeath;
 
 	// This is apparently a necessity according to the docs to load the information
-	public CardStats() : this(0, 0, null, null) { }
+	public CardStats() : this(0, "res://assets/characters/Farmer.png", "Farmer", "Grey", "common", 2, 10, 10, "No effect", "basic", "basic", "basic", "basic") { }
 
-	public CardStats(int health, int attack, string cardColour, string iconName)
+	public CardStats(int id, string imagepath, string name, string colour, string rarity, int cost, int attack, int health, string effect, string summon, string onattack, string ondamaged, string ondeath) 
 	{
-		Health = health;
-		Attack = attack;
-		CardColour = cardColour;
-		IconName = iconName;
+		this.id = id;
+		this.Image = GD.Load<Texture2D>(imagepath);
+		this.Name = name;
+		this.Colour = colour;
+		this.Rarity = rarity;
+		this.Cost = cost;
+		this.Attack = attack;
+		this.Health = health;
+		this.Effect = effect;
+		this.Summon = summon;
+		this.OnAttack = onattack;
+		this.OnDamaged = ondamaged;
+		this.OnDeath = ondeath;
 	}
 }

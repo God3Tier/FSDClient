@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="CardStats" format=3 uid="uid://c30x8ciic1rhi"]
+
+[ext_resource type="Texture2D" uid="uid://duvgyygftfaod" path="res://assets/characters/Dryad.png" id="1_4lpbu"]
+[ext_resource type="Script" uid="uid://b2r5pcvph5drw" path="res://resource/CardStats.cs" id="2_0jjl3"]
+
+[resource]
+script = ExtResource("2_0jjl3")
+id = 22
+Image = ExtResource("1_4lpbu")
+Name = "Dryad"
+Colour = "Green"
+Rarity = "rare"
+Cost = 4
+Attack = 15
+Health = 15
+Effect = "summon: if there is an enemy unit in front, gain +10/+10"
+Summon = "self_stats_change"
+OnAttack = "basic"
+OnDamaged = "basic"
+OnDeath = "basic"

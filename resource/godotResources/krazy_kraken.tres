@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="CardStats" format=3 uid="uid://dxiuhsrd242t6"]
+
+[ext_resource type="Texture2D" uid="uid://cc3tbkus1kmqt" path="res://assets/characters/Krazy_Kraken.png" id="1_3ox1r"]
+[ext_resource type="Script" uid="uid://b2r5pcvph5drw" path="res://resource/CardStats.cs" id="2_edxav"]
+
+[resource]
+script = ExtResource("2_edxav")
+id = 15
+Image = ExtResource("1_3ox1r")
+Name = "Krazy Kraken"
+Colour = "Blue"
+Rarity = "rare"
+Cost = 4
+Attack = 30
+Health = 20
+Effect = "Attacks a random unit or leader"
+Summon = "basic"
+OnAttack = "random_all"
+OnDamaged = "basic"
+OnDeath = "basic"
