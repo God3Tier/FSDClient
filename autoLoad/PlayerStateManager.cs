@@ -17,7 +17,7 @@ public partial class PlayerStateManager : Node
 	public static PlayerStateManager Instance { get; private set; }
 	public PlayerData PlayerData { get; private set; }
 	public List<CardData> DeckCardDatas { get; set; }
-	public int UserId { get; private set; }
+	public long UserId { get; private set; }
 	public int Level { get; private set; }
 	public int Crystal { get; private set; }
 	public int Gold { get;  private set; }
@@ -36,7 +36,7 @@ public partial class PlayerStateManager : Node
 	public void SetPlayerData(LoginResponse loginResponse)
 	{
 		GD.Print("Intitialisiing with ", loginResponse.ToString() + " end of line");
-		
+		UserId = loginResponse.UserID;
 		Token = loginResponse.Token;
 		Level = loginResponse.Level;
 		Crystal = loginResponse.Crystal;
