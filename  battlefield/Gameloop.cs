@@ -200,7 +200,7 @@ public partial class Gameloop : Node2D
     private void OnCardDropped(BattleSlot battleslot)
     {
         // TODO: Write to Server should be implemented once backend decides how to transfer information
-        WriteToServer("");
+        // WriteToServer("");
         // Simulate delay of card
         // Thread.Sleep(1);
         battleslot.Card.ActiveY = battleslot.y;
