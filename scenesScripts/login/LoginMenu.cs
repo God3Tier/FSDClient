@@ -3,8 +3,8 @@ namespace FSDClient.sceneScripts.login;
 using Godot;
 using System;
 using System.Text.Json;
-using FSDClient.autoLoad;
 using System.Text.Json.Serialization;
+using FSDClient.autoLoad;
 
 public class LoginResponse
 {
