@@ -10,21 +10,10 @@ using FSDClient.autoLoad;
 using FSDClient.battlefield.responseType;
 using System.Collections.Concurrent;
 using System.Text.Json.Serialization;
-using System;
+using System; 
 using System.Text.Json;
 using FSDClient.battlefield.responseType;
 
-
-enum MessageType
-{
-    JOIN_GAME,
-    CARD_PLACED,
-    END_TURN,
-    CARD_DEAD,
-    CARD_ATTACK,
-    CARD_PLACED_ENEMY
-
-}
 
 public partial class Gameloop : Node2D
 {
@@ -230,6 +219,8 @@ public partial class Gameloop : Node2D
         if (Socket.GetReadyState() != WebSocketPeer.State.Open)
         {
             // Do Some connection error and try to rehandle
+            Socket.ConnectToUrl(ConstructWebsocketUrl());
+            WriteToServer(RequestAction.RECONNECT);
             return;
         }
 
@@ -250,16 +241,16 @@ public partial class Gameloop : Node2D
         while (readQueue.TryDequeue(out string msg))
         {
             var Data = JsonSerializer.Deserialize<ResponseBase>(msg);
-            var msgType = Enum.Parse(typeof(MessageType), Data.MessageType);
+            var msgType = Enum.Parse(typeof(FSDClient.battlefield.responseType.Action), Data.Action);
 
             switch (msgType)
             {
-                case MessageType.JOIN_GAME:
+                case FSDClient.battlefield.responseType.Action.JOIN_GAME:
                     {
                         PlayerState = JsonSerializer.Deserialize<PlayerState>(Data.StateView);
                         break;
                     }
-                case MessageType.CARD_PLACED_ENEMY:
+                case FSDClient.battlefield.responseType.Action.CARD_PLACED_ENEMY:
                     {
                         var NewInputData = JsonSerializer.Deserialize<CardPlacementResponse>(Data.StateView);
                         if (!NewInputData.ValidInput)
@@ -274,12 +265,12 @@ public partial class Gameloop : Node2D
                         OpponentBoard[NewInputData.YPos][NewInputData.XPos].EnterBattlefield();
                         break;
                     }
-                case MessageType.CARD_PLACED:
+                case FSDClient.battlefield.responseType.Action.CARD_PLACED:
                     {
                         GD.Print(Data);
                         break;
                     }
-                case MessageType.CARD_DEAD:
+                case FSDClient.battlefield.responseType.Action.CARD_DEAD:
                     {
                         break;
                     }
@@ -357,10 +348,11 @@ public partial class Gameloop : Node2D
     /*
 	* I am going on a whim here but this should be called within the main game loop
 	*/
-    public void WriteToServer(RequestAction req, PlayerState playerstate, string parameters = "")
+    public void WriteToServer(RequestAction req, string parameters = "")
     {
-        
-        writeQueue.Enqueue("");
+        RequestConstructor reqAck = new();
+        var message = reqAck.GenerateRequest(req, parameters, PlayerState); 
+        writeQueue.Enqueue(message);
     }
 
     private void ReturnToHomeScreen()

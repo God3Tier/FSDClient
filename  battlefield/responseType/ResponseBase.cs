@@ -4,6 +4,23 @@ using System;
 using System.Text.Json.Serialization;
 using FSDClient.battlefield.responseType;
 
+public enum MessageType
+{
+    ACTION_RESULT
+}
+
+public enum Action
+{
+    JOIN_GAME,
+    CARD_PLACED,
+    END_TURN,
+    CARD_DEAD,
+    CARD_ATTACK,
+    CARD_PLACED_ENEMY
+
+}
+
+
 public class ResponseBase
 {
     [JsonPropertyName("message_type")]

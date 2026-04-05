@@ -7,7 +7,8 @@ using FSDClient.battlefield.responseType;
 public enum RequestAction
 {
     JOIN_GAME,
-    CARD_PLACED
+    CARD_PLACED,
+    RECONNECT
 }
 
 public class RequestConstructor
@@ -32,3 +33,4 @@ public class RequestConstructor
     }
 
 }
+    
