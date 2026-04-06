@@ -31,8 +31,8 @@ public partial class Gameloop : Node2D
 	public PlayerData IncomingPlayer { get; set; }
 
 	// Deal with card placement and card movement
-	private Card[][] Board { get; set; } = new Card[2][];
-	private Card[][] OpponentBoard { get; set; } = new Card[2][];
+	private Slot[] Board { get; set; } = new BattleSlot[6];
+	private Slot[] OpponentBoard { get; set; } = new BattleSlot[6];
 	private CardManager CardManager;
 	private HandArea HandArea;
 	private DeckSpace DeckSpace;
@@ -58,11 +58,12 @@ public partial class Gameloop : Node2D
 	private readonly ConcurrentQueue<string> writeQueue = new();
 	private double _reconnectTimer { get; set; }
 	private readonly double _reconnectDelay = 3.0;
+	private readonly ConcurrentQueue<AttackEvent> EventQueue = new();
 
 	// I am of the assumption that this is what is being called by the
 	// We put this in gameloop later
 	public override void _Ready()
-	{
+	{		
 		MainPlayer = PlayerStateManager.Instance;
 		try
 		{
@@ -80,39 +81,30 @@ public partial class Gameloop : Node2D
 			GD.Print("Unable to connect to websocket becayse of ", e);
 		}
 		HandArea = GetNode<HandArea>("HandArea");
-
-
-		for (int i = 0; i < 2; i++)
-		{
-			Board[i] = new Card[3];
-			OpponentBoard[i] = new Card[3];
-		}
-
-		foreach (Node child in GetChildren())
+		
+		// Load the battle slots for the player
+		var BoardNode = (Control)FindChild("Board");
+		foreach (Node child in BoardNode.GetChildren())
 		{
 			string childName = child.Name.ToString();
 			if (childName.Contains("BattleSlot"))
 			{
 				var BattleSlot = (BattleSlot)child;
 				int lastInt = (int)(childName[^1] - '1');
-
-				BattleSlot.x = lastInt / 3;
-				BattleSlot.y = lastInt % 3;
-				GD.Print(child.Name);
-
+				Board[lastInt] = BattleSlot;
 			}
-
 		}
-
-		var opponentsCards = (Control)FindChild("OpponentsCards");
-
-		foreach (Node child in opponentsCards.GetChildren())
+		
+		// Load the battle slots for the opponent
+		var OpponentBoardNode = (Control)FindChild("OpponentBoard");
+		foreach (Node child in OpponentBoardNode.GetChildren())
 		{
-			if (child is Card c)
+			string childName = child.Name.ToString();
+			if (childName.Contains("BattleSlot"))
 			{
-				GD.Print("Found opponent card removing texture it");
-				c.EmptyTexture();
-				// c.Scale =  -> Set scale
+				var BattleSlot = (BattleSlot)child;
+				int lastInt = (int)(childName[^1] - '1');
+				OpponentBoard[lastInt] = BattleSlot;
 			}
 		}
 
@@ -127,20 +119,36 @@ public partial class Gameloop : Node2D
 		HandArea = GetNode<HandArea>("HandArea");
 		HandArea._playerHand = CardManager._playerHand;
 		HandArea._deckSpace = CardManager._deckSpace;
+
+		HandArea._playerHand.AddCardMessage += OnCardAdd;
+		HandArea._playerHand.RemoveCardMessage += OnCardReturn; 
+		
 		GD.Print(HandArea);
 		GD.Print(CardManager._playerHand.Name);
-		
-
-		// TestCard("Card1");
-		// TestCard("Card2");
-		// TestCard("Card3");
-		// TestCard("Card4");
-		// TestCard("Card5");
-		// TestCard("Card6");
-		// TestCard("Card7");
-		// TestCard("Card8");
 		HandArea.RaiseDeck();
+		
+		Card TempCard = (Card)CardBuilder.GenerateCard(10);
+		TempCard.CurrentSlotStatus = Card.SlotStatus.Deck;
+		CardManager.AddChild(TempCard);
+		HandArea._deckSpace.AddCard(TempCard);
 		GD.Print("Completed everything without a problem");
+	}
+
+	private void OnCardAdd(int cardID)
+	{
+		var obj = new
+		{
+			card_id = cardID
+		};
+		WriteToServer(RequestAction.SELECT_CARD, JsonSerializer.Serialize(obj));
+	}
+	
+	private void OnCardReturn(int cardID)
+	{
+		var obj = new {
+			card_id = cardID
+		};
+		WriteToServer(RequestAction.DESELECT_CARD, JsonSerializer.Serialize(obj));
 	}
 
 	private void TestCard(string Name)
@@ -165,29 +173,6 @@ public partial class Gameloop : Node2D
 		return BaseUrl;
 	}
 
-	private void OnAttacked(Card card)
-	{
-		int ActiveY = card.ActiveY;
-		if (OpponentBoard[0][ActiveY] == null && OpponentBoard[0][ActiveY] == null)
-		{
-			// Handle logic for player getting attacked and opponent getting counterAttack
-			GD.Print("Counter attack succesful");
-		}
-		else if (OpponentBoard[0][ActiveY] == null)
-		{
-			OpponentBoard[1][ActiveY].UpdateHealth(card.Attack);
-		}
-		else
-		{
-			OpponentBoard[0][ActiveY].UpdateHealth(card.Attack);
-		}
-		int player1Copy = Player1Health;
-		int player2Copy = Player2Health;
-		card.AttackOpponent(OpponentBoard, Board, ref player1Copy, ref player2Copy);
-		Player1Health = player1Copy;
-		Player2Health = player2Copy;
-	}
-
 	// This function is a proof of concept
 	private void OnCardDropped(BattleSlot battleslot)
 	{
@@ -195,7 +180,6 @@ public partial class Gameloop : Node2D
 		var playerStateManager = PlayerStateManager.Instance;
 		var obj = new
 		{
-			player_id = playerStateManager.UserId,
 			card_id = battleslot.Card.CardID,
 			pos_x = battleslot.x,
 			pos_y = battleslot.y,
@@ -206,11 +190,9 @@ public partial class Gameloop : Node2D
 		// Thread.Sleep(1);
 		battleslot.Card.ActiveY = battleslot.y;
 		battleslot.Card.ActiveX = battleslot.x;
-		battleslot.Card.Attacked += OnAttacked;
 
 		int player1Copy = Player1Health;
 		int player2Copy = Player2Health;
-		battleslot.Card.SpawnCard(OpponentBoard, Board, battleslot, ref player1Copy, ref player2Copy);
 		Player1Health = player1Copy;
 		Player2Health = player2Copy;
 	}
@@ -222,6 +204,15 @@ public partial class Gameloop : Node2D
 		HandleWebSocket();
 		HandleGameTimer(delta);
 		HandleInputFromServer();
+		ProcessEvent();
+	}
+
+	public void ProcessEvent()
+	{
+		// GD.Print("Calling Process Event");
+		if (EventQueue.TryDequeue(out AttackEvent attackEvent))
+		{
+		}
 	}
 
 	private void HandleWebSocket()
@@ -271,10 +262,70 @@ public partial class Gameloop : Node2D
 		while (readQueue.TryDequeue(out string msg))
 		{
 			GD.Print(msg);
-			try {
-				var Data = JsonSerializer.Deserialize<TickUpdater>(msg);
-			
-			} catch (Exception e) {
+			try
+			{
+				var Data = JsonSerializer.Deserialize<ResponseManager>(msg);
+				if (Data.Result.Equals("failure"))
+				{
+					// Some error handling
+					return;
+				}
+
+
+				if (Enum.TryParse<ActionType>(Data.ActionType, out var actionType))
+				{
+					switch (actionType)
+					{
+						case ActionType.CardPlaced:
+							{
+								PlayerState = JsonSerializer.Deserialize<PlayerState>(Data.Parameters);
+								break;
+							}
+						case ActionType.TickUpdate:
+							{
+								var tickUpdate = JsonSerializer.Deserialize<TickUpdater>(Data.Parameters);
+
+
+								if (TurnPause && CardManager._deckSpace._cardCount != tickUpdate.DrawPile.Length)
+								{
+									foreach (var card in tickUpdate.DrawPile)
+									{
+										var cardTemp = CardBuilder.GenerateCard(card.CardID);
+										CardManager.AddChild(cardTemp);
+										CardManager._deckSpace.AddCard(cardTemp);
+									}
+
+									return;
+
+								}
+
+								foreach (var action in tickUpdate.AttackEvent)
+								{
+									EventQueue.Enqueue(action);
+								}
+
+								foreach (var board in tickUpdate.EnemyBoard)
+								{
+									if (!OpponentBoard[board.Row*3+board.Col].CardInSlot)
+									{
+										Card card = CardBuilder.GenerateCard(board.CardID);
+										OpponentBoard[board.Row*3+board.Col].AddCard(card);
+									}
+								}
+
+								break;
+							}
+						default:
+							{
+								break;
+							}
+					}
+					// PlayerState = JsonSerializer.Deserialize<PlayerState>(Data.Parameters);
+				}
+
+			}
+			catch (Exception e)
+			{
 				GD.PrintErr("Unable to serialize ", e);
 			}
 

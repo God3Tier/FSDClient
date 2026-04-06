@@ -8,7 +8,9 @@ public enum RequestAction
 {
 	JOIN_GAME,
 	CARD_PLACED,
-	RECONNECT
+	RECONNECT,
+	SELECT_CARD,
+	DESELECT_CARD
 }
 
 public class RequestConstructor
@@ -24,13 +26,12 @@ public class RequestConstructor
 
 
 	public string GenerateRequest(RequestAction req, string parameters, PlayerState playerstate)
-	{   
+	{
 		Params = parameters;
-		Action = req.ToString();
+		Action = req.ToString().ToLower();
 		StateHashAfter = playerstate.HashPlayerView();
-		SequenceNumber = playerstate.SequenceNumber; 
+		SequenceNumber = playerstate.SequenceNumber;
 		return JsonSerializer.Serialize(this);
 	}
 
 }
-	

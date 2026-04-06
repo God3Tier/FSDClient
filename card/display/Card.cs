@@ -22,7 +22,7 @@ public partial class Card : Node2D
 	public int ActiveY { get; set; }
 	public int ActiveX { get; set; }
 	public bool IsEmpty { get; set; } = true;
-	// hi
+
 	public enum SlotStatus
 	{
 		Pack,
@@ -87,7 +87,7 @@ public partial class Card : Node2D
 		GD.Print("Creating card");
 
 		CardID = cardViewTextures.CardID;
-		
+
 		var BorderTexture = (Sprite2D)FindChild("Border", true);
 		BorderTexture.Texture = cardViewTextures.BorderTexture;
 		BorderTexture.Scale = new Vector2(0.500f, 0.500f);
@@ -120,27 +120,40 @@ public partial class Card : Node2D
 		GD.Print("Able to create card");
 	}
 
-	public void UpdateHealth(int damageTaken)
+	// To update the stats of the current card
+	// damage must be negative, else it will be treated as a heal
+	// returns true if the card is dead
+	public bool UpdateStats(int attackChange, int damage)
 	{
-		var CurrentHealth = (RichTextLabel)FindChild("Health", true);
-		if (int.TryParse(CurrentHealth.Text, out int health))
+		if (attackChange != 0) // change attack
 		{
-			health -= damageTaken;
-			CurrentHealth.Text = health.ToString();
+			// Get the attack label of the card
+			var CurrentAttack = (RichTextLabel)FindChild("Attack", true);
+			Attack += attackChange;
+			CurrentAttack.Text = Attack.ToString();
 		}
-		else
+		if (damage != 0) // change health
 		{
-			GD.Print("Whoops");
+			// Get the attack label of the card
+			var CurrentHealth = (RichTextLabel)FindChild("Health", true);
+			Health += damage;
+			CurrentHealth.Text = Health.ToString();
+			
+			if (Health <= 0)
+			{
+				return true;
+			}
 		}
+		return false;
 	}
-
-	public void EnterBattlefield()
+	
+	// Render card into battleslot
+	public void EnterBattleSlot()
 	{
 		var ElixirCost = (RichTextLabel)FindChild("ElixirCost");
 		ElixirCost.Text = "";
-		BattleMode = true;
+		CurrentSlotStatus = SlotStatus.Battle;
 		IsEmpty = false;
-		// var
 	}
 
 	public void OnMouseEntered()
@@ -152,71 +165,4 @@ public partial class Card : Node2D
 	{
 		EmitSignal(SignalName.HoveredOff, this);
 	}
-
-
-	public void EmptyTexture()
-	{
-		GD.Print("Empty Texture called");
-		foreach (Node child in GetChildren())
-		{
-			if (child is RichTextLabel label)
-			{
-				label.Text = "";
-				GD.Print("Getting rid of label");
-			}
-			else if (child is Sprite2D sprite)
-			{
-				GD.Print("Making child null");
-				sprite.Texture = null;
-			}
-		}
-	}
-
-	public void AttackOpponent(Card[][] OpponentBoard, Card[][] Board, ref int player1Health, ref int player2Health)
-	{
-		if (OpponentBoard[0][ActiveY] == null && OpponentBoard[0][ActiveY] == null)
-		{
-			// Handle logic for player getting attacked and opponent getting counterAttack
-			player2Health -= Attack;
-			Health -= 5;
-		}
-		else if (OpponentBoard[0][ActiveY] == null)
-		{
-			OpponentBoard[1][ActiveY].UpdateHealth(Attack);
-			if (OpponentBoard[1][ActiveY].Health <= 0)
-			{
-				OpponentBoard[1][ActiveY].EmptyTexture();
-			}
-		}
-		else
-		{
-			OpponentBoard[0][ActiveY].UpdateHealth(Attack);
-			if (OpponentBoard[0][ActiveY].Health <= 0)
-			{
-				OpponentBoard[0][ActiveY].EmptyTexture();
-			}
-		}
-	}
-
-	public void SpawnCard(Card[][] OpponentBoard, Card[][] Board, BattleSlot battleslot, ref int player1Health, ref int player2Health)
-	{
-		GD.Print("Updating Board");
-		Board[battleslot.x][battleslot.y] = this;
-		battleslot.Card.EnterBattlefield();
-	}
-
-	public void OnDeath(Card[][] OpponentBoard, Card[][] Board)
-	{
-		Board[ActiveX][ActiveY] = null;
-	}
-
-	public void OnDamaged(Card[][] OpponentBoard, Card[][] Board, int damageTaken, int attackX, int attackY)
-	{
-		Board[ActiveX][ActiveY].Health -= damageTaken;
-		if (Board[ActiveX][ActiveY].Health <= 0)
-		{
-			Board[ActiveX][ActiveY].OnDeath(OpponentBoard, Board);
-		}
-	}
-
 }

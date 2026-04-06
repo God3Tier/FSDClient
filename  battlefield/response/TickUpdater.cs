@@ -3,86 +3,120 @@ namespace FSDClient.battlefield.response;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
+public class HandCardView
+{
+    [JsonPropertyName("card_id")]
+    public int CardID { get; set; }
+    [JsonPropertyName("card_name")]
+    public string CardName { get; set; }
+    [JsonPropertyName("colour")]
+    public string Colour { get; set; }
+    [JsonPropertyName("current_health")]
+    public int CurrentHealth { get; set; }
+    [JsonPropertyName("max_health")]
+    public int MaxHealth { get; set; }
+    [JsonPropertyName("card_attack")]
+    public int CardAttack { get; set; }
+    [JsonPropertyName("charge_ticks_remaining")]
+    public int ChargeTicksRemaining { get; set; }
+    [JsonPropertyName("charge_ticks_total")]
+    public int ChargeTicksTotal { get; set; }
+    [JsonPropertyName("row")]
+    public int Row { get; set; }
+    [JsonPropertyName("col")]
+    public int Col { get; set; }
+}
+
 public class AttackEvent
 {
+    [JsonPropertyName("attacker_id")]
+    public long AttackerId { get; set; }
     [JsonPropertyName("attacker_card_id")]
-    private int AttackerCardID;
+    public int AttackerCardID { get; set; }
     [JsonPropertyName("attacker_row")]
-    private int AttackerRow;
+    public int AttackerRow { get; set; }
     [JsonPropertyName("attacker_col")]
-    private int AttackerCol;
+    public int AttackerCol { get; set; }
     [JsonPropertyName("target_card_id")]
-    private int TargetCardID;
+    public int TargetCardID { get; set; }
     [JsonPropertyName("target_row")]
-    private int TargetRow;
+    public int TargetRow { get; set; }
     [JsonPropertyName("target_col")]
-    private int TargetCol;
+    public int TargetCol { get; set; }
     [JsonPropertyName("damage")]
-    private int Damage;
+    public int Damage { get; set; }
     [JsonPropertyName("counter_damage")]
-    private int CounterDamage;
+    public int CounterDamage { get; set; }
     [JsonPropertyName("target_is_leader")]
-    private bool TargetIsLeader;
+    public bool TargetIsLeader { get; set; }
 
-    
 }
 
 public class BoardCardView
 {
     [JsonPropertyName("card_id")]
-    private int CardID;
+    public int CardID { get; set; }
     [JsonPropertyName("card_name")]
-    private int CardName;
+    public int CardName { get; set; }
     [JsonPropertyName("colour")]
-    private int Colour;
+    public int Colour { get; set; }
     [JsonPropertyName("current_health")]
-    private int CurrentHealth;
+    public int CurrentHealth { get; set; }
     [JsonPropertyName("max_health")]
-    private int MaxHealth;
+    public int MaxHealth { get; set; }
     [JsonPropertyName("card_attack")]
-    private int CardAttack;
+    public int CardAttack { get; set; }
     [JsonPropertyName("charge_ticks_remaining")]
-    private int ChargeTicksRemaining;
+    public int ChargeTicksRemaining { get; set; }
     [JsonPropertyName("charge_ticks_total")]
-    private int ChargeTicksTotal;
+    public int ChargeTicksTotal { get; set; }
     [JsonPropertyName("row")]
-    private int Row;
+    public int Row { get; set; }
     [JsonPropertyName("col")]
-    private int Col;
+    public int Col { get; set; }
 }
 
 public class TickUpdater
 {
     [JsonPropertyName("milli_elixer")]
-    private int MilliElixir;
+    public int MilliElixir { get; set; }
 
     [JsonPropertyName("elixer")]
-    private int Elixir;
+    public int Elixir { get; set; }
 
     [JsonPropertyName("elixer_cap")]
-    private int ElixirCap;
+    public int ElixirCap { get; set; }
 
     [JsonPropertyName("your_board")]
-    private BoardCardView[] YourBoard;
+    public BoardCardView[] YourBoard { get; set; }
 
     [JsonPropertyName("enemy_board")]
-    private BoardCardView[] EnemyBoard;
+    public BoardCardView[] EnemyBoard { get; set; }
 
     [JsonPropertyName("your_hp")]
-    private int YourHp;
+    public int YourHp { get; set; }
 
     [JsonPropertyName("enemy_hp")]
-    private int EnemyHp;
+    public int EnemyHp { get; set; }
 
     [JsonPropertyName("leader_atck")]
-    private int LeaderAtk;
-    
+    public int LeaderAtk { get; set; }
+
+    [JsonPropertyName("draw_pile")]
+    public BoardCardView[] DrawPile { get; set; }
+
+    [JsonPropertyName("hand")]
+    public BoardCardView[] Hand { get; set; }
+
     [JsonPropertyName("phase")]
-    private string Phase;
-    
+    public string Phase { get; set; }
+
     [JsonPropertyName("round_number")]
-    private int RoundNumber;
+    public int RoundNumber { get; set; }
+
+    [JsonPropertyName("winner_id")]
+    public int WinnerID { get; set; }
     
     [JsonPropertyName("attack_log")]
-    private AttackEvent[] AttackEvent;
+    public  AttackEvent[] AttackEvent;
 }

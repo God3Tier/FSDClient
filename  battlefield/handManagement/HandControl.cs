@@ -7,10 +7,14 @@ using FSDClient.card.display;
 
 public partial class HandControl : Control
 {
+    [Signal]
+    public delegate void AddCardMessageEventHandler(int cardID);
+    [Signal]
+    public delegate void RemoveCardMessageEventHandler(int cardID);
 	public Card[] _cardList { get; protected set; }
 	public Slot[] _slotList { get; protected set; }
 	protected Vector2[] _slotBasePositions;
-	protected int _cardCount = 0;
+	public int _cardCount = 0;
 	protected int _cardLimit;
 	protected float _normalSpeed = 0.3f;
 	protected float _deckSpeed = 0.3f;
@@ -31,8 +35,9 @@ public partial class HandControl : Control
 					break;
 				}
 			}
-			// update all the card positions
-			UpdateCardPositions();
+            // update all the card positions
+            UpdateCardPositions();
+			/// Signal Emission 
 		}
 		// If the card is already part of this collection, animate it back to its original slot
 		else
@@ -81,7 +86,9 @@ public partial class HandControl : Control
 		_cardList[index] = null;
 		_slotList[index].RemoveCard();
 		_cardCount--;
-		UpdateCardPositions();
+        UpdateCardPositions();
+		
+        // Emit Signal 
 	}
 	
 	
