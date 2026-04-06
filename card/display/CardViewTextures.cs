@@ -13,6 +13,7 @@ public class CardViewTextures
     private static readonly string DEFENCE_LABEL = "res://assets/symbols/defence_symbol.png";
 
     public int CardID { get; set; }
+    public string Name { get; set; }
     public Texture2D BorderTexture { get; set; }
     public Texture2D IconTexture { get; set; }
     public Texture2D LabelTexture { get; set; }
@@ -25,7 +26,11 @@ public class CardViewTextures
 
     public CardViewTextures(CardViewData CardViewData)
     {
+
         CardID = CardViewData.CardID;
+        
+        Name = CardViewData.IconName.ToString();
+
         string BorderUrl = BORDER_BASE_URL.Replace("PLACEHOLDER", CardViewData.Color);
         BorderTexture = GD.Load<Texture2D>(BorderUrl);
 

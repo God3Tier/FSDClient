@@ -34,4 +34,10 @@ public class CardBuilder
 		CardTemp.LoadDataTexture(textures);
 		return CardTemp;
 	}
+	
+	public static CardStats GetCardValues(int cardID)
+	{
+		CardStats stats = Reference.cardInfo[cardID];
+		return stats;
+	}
 }

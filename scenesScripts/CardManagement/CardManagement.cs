@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using FSDClient.card;
+using FSDClient.resource;
 	
 public class GetCollectionResponse
 {
@@ -125,9 +126,38 @@ public partial class CardManagement : Control
 		{
 			GD.PrintErr("Whoops ", e);
 		}
-
+		
+		InitialisePlayerInformation();
 		FetchCollections();
 		FetchDecks();
+	}
+	
+		private void InitialisePlayerInformation()
+	{
+		// Set player Icon TODO: I need Windy's code to be merged before I can do this
+
+		var Header = (BoxContainer)FindChild("Header");
+		var Row1 = (BoxContainer)Header.FindChild("Row 1");
+		//var Row2 = (BoxContainer)Header.FindChild("Row 2");
+
+		// GD.Print(Row1, Row2);
+
+		// Set Header -> Row1 -> XP -> Banner -> Level
+		var Lv = (Label)((TextureRect)((ColorRect)Row1.FindChild("XP")).FindChild("Banner")).FindChild("Level");
+		Lv.Text = CurrentPlayer.Level.ToString();
+		//// Set Header -> Row1 -> Crystal ->  Label
+		//var Cry = (Label)((ColorRect)Row1.FindChild("Crystal", true)).FindChild("Label");
+		//Cry.Text = CurrentPlayer.Crystal.ToString();
+//
+		//// Set Header -> Row1 -> Gold ->  Label
+		//var Gld = (Label)((ColorRect)Row1.FindChild("Gold", true)).FindChild("Label");
+		//Gld.Text = CurrentPlayer.Gold.ToString();
+
+		// Set Header -> Row2 -> Name ->  Label
+		var Username = (Label)((ColorRect)Row1.FindChild("Name", true)).FindChild("Label");
+		Username.Text = CurrentPlayer.PlayerData.Username;
+
+
 	}
 	
 	// Function to fetch collections from backend
@@ -683,6 +713,39 @@ public partial class CardManagement : Control
 	private void OpenCardPopup(int CardId)
 	{
 		Control CardPopupContainerNode = GetNode<Control>("CardPopupContainer");
+		
+		// Update the values
+		CardStats CardValues = CardBuilder.GetCardValues(CardId);
+
+		Panel CardPopupBox = CardPopupContainerNode.GetNode<Panel>("CardPopupBox");
+		
+		// Header card name
+		Label Header = CardPopupBox.GetNode<Label>("Header");
+		Header.Text = CardValues.Name;
+		
+		// Image
+		TextureRect CardAppearance = CardPopupBox.GetNode<TextureRect>("CardDetails/LeftCardDetails/CardAppearance");
+		CardAppearance.Texture = CardValues.Image;
+
+		// Rarity
+		Label RarityTextLabel = CardPopupBox.GetNode<Label>("CardDetails/LeftCardDetails/CardDescription/RarityContainer/RarityTextLabel");
+		RarityTextLabel.Text = CardValues.Rarity;
+		
+		// Cost
+		Label CostTextLabel = CardPopupBox.GetNode<Label>("CardDetails/RightCardDetails/CardStats/CostContainer/CostLevelContainer/CostTextLabel");
+		CostTextLabel.Text = CardValues.Cost.ToString();
+		
+		// Power
+		Label PowerTextLabel = CardPopupBox.GetNode<Label>("CardDetails/RightCardDetails/CardStats/PowerContainer/PowerLevelContainer/PowerTextLabel");
+		PowerTextLabel.Text = CardValues.Attack.ToString();
+
+		// HP
+		Label HPTextLabel = CardPopupBox.GetNode<Label>("CardDetails/RightCardDetails/CardStats/HPContainer/HPLevelContainer/HPTextLabel");
+		HPTextLabel.Text = CardValues.Health.ToString();
+		
+		// Effect
+		Label AbilityTextLabel = CardPopupBox.GetNode<Label>("CardDetails/RightCardDetails/AbilityContainer/AbilityTextLabel");
+		AbilityTextLabel.Text = CardValues.Effect;
 		
 		// Turn it On (make visible true)
 		CardPopupContainerNode.Visible = true;

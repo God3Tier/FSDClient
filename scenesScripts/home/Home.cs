@@ -6,6 +6,7 @@ using FSDClient.autoLoad;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using FSDClient.card;
 
 class MatchStatusResponse
 {
@@ -155,7 +156,6 @@ public class PackCardData
 
 public partial class Home : Control
 {
-	private static readonly PackedScene CardScene = GD.Load<PackedScene>("res://scenes/gameComponents/Card.tscn");
 	private volatile bool _searching = false;
 	private volatile bool _cancelled = false;
 	private volatile bool _accepted = false;
@@ -214,23 +214,23 @@ public partial class Home : Control
 
 		var Header = (BoxContainer)FindChild("Header");
 		var Row1 = (BoxContainer)Header.FindChild("Row 1");
-		var Row2 = (BoxContainer)Header.FindChild("Row 2");
+		//var Row2 = (BoxContainer)Header.FindChild("Row 2");
 
 		// GD.Print(Row1, Row2);
 
 		// Set Header -> Row1 -> XP -> Banner -> Level
 		var Lv = (Label)((TextureRect)((ColorRect)Row1.FindChild("XP")).FindChild("Banner")).FindChild("Level");
 		Lv.Text = CurrentPlayer.Level.ToString();
-		// Set Header -> Row1 -> Crystal ->  Label
-		var Cry = (Label)((ColorRect)Row1.FindChild("Crystal", true)).FindChild("Label");
-		Cry.Text = CurrentPlayer.Crystal.ToString();
-
-		// Set Header -> Row1 -> Gold ->  Label
-		var Gld = (Label)((ColorRect)Row1.FindChild("Gold", true)).FindChild("Label");
-		Gld.Text = CurrentPlayer.Gold.ToString();
+		//// Set Header -> Row1 -> Crystal ->  Label
+		//var Cry = (Label)((ColorRect)Row1.FindChild("Crystal", true)).FindChild("Label");
+		//Cry.Text = CurrentPlayer.Crystal.ToString();
+//
+		//// Set Header -> Row1 -> Gold ->  Label
+		//var Gld = (Label)((ColorRect)Row1.FindChild("Gold", true)).FindChild("Label");
+		//Gld.Text = CurrentPlayer.Gold.ToString();
 
 		// Set Header -> Row2 -> Name ->  Label
-		var Username = (Label)((ColorRect)Row2.FindChild("Name", true)).FindChild("Label");
+		var Username = (Label)((ColorRect)Row1.FindChild("Name", true)).FindChild("Label");
 		Username.Text = CurrentPlayer.PlayerData.Username;
 
 
@@ -616,7 +616,7 @@ public partial class Home : Control
 		CardControl.SizeFlagsHorizontal = (Control.SizeFlags)SizeFlags.ShrinkCenter;
 
 		// Create the card itself
-		var Card = CardScene.Instantiate<Node2D>();
+		var Card = CardBuilder.GenerateCard(CardId);
 		Card.Position = new Vector2(100, 115);
 
 		CardControl.AddChild(Card);
