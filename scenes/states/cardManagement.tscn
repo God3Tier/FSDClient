@@ -16,7 +16,7 @@
 [ext_resource type="StyleBox" uid="uid://c2qfhim47uhhm" path="res://styles/button_danger_pressed.tres" id="12_0dskt"]
 [ext_resource type="StyleBox" uid="uid://cg7xt7j6ukctr" path="res://styles/popup.tres" id="12_v80jo"]
 [ext_resource type="Texture2D" uid="uid://cqlpljo3fyehv" path="res://assets/popup/xmark.png" id="13_bdlf1"]
-[ext_resource type="Texture2D" uid="uid://de1xve7wh1kwa" path="res://assets/characters/Farmer.png" id="14_vn7bd"]
+[ext_resource type="Texture2D" uid="uid://c5dab32ltaqbv" path="res://assets/characters/Farmer.png" id="14_vn7bd"]
 [ext_resource type="Texture2D" uid="uid://cng6okaxx3fyt" path="res://assets/symbols/energy.png" id="15_fh2y4"]
 [ext_resource type="Texture2D" uid="uid://bqe7flm7kyijb" path="res://assets/symbols/attack_symbol.png" id="16_knx5m"]
 [ext_resource type="Texture2D" uid="uid://u0l0s1ftn71l" path="res://assets/symbols/defence_symbol.png" id="17_mg07r"]

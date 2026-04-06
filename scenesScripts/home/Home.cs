@@ -75,9 +75,9 @@ public class PackData
 	public bool IsOpened { get; set; }
 
 	[JsonPropertyName("created_at")]
-	public DateTime CreatedAt { get; set; }
+	public string CreatedAt { get; set; }
 
-	public PackData(int packId, string packType, bool isOpened, DateTime createdAt)
+	public PackData(int packId, string packType, bool isOpened, string createdAt)
 	{
 		PackId = packId;
 		PackType = packType;
@@ -368,7 +368,7 @@ public partial class Home : Control
 	// Function to fetch backend for packs
 	private void FetchPacks()
 	{
-		Network.SendRequestWithToken(NetworkManager.BASE_URL + NetworkManager.DECK + "/pack/get", Godot.HttpClient.Method.Get, "", GetPacksResponse);
+		Network.SendRequestWithToken(NetworkManager.BASE_URL + NetworkManager.DECK + "/packs", Godot.HttpClient.Method.Get, "", GetPacksResponse);
 	}
 
 
@@ -433,7 +433,7 @@ public partial class Home : Control
 	// Function to fetch backend to open packs
 	private void OpenPack(string index)
 	{
-		Network.SendRequestWithToken(NetworkManager.BASE_URL + NetworkManager.DECK + "/pack/open?pack_id=" + index, Godot.HttpClient.Method.Post, "", OpenPackResponse);
+		Network.SendRequestWithToken(NetworkManager.BASE_URL + NetworkManager.DECK + "/packs/open?pack_id=" + index, Godot.HttpClient.Method.Post, "", OpenPackResponse);
 	}
 
 	// response for opening packs
