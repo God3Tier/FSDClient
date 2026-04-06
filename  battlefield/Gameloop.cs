@@ -63,7 +63,7 @@ public partial class Gameloop : Node2D
     // I am of the assumption that this is what is being called by the
     // We put this in gameloop later
     public override void _Ready()
-    {        
+    {
         MainPlayer = PlayerStateManager.Instance;
         try
         {
@@ -130,8 +130,8 @@ public partial class Gameloop : Node2D
         HandArea._deckSpace = CardManager._deckSpace;
 
         HandArea._playerHand.AddCardMessage += OnCardAdd;
-        HandArea._playerHand.RemoveCardMessage += OnCardReturn; 
-        
+        HandArea._playerHand.RemoveCardMessage += OnCardReturn;
+
         GD.Print(HandArea);
         GD.Print(CardManager._playerHand.Name);
         HandArea.RaiseDeck();
@@ -146,10 +146,11 @@ public partial class Gameloop : Node2D
         };
         WriteToServer(RequestAction.SELECT_CARD, JsonSerializer.Serialize(obj));
     }
-    
+
     private void OnCardReturn(int cardID)
     {
-        var obj = new {
+        var obj = new
+        {
             card_id = cardID
         };
         WriteToServer(RequestAction.DESELECT_CARD, JsonSerializer.Serialize(obj));
@@ -238,9 +239,9 @@ public partial class Gameloop : Node2D
 
 	public void ProcessEvent()
 	{
-		GD.Print("Calling Process Event");
 		if (EventQueue.TryDequeue(out AttackEvent attackEvent))
 		{
+			GD.Print("Calling Process Event");
 			// Manage it here
 			// I have no idea if this is correct or not
 			var opponentDead = false;
@@ -252,21 +253,23 @@ public partial class Gameloop : Node2D
 				{
 					Player2Health -= attackEvent.Damage;
 					opponentDead = OpponentBoard[attackEvent.AttackerCol][attackEvent.AttackerRow].UpdateHealth(attackEvent.CounterDamage);
-					if (opponentDead) {
+					if (opponentDead)
+					{
 						OpponentBoard[attackEvent.AttackerRow][attackEvent.AttackerCol].EmptyTexture();
-						OpponentBoard[attackEvent.AttackerRow][attackEvent.AttackerCol].IsEmpty = true; 
+						OpponentBoard[attackEvent.AttackerRow][attackEvent.AttackerCol].IsEmpty = true;
 					}
 				}
 				else
 				{
 					selfDead = Board[attackEvent.TargetCol][attackEvent.TargetRow].UpdateHealth(attackEvent.Damage);
-					if (selfDead) {
+					if (selfDead)
+					{
 						int slot = attackEvent.TargetCol + attackEvent.TargetRow * 3 + 1;
 						var battleSlot = (BattleSlot)FindChild("BattleSlot" + slot);
 						battleSlot.RemoveCard();
 					}
 				}
-			
+
 			}
 			else
 			{
@@ -274,7 +277,8 @@ public partial class Gameloop : Node2D
 				{
 					Player1Health -= attackEvent.Damage;
 					selfDead = Board[attackEvent.AttackerCol][attackEvent.AttackerRow].UpdateHealth(attackEvent.CounterDamage);
-					if (selfDead) {
+					if (selfDead)
+					{
 						int slot = attackEvent.AttackerCol + attackEvent.AttackerRow * 3 + 1;
 						var battleSlot = (BattleSlot)FindChild("BattleSlot" + slot);
 						battleSlot.RemoveCard();
@@ -283,13 +287,14 @@ public partial class Gameloop : Node2D
 				else
 				{
 					opponentDead = OpponentBoard[attackEvent.TargetCol][attackEvent.TargetRow].UpdateHealth(attackEvent.Damage);
-					if (opponentDead) {
+					if (opponentDead)
+					{
 						OpponentBoard[attackEvent.TargetRow][attackEvent.TargetCol].EmptyTexture();
-						OpponentBoard[attackEvent.TargetRow][attackEvent.TargetCol].IsEmpty = true; 
+						OpponentBoard[attackEvent.TargetRow][attackEvent.TargetCol].IsEmpty = true;
 					}
 				}
 			}
-			
+
 		}
 	}
 
@@ -343,7 +348,7 @@ public partial class Gameloop : Node2D
 			try
 			{
 				var Data = JsonSerializer.Deserialize<ResponseManager>(msg);
-				if (Data.Result.Equals("failure"))
+				if (Data.Result != null && Data.Result.Equals("failure"))
 				{
 					// Some error handling
 					return;
@@ -362,7 +367,6 @@ public partial class Gameloop : Node2D
 						case ActionType.TickUpdate:
 							{
 								var tickUpdate = JsonSerializer.Deserialize<TickUpdater>(Data.Parameters);
-
 
 								if (TurnPause && CardManager._deckSpace._cardCount != tickUpdate.DrawPile.Length)
 								{
@@ -398,7 +402,7 @@ public partial class Gameloop : Node2D
 								break;
 							}
 					}
-					// PlayerState = JsonSerializer.Deserialize<PlayerState>(Data.Parameters);
+					PlayerState = JsonSerializer.Deserialize<PlayerState>(Data.Parameters);
 				}
 
 			}

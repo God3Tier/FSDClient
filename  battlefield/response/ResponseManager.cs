@@ -22,7 +22,8 @@ public class ResponseManager
 {
     [JsonPropertyName("message_type")]
     public string MessageType { get; set; }
-    [JsonPropertyName("action_type")]
+    
+    [JsonPropertyName("action")]
     public string ActionType { get; set; }
     [JsonPropertyName("params")]
     public JsonElement Parameters { get; set; }
