@@ -34,6 +34,8 @@ public class PlayerState
 	[JsonPropertyName("opponent_game_data")]
 	public string OpponentGameData { get; set; }
 
+    [JsonPropertyName("tick_number")]
+    public long TickNumber;
 
 
 	private void WriteByte(XxHash64 hash, byte[] bytes)

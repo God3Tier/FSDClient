@@ -83,5 +83,5 @@ public class TickUpdater
     private int RoundNumber;
     
     [JsonPropertyName("attack_log")]
-    private AttackEvent[] AttackEvent;
+    public  AttackEvent[] AttackEvent;
 }
