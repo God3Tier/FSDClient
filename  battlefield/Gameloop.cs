@@ -63,7 +63,7 @@ public partial class Gameloop : Node2D
     // I am of the assumption that this is what is being called by the
     // We put this in gameloop later
     public override void _Ready()
-    {
+    {        
         MainPlayer = PlayerStateManager.Instance;
         try
         {
@@ -128,6 +128,10 @@ public partial class Gameloop : Node2D
         HandArea = GetNode<HandArea>("HandArea");
         HandArea._playerHand = CardManager._playerHand;
         HandArea._deckSpace = CardManager._deckSpace;
+
+        HandArea._playerHand.AddCardMessage += OnCardAdd;
+        HandArea._playerHand.RemoveCardMessage += OnCardReturn; 
+        
         GD.Print(HandArea);
         GD.Print(CardManager._playerHand.Name);
 
@@ -141,6 +145,23 @@ public partial class Gameloop : Node2D
         TestCard("Card8");
         HandArea.RaiseDeck();
         GD.Print("Completed everything without a problem");
+    }
+
+    private void OnCardAdd(int cardID)
+    {
+        var obj = new
+        {
+            card_id = cardID
+        };
+        WriteToServer(RequestAction.SELECT_CARD, JsonSerializer.Serialize(obj));
+    }
+    
+    private void OnCardReturn(int cardID)
+    {
+        var obj = new {
+            card_id = cardID
+        };
+        WriteToServer(RequestAction.DESELECT_CARD, JsonSerializer.Serialize(obj));
     }
 
     private void TestCard(string Name)
@@ -229,7 +250,7 @@ public partial class Gameloop : Node2D
         if (EventQueue.TryDequeue(out AttackEvent attackEvent))
         {
             // Manage it here
-            // I have no idea if this is correct or not 
+            // I have no idea if this is correct or not
             if (MainPlayer.UserId != attackEvent.AttackerId)
             {
 
@@ -256,10 +277,6 @@ public partial class Gameloop : Node2D
                     OpponentBoard[attackEvent.TargetCol][attackEvent.TargetRow].OnDamaged(OpponentBoard, Board, attackEvent.Damage, attackEvent.TargetCol, attackEvent.TargetRow);
                 }
             }
-
-
-
-
         }
     }
 
@@ -319,6 +336,7 @@ public partial class Gameloop : Node2D
                     return;
                 }
 
+
                 if (Enum.TryParse<ActionType>(Data.ActionType, out var actionType))
                 {
                     switch (actionType)
@@ -331,6 +349,20 @@ public partial class Gameloop : Node2D
                         case ActionType.TickUpdate:
                             {
                                 var tickUpdate = JsonSerializer.Deserialize<TickUpdater>(Data.Parameters);
+
+
+                                if (TurnPause && CardManager._deckSpace._cardCount != tickUpdate.DrawPile.Length)
+                                {
+                                    foreach (var card in tickUpdate.DrawPile)
+                                    {
+                                        var cardTemp = CardBuilder.GenerateCard(card.CardID);
+                                        CardManager.AddChild(cardTemp);
+                                        CardManager._deckSpace.AddCard(cardTemp);
+                                    }
+
+                                    return;
+
+                                }
 
                                 foreach (var action in tickUpdate.AttackEvent)
                                 {

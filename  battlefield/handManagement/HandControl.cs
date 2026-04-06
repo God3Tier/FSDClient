@@ -7,10 +7,14 @@ using FSDClient.card.display;
 
 public partial class HandControl : Control
 {
+    [Signal]
+    public delegate void AddCardMessageEventHandler(int cardID);
+    [Signal]
+    public delegate void RemoveCardMessageEventHandler(int cardID);
 	public Card[] _cardList { get; protected set; }
 	public Slot[] _slotList { get; protected set; }
 	protected Vector2[] _slotBasePositions;
-	protected int _cardCount = 0;
+	public int _cardCount = 0;
 	protected int _cardLimit;
 	protected float _normalSpeed = 0.3f;
 	protected float _deckSpeed = 0.3f;
