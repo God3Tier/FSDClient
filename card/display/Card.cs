@@ -149,6 +149,7 @@ public partial class Card : Node2D
     {
         var ElixirCost = (RichTextLabel)FindChild("ElixirCost");
         ElixirCost.Text = "";
+        CurrentSlotStatus = SlotStatus.Battle;
         BattleMode = true;
         IsEmpty = false;
         // var

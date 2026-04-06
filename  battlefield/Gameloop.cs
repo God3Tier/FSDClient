@@ -374,12 +374,21 @@ public partial class Gameloop : Node2D
 
 								if (TurnPause && CardManager._deckSpace._cardCount != tickUpdate.DrawPile.Length)
 								{
+									foreach (var card in CardManager._deckSpace._cardList)
+									{
+										if (card != null)
+										{
+											CardManager._deckSpace.RemoveCard(card);
+										}
+									}
 									foreach (var card in tickUpdate.DrawPile)
 									{
 										try
 										{
 											var cardTemp = CardBuilder.GenerateCard(card.CardID);
+											cardTemp.CurrentSlotStatus = Card.SlotStatus.Deck;
 											CardManager.AddChild(cardTemp);
+											cardTemp.ZIndex = 4;
 											CardManager._deckSpace.AddCard(cardTemp);
 										}
 										catch (Exception e)
@@ -393,20 +402,32 @@ public partial class Gameloop : Node2D
 									return;
 
 								}
-
-								foreach (var action in tickUpdate.AttackEvent)
+								if (tickUpdate == null)
 								{
-									EventQueue.Enqueue(action);
+									return;
 								}
 
-								foreach (var board in tickUpdate.EnemyBoard)
+								if (tickUpdate.AttackEvent != null)
 								{
-									if (OpponentBoard[board.Col][board.Row].IsEmpty)
+									foreach (var action in tickUpdate.AttackEvent)
 									{
-										CardBuilder.LoadTextureFromId(board.CardID, OpponentBoard[board.Col][board.Row]);
-										OpponentBoard[board.Col][board.Row].IsEmpty = false;
+										EventQueue.Enqueue(action);
 									}
 								}
+
+								if (tickUpdate.EnemyBoard != null)
+								{
+									foreach (var board in tickUpdate.EnemyBoard)
+									{
+										if (OpponentBoard[board.Col][board.Row].IsEmpty)
+										{
+											CardBuilder.LoadTextureFromId(board.CardID, OpponentBoard[board.Col][board.Row]);
+											OpponentBoard[board.Col][board.Row].IsEmpty = false;
+										}
+									}
+								}
+
+
 
 								break;
 							}
