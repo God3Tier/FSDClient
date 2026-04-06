@@ -12,10 +12,10 @@ public enum MessageType
 
 public enum ActionType
 {
-    JoinGame,
-    SelectCards,
-    CardPlaced,
-    TickUpdate
+    JOIN_GAME,
+    SELECT_CARDS,
+    CARD_PLACED,
+    TICK_UPDATE
 }
 
 public class ResponseManager

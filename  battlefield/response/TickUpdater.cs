@@ -52,26 +52,53 @@ public class AttackEvent
 
 }
 
+// public class BoardCardView
+// {
+//     [JsonPropertyName("card_id")]
+//     public int CardID { get; set; }
+//     [JsonPropertyName("card_name")]
+//     public int CardName { get; set; }
+//     [JsonPropertyName("colour")]
+//     public int Colour { get; set; }
+//     [JsonPropertyName("current_health")]
+//     public int CurrentHealth { get; set; }
+//     [JsonPropertyName("max_health")]
+//     public int MaxHealth { get; set; }
+//     [JsonPropertyName("card_attack")]
+//     public int CardAttack { get; set; }
+//     [JsonPropertyName("charge_ticks_remaining")]
+//     public int ChargeTicksRemaining { get; set; }
+//     [JsonPropertyName("charge_ticks_total")]
+//     public int ChargeTicksTotal { get; set; }
+//     [JsonPropertyName("row")]
+//     public int Row { get; set; }
+//     [JsonPropertyName("col")]
+//     public int Col { get; set; }
+// }
+
 public class BoardCardView
 {
     [JsonPropertyName("card_id")]
     public int CardID { get; set; }
+
     [JsonPropertyName("card_name")]
-    public int CardName { get; set; }
+    public string CardName { get; set; }  // was int, must be string
+
     [JsonPropertyName("colour")]
-    public int Colour { get; set; }
-    [JsonPropertyName("current_health")]
-    public int CurrentHealth { get; set; }
-    [JsonPropertyName("max_health")]
-    public int MaxHealth { get; set; }
-    [JsonPropertyName("card_attack")]
-    public int CardAttack { get; set; }
-    [JsonPropertyName("charge_ticks_remaining")]
-    public int ChargeTicksRemaining { get; set; }
-    [JsonPropertyName("charge_ticks_total")]
-    public int ChargeTicksTotal { get; set; }
+    public string Colour { get; set; }    // was int, must be string
+
+    [JsonPropertyName("mana_cost")]       // server sends "mana_cost" not "current_health" etc
+    public int ManaCost { get; set; }
+
+    [JsonPropertyName("attack")]
+    public int Attack { get; set; }
+
+    [JsonPropertyName("hp")]
+    public int Hp { get; set; }
+
     [JsonPropertyName("row")]
     public int Row { get; set; }
+
     [JsonPropertyName("col")]
     public int Col { get; set; }
 }
@@ -116,7 +143,7 @@ public class TickUpdater
 
     [JsonPropertyName("winner_id")]
     public int WinnerID { get; set; }
-    
+
     [JsonPropertyName("attack_log")]
-    public  AttackEvent[] AttackEvent;
+    public AttackEvent[] AttackEvent;
 }

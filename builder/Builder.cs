@@ -16,11 +16,11 @@ public class Builder
 {
 	private static readonly int TIME_TO_ATTACK = 10;
 	// This constructs the card from the CardData class 
-	public static CardViewTextures BuildCard(CardData CardData)
-	{
-		var data = new CardViewData(0, CardData.Color.ToString().ToLower(), CardData.Name, CardData.Cost, CardData.Health, CardData.Attack, CardData.TimeToAttack);
-		return new CardViewTextures(data);
-	}
+	// public static CardViewTextures BuildCard(CardData CardData)
+	// {
+	// 	var data = new CardViewData(0, CardData.Color.ToString().ToLower(), CardData.Name, CardData.Cost, CardData.Health, CardData.Attack, CardData.TimeToAttack);
+	// 	return new CardViewTextures(data);
+	// }
 	
 	public static CardViewTextures BuildCard(CardStats CardStats)
 	{

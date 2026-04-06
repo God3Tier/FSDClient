@@ -156,19 +156,19 @@ public partial class Gameloop : Node2D
         WriteToServer(RequestAction.DESELECT_CARD, JsonSerializer.Serialize(obj));
     }
 
-    private void TestCard(string Name)
-    {
-        var TestCard = new CardData(10, "farmer", Colour.RED, 100, 10, 5);
-        var CardTexture = Builder.BuildCard(TestCard);
-        var CardScene = GD.Load<PackedScene>("res://scenes/gameComponents/Card.tscn");
-        var CardTemp = CardScene.Instantiate<Card>();
-        CardTemp.Name = Name;
-        CardTemp.CurrentSlotStatus = Card.SlotStatus.Deck;
-        CardTemp.ZIndex = 4;
-        CardTemp.LoadDataTexture(CardTexture);
-        CardManager.AddChild(CardTemp);
-        CardManager._deckSpace.AddCard(CardTemp);
-    }
+    // private void TestCard(string Name)
+    // {
+    //     var TestCard = new CardData(10, "farmer", Colour.RED, 100, 10, 5);
+    //     var CardTexture = Builder.BuildCard(TestCard);
+    //     var CardScene = GD.Load<PackedScene>("res://scenes/gameComponents/Card.tscn");
+    //     var CardTemp = CardScene.Instantiate<Card>();
+    //     CardTemp.Name = Name;
+    //     CardTemp.CurrentSlotStatus = Card.SlotStatus.Deck;
+    //     CardTemp.ZIndex = 4;
+    //     CardTemp.LoadDataTexture(CardTexture);
+    //     CardManager.AddChild(CardTemp);
+    //     CardManager._deckSpace.AddCard(CardTemp);
+    // }
 
     private string ConstructWebsocketUrl()
     {
@@ -359,22 +359,35 @@ public partial class Gameloop : Node2D
 				{
 					switch (actionType)
 					{
-						case ActionType.CardPlaced:
+						case ActionType.CARD_PLACED:
 							{
 								PlayerState = JsonSerializer.Deserialize<PlayerState>(Data.Parameters);
 								break;
 							}
-						case ActionType.TickUpdate:
+						case ActionType.TICK_UPDATE:
 							{
+								if (Data.Parameters.ValueKind == JsonValueKind.Undefined ||
+									   Data.Parameters.ValueKind == JsonValueKind.Null)
+									break;
+								GD.Print("Received tick update");
 								var tickUpdate = JsonSerializer.Deserialize<TickUpdater>(Data.Parameters);
 
 								if (TurnPause && CardManager._deckSpace._cardCount != tickUpdate.DrawPile.Length)
 								{
 									foreach (var card in tickUpdate.DrawPile)
 									{
-										var cardTemp = CardBuilder.GenerateCard(card.CardID);
-										CardManager.AddChild(cardTemp);
-										CardManager._deckSpace.AddCard(cardTemp);
+										try
+										{
+											var cardTemp = CardBuilder.GenerateCard(card.CardID);
+											CardManager.AddChild(cardTemp);
+											CardManager._deckSpace.AddCard(cardTemp);
+										}
+										catch (Exception e)
+										{
+											GD.PrintErr(e);
+										}
+
+
 									}
 
 									return;
