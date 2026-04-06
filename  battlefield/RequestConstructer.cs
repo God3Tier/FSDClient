@@ -6,32 +6,32 @@ using FSDClient.battlefield.responseType;
 
 public enum RequestAction
 {
-    JOIN_GAME,
-    CARD_PLACED,
-    RECONNECT,
-    SELECT_CARD,
-    DESELECT_CARD
+	JOIN_GAME,
+	CARD_PLACED,
+	RECONNECT,
+	SELECT_CARD,
+	DESELECT_CARD
 }
 
 public class RequestConstructor
 {
-    [JsonPropertyName("action")]
-    private string Action { get; set; }
-    [JsonPropertyName("params")]
-    private string Params { get; set; }
-    [JsonPropertyName("state_hash_after")]
-    private ulong StateHashAfter { get; set; }
-    [JsonPropertyName("sequence_number")]
-    private long SequenceNumber { get; set; }
+	[JsonPropertyName("action")]
+	private string Action { get; set; }
+	[JsonPropertyName("params")]
+	private string Params { get; set; }
+	[JsonPropertyName("state_hash_after")]
+	private ulong StateHashAfter { get; set; }
+	[JsonPropertyName("sequence_number")]
+	private long SequenceNumber { get; set; }
 
 
-    public string GenerateRequest(RequestAction req, string parameters, PlayerState playerstate)
-    {
-        Params = parameters;
-        Action = req.ToString().ToLower();
-        StateHashAfter = playerstate.HashPlayerView();
-        SequenceNumber = playerstate.SequenceNumber;
-        return JsonSerializer.Serialize(this);
-    }
+	public string GenerateRequest(RequestAction req, string parameters, PlayerState playerstate)
+	{
+		Params = parameters;
+		Action = req.ToString().ToLower();
+		StateHashAfter = playerstate.HashPlayerView();
+		SequenceNumber = playerstate.SequenceNumber;
+		return JsonSerializer.Serialize(this);
+	}
 
 }

@@ -1,6 +1,7 @@
 namespace FSDClient.battlefield.response;
 
 using System.Text.Json.Serialization;
+using System.Text.Json;
 using System;
 
 public enum MessageType
@@ -24,7 +25,7 @@ public class ResponseManager
     [JsonPropertyName("action_type")]
     public string ActionType { get; set; }
     [JsonPropertyName("params")]
-    public string Parameters { get; set; }
+    public JsonElement Parameters { get; set; }
     
     [JsonPropertyName("result")]
     public string Result { get; set; }
@@ -33,7 +34,7 @@ public class ResponseManager
     public string ErrorMessage { get; set; }
     
     [JsonPropertyName("state_view")]
-    public string StateView { get; set; }
+    public JsonElement StateView { get; set; }
     
     [JsonPropertyName("sequence_number")]
     public int SequenceNumber { get; set; }
