@@ -1,11 +1,12 @@
-namespace FSDClient.card.purple.mechanics;
+
+namespace FSDClient.card.mechanics.purple;
 
 using FSDClient.card.display;
 using FSDClient.battlefield.handManagement;
 using System;
 using Godot;
 
-public partial class Traitor : Card
+public partial class PlagueDoctor  : Card
 {
 	public int SummonHealth = -10;
 	public int SummonAttack = -15;

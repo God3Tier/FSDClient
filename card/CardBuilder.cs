@@ -12,8 +12,10 @@ using FSDClient.card.mechanics.grey;
 using FSDClient.card.mechanics.red;
 using FSDClient.card.mechanics.blue;
 using FSDClient.card.mechanics.green;
+using FSDClient.card.mechanics.purple;
+using FSDClient.card.mechanics.yellow;
 
-public class CardBulder
+public class CardBuilder
 {
     private static readonly CardStatsTable Reference = GD.Load<ResourceManager>("res://resource/ResourceManager.cs").CardStatsTable;
     private static readonly PackedScene packedScene = ResourceLoader.Load<PackedScene>("res://scenes/gameComponents/Card.tscn");
@@ -43,10 +45,21 @@ public class CardBulder
         [22] = (packedScene) => packedScene.Instantiate<Dryad>(),
         [23] = (packedScene) => packedScene.Instantiate<AlphaWolf>(),
         [24] = (packedScene) => packedScene.Instantiate<Quetzalcoatl>(),
+        [25] = (packedScene) => packedScene.Instantiate<GlassBones>(),
+        [26] = (packedScene) => packedScene.Instantiate<Traitor>(),
+        [27] = (packedScene) => packedScene.Instantiate<PlagueDoctor>(),
+        [28] = (packedScene) => packedScene.Instantiate<Witch>(),
+        [29] = (packedScene) => packedScene.Instantiate<Dullahan>(),
+        [30] = (packedScene) => packedScene.Instantiate<Shikigami>(),
+        [31] = (packedScene) => packedScene.Instantiate<LazyChick>(),
+        [32] = (packedScene) => packedScene.Instantiate<Angel>(),
+        [33] = (packedScene) => packedScene.Instantiate<HolySpearKnight>(),
+        [34] = (packedScene) => packedScene.Instantiate<CatSith>(),
+        [35] = (packedScene) => packedScene.Instantiate<Paladin>(),
+        [36] = (packedScene) => packedScene.Instantiate<Archangel>(),
         [37] = (packedScene) => packedScene.Instantiate<Technoblade>(),
         [38] = (packedScene) => packedScene.Instantiate<Wolf>(),
     };
-    
 
     
     public static Card GenerateCard(int cardID)
