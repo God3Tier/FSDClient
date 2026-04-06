@@ -216,8 +216,17 @@ public partial class Card : Node2D
         battleslot.Card.EnterBattlefield();
     }
 
-    public void OnDamaged(Card[][] OpponentBoard, Card[][] Board, int damageTaken,  int attackX, int attackY)
-    {
+    public void OnDeath(Card[][] OpponentBoard, Card[][] Board)
+        {
+            Board[ActiveX][ActiveY] = null;
+        }
     
-    }
+        public void OnDamaged(Card[][] OpponentBoard, Card[][] Board, int damageTaken, int attackX, int attackY)
+        {
+            Board[ActiveX][ActiveY].Health -= damageTaken;
+            if (Board[ActiveX][ActiveY].Health <= 0)
+            {
+                Board[ActiveX][ActiveY].OnDeath(OpponentBoard, Board);
+            }
+        }
 }
