@@ -6,6 +6,7 @@ using FSDClient.autoLoad;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using FSDClient.card;
 	
 public class GetCollectionResponse
 {
@@ -446,7 +447,8 @@ public partial class CardManagement : Control
 		CardControl.Name = "CardControl";
 				
 		// Create the card itself
-		var Card = CardScene.Instantiate<Node2D>();
+		var Card = CardBuilder.GenerateCard(CardId);
+			
 		Card.Position = new Vector2(95, 100);
 		CardControl.AddChild(Card);
 				

@@ -8,13 +8,13 @@ using FSDClient.player;
 using FSDClient.resource;
 
 /*
-    This is a static class that contains the 2 builder methods to construct the control (NOT NODE) of the card. 
-    This is to be used within the scene to create the card / player icon onto the screen. 
+	This is a static class that contains the 2 builder methods to construct the control (NOT NODE) of the card. 
+	This is to be used within the scene to create the card / player icon onto the screen. 
 */
 // This class is to be depricated
 public class Builder
 {
-    private static readonly int TIME_TO_ATTACK = 10;
+	private static readonly int TIME_TO_ATTACK = 10;
 	// This constructs the card from the CardData class 
 	public static CardViewTextures BuildCard(CardData CardData)
 	{
