@@ -906,6 +906,7 @@ public partial class CardManagement : Control
 		SaveButton.Visible = visible;
 	}
 	
+	// Close text popup container
 	private void _OnTextPopupBackgroundPressed(){
 		Control TextPopupContainer = GetNode<Control>("TextPopupContainer");
 		TextPopupContainer.Visible = false;

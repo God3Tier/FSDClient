@@ -484,7 +484,7 @@ public partial class Home : Control
 	{
 		GD.Print(responseCode);
 		string json = System.Text.Encoding.UTF8.GetString(body);
-		if (result != (long)HttpRequest.Result.Success || responseCode != 200)
+		if (result != (long)HttpRequest.Result.Success && responseCode != 200)
 		{
 			GD.PrintErr("Failed in fetching packs");
 			return;
@@ -549,7 +549,7 @@ public partial class Home : Control
 	{
 		GD.Print(responseCode);
 		string json = System.Text.Encoding.UTF8.GetString(body);
-		if (result != (long)HttpRequest.Result.Success || responseCode != 200)
+		if (result != (long)HttpRequest.Result.Success && responseCode != 200)
 		{
 			GD.PrintErr("Failed in opening packs");
 			return;
