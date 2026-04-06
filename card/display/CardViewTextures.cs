@@ -29,7 +29,7 @@ public class CardViewTextures
         string BorderUrl = BORDER_BASE_URL.Replace("PLACEHOLDER", CardViewData.Color);
         BorderTexture = GD.Load<Texture2D>(BorderUrl);
 
-        string IconURL = ICON_BASE_URL.Replace("PLACEHOLDER", CardViewData.IconName);
+        string IconURL = ICON_BASE_URL.Replace("PLACEHOLDER", CardViewData.IconName.Replace(" ", "_"));
         IconTexture = GD.Load<Texture2D>(IconURL);
 
         string LabelIcon = LABEL_BASE_URL.Replace("PLACEHOLDER", CardViewData.Color);
