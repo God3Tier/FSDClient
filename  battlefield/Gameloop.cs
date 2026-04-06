@@ -269,12 +269,12 @@ public partial class Gameloop : Node2D
 	{
 		while (readQueue.TryDequeue(out string msg))
 		{
-            GD.Print(msg);
+			GD.Print(msg);
 			try {
-			    var Data = JsonSerializer.Deserialize<TickUpdater>(msg);
+				var Data = JsonSerializer.Deserialize<TickUpdater>(msg);
 			
 			} catch (Exception e) {
-                GD.PrintErr("Unable to serialize ", e);
+				GD.PrintErr("Unable to serialize ", e);
 			}
 
 			// Here, we somehow parse said information about card and then mess around with it. But to continue, I need to settle card Dictionary
