@@ -1,11 +1,11 @@
 [gd_scene format=3 uid="uid://diapfb1ab512i"]
 
-[ext_resource type="Texture2D" uid="uid://bnpaihueo2hbn" path="res://assets/battlefield/battlefield_square.png" id="1_mxh2e"]
+[ext_resource type="Texture2D" uid="uid://dfkhf45cicnwd" path="res://assets/battlefield/battlefield_square.png" id="1_mxh2e"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_nqaf0"]
 size = Vector2(166, 168.5)
 
-[node name="CardSlot" type="Node2D" unique_id=1553162117]
+[node name="DeckSlot" type="Node2D" unique_id=1553162117]
 
 [node name="CardSlotImage" type="Sprite2D" parent="." unique_id=437682159]
 position = Vector2(0.50000006, -1.6093254e-06)

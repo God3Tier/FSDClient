@@ -1,15 +1,17 @@
+namespace FSDClient.battlefield.handManagement;
+
+
 using Godot;
 using System;
 using FSDClient.card.display;
-namespace FSDClient.battlefield.handManagement;
 
-public partial class BattleSlot : Node2D
+public partial class BattleSlot : Slot
 {
 	// TODO: Remove to check if card is null 
-	public bool CardInSlot = false;
+	
 	public int x { get; set; }
 	public int y { get; set; }
-	public Card Card { get; set;}
+
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
