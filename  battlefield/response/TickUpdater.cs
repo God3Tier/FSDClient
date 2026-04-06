@@ -23,7 +23,6 @@ public class AttackEvent
     private int CounterDamage;
     [JsonPropertyName("target_is_leader")]
     private bool TargetIsLeader;
-
     
 }
 
