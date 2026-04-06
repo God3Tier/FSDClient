@@ -31,8 +31,9 @@ public partial class HandControl : Control
 					break;
 				}
 			}
-			// update all the card positions
-			UpdateCardPositions();
+            // update all the card positions
+            UpdateCardPositions();
+			/// Signal Emission 
 		}
 		// If the card is already part of this collection, animate it back to its original slot
 		else
@@ -81,7 +82,9 @@ public partial class HandControl : Control
 		_cardList[index] = null;
 		_slotList[index].RemoveCard();
 		_cardCount--;
-		UpdateCardPositions();
+        UpdateCardPositions();
+		
+        // Emit Signal 
 	}
 	
 	
