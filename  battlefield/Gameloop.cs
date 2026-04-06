@@ -342,7 +342,48 @@ public partial class Gameloop : Node2D
 
 		return true;
 	}
-
+	
+	// To process the attack event on card that is sent from backend
+	public void ProcessAttackEvent(AttackEvent state)
+	{
+		Card attacker = Board[state.attacker_row][state.attacker_col];
+		Card target = OpponentBoard[state.target_row][state.target_col];
+		
+		// If the card dies
+		if (target.UpdateHealth(state.damage))
+		{
+			// TODO: Process OnDeathEffect
+		}
+		else // If the card doesn't die
+		{
+			// TODO: Process OnDamagedEffect
+		}
+		// TODO: Process attacker on attack effect
+	}
+	
+	// To process the attack event on leader that is sent from backend
+	public void ProcessLeaderCounterAttack(AttackEvent state)
+	{
+		Card attacker = Board[state.attacker_row][state.attacker_col];
+		LeaderHP = Player2Health - state.Damage; // TODO: Hardcoded to only process enemy leader
+		
+		if (LeaderHP <= 0)
+		{
+			return; // TODO: Process game win
+		}
+		
+		if (attacker.UpdateHealth(state.counter_damage))
+		{
+			// TODO: Process death effect if any
+			return;
+		}
+		else
+		{
+			// Process onDamaged effect if any
+			return;
+		}
+	}
+	
 	/*
 	* I am going on a whim here but this should be called within the main game loop
 	*/

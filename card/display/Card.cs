@@ -122,13 +122,21 @@ public partial class Card : Node2D
 	}
 
 	// To update the card's HP when they take damage, or when they heal
-    public void UpdateHealth(int damageTaken)
+    public bool UpdateHealth(int damageTaken)
     {
         var CurrentHealth = (RichTextLabel)FindChild("Health", true);
         if (int.TryParse(CurrentHealth.Text, out int health))
         {
             health -= damageTaken;
             CurrentHealth.Text = health.ToString();
+            if (health <= 0)
+            {
+            	return true; // Card is dead
+            }
+            else
+            {
+            	return false; // Card is still alive
+            }
         }
         else
         {
