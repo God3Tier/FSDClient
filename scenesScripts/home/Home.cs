@@ -203,7 +203,7 @@ public partial class Home : Control
 	public void _OnCancelButtonPressed()
 	{
 		// Send request to cancel the game connection
-		Network.SendRequestWithToken(NetworkManager.BASE_URL + NetworkManager.MATCHMAKING + "/matchmaking/matchmaking/queue", Godot.HttpClient.Method.Delete, "", CancelMatchResponse);
+		Network.SendRequestWithToken(NetworkManager.BASE_URL + NetworkManager.MATCHMAKING + "/matchmaking/queue", Godot.HttpClient.Method.Delete, "", CancelMatchResponse);
 		_cancelled = true;
 
 		_searching = false;
