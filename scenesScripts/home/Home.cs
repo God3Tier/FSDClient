@@ -52,6 +52,30 @@ class AcceptMatchResponse
 	}
 }
 
+public class GetActiveResponse
+{
+	[JsonPropertyName("active_deck_id")]
+	public int ActiveDeckId { get; set; }
+}
+
+public class ActiveDeckResponse
+{
+	[JsonPropertyName("deck_id")]
+	public int DeckId { get; set; }
+	
+	[JsonPropertyName("name")]
+	public string Name { get; set; } = "";
+	
+	[JsonPropertyName("card_ids")]
+	public List<int> CardIds { get; set; } = new();
+	
+	[JsonPropertyName("cards")]
+	public List<CardInfo> Cards { get; set; } = new();
+	
+	[JsonPropertyName("is_active")]
+	public bool IsActive { get; set; } = false;
+}
+
 public class GetPacksResponse
 {
 	[JsonPropertyName("packs")]
@@ -345,9 +369,43 @@ public partial class Home : Control
 		
 		var Response = JsonSerializer.Deserialize<AcceptMatchResponse>(json);
 		PlayerStateManager.Instance.SessionId = Response.SessionId;
+		
+		Network.SendRequestWithToken(NetworkManager.BASE_URL + NetworkManager.DECK + "/decks/active", Godot.HttpClient.Method.Get, "", ActiveDeckIdResponse);
+	}
+	
+		private void ActiveDeckIdResponse(long result, long responseCode, string[] headers, byte[] body)
+	{
+		string json = System.Text.Encoding.UTF8.GetString(body);
+		GD.Print(responseCode);
+
+		if (result != 200 && responseCode != 200)
+		{
+			GD.PrintErr("Unable to accept value");
+			return;
+		}
+		
+		int ActiveDeckId = JsonSerializer.Deserialize<GetActiveResponse>(json).ActiveDeckId;	
+		
+		Network.SendRequestWithToken(NetworkManager.BASE_URL + NetworkManager.DECK + "/decks/" + ActiveDeckId, Godot.HttpClient.Method.Get, "", ActiveDeckResponse);
+	}
+	
+	private void ActiveDeckResponse(long result, long responseCode, string[] headers, byte[] body)
+	{
+		string json = System.Text.Encoding.UTF8.GetString(body);
+		GD.Print(responseCode);
+
+		if (result != 200 && responseCode != 200)
+		{
+			GD.PrintErr("Unable to accept value");
+			return;
+		}
+		
+		ActiveDeckResponse ActiveDeck = JsonSerializer.Deserialize<ActiveDeckResponse>(json);	
+		GD.Print(ActiveDeck.DeckId);
 		var GameStateManager = GetNode<GameStateManager>("/root/GameStateManager");
 		GameStateManager.ChangeGameState(GameState.INGAMEMODE);
 	}
+	
 
 	// Update packs on pressed function
 	private void UpdatePackSlotPressedFunction()
