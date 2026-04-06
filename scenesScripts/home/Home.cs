@@ -6,6 +6,7 @@ using FSDClient.autoLoad;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using FSDClient.card;
 
 class MatchStatusResponse
 {
@@ -155,7 +156,6 @@ public class PackCardData
 
 public partial class Home : Control
 {
-	private static readonly PackedScene CardScene = GD.Load<PackedScene>("res://scenes/gameComponents/Card.tscn");
 	private volatile bool _searching = false;
 	private volatile bool _cancelled = false;
 	private volatile bool _accepted = false;

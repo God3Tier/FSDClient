@@ -41,6 +41,11 @@ public class LoginResponse
 	}
 }
 
+public class ApiErrorResponse
+{
+	public string error { get; set; }
+}
+
 public partial class LoginMenu : Control
 {
 	private NetworkManager networkManager;
@@ -94,6 +99,9 @@ public partial class LoginMenu : Control
 		if (CreatingAccount)
 		{
 			GD.Print("State changer button called");
+			var HeaderLabel = GetNode<Label>("RightPanel/Header");
+			HeaderLabel.Text = "Welcome Back";
+			
 			var SendInformationButton = (Button)FindChild("SendInformation");
 			SendInformationButton.Text = "Login";
 
@@ -104,6 +112,9 @@ public partial class LoginMenu : Control
 		else
 		{
 			GD.Print("State changer button called");
+			var HeaderLabel = GetNode<Label>("RightPanel/Header");
+			HeaderLabel.Text = "Register!!";
+			
 			var SendInformationButton = (Button)FindChild("SendInformation");
 			SendInformationButton.Text = "Create Account";
 
@@ -114,6 +125,21 @@ public partial class LoginMenu : Control
 		}
 	}
 
+	// function to make text popup visible and set the text
+	private void SetTextPopup(string Text)
+	{
+		Control TextPopupContainer = GetNode<Control>("TextPopupContainer");
+		Label TextLabel = TextPopupContainer.GetNode<Label>("TextBackgroundContainer/MarginTextContainer/TextLabel");
+		TextPopupContainer.Visible = true;
+		TextLabel.Text = Text;
+	}
+	
+	// Close text popup container
+	private void _OnTextPopupBackgroundPressed(){
+		Control TextPopupContainer = GetNode<Control>("TextPopupContainer");
+		TextPopupContainer.Visible = false;
+	}
+	
 	private void Login()
 	{
 		GD.Print("Logging in");
@@ -149,16 +175,18 @@ public partial class LoginMenu : Control
 
 	private void RegisterResponse(long result, long responseCode, string[] headers, byte[] body)
 	{
-		GD.Print(responseCode);
-		GD.Print(System.Text.Encoding.UTF8.GetString(body));
-		if (result != 201 || responseCode != 201)
+		string json = System.Text.Encoding.UTF8.GetString(body);
+			GD.Print(responseCode);
+		if (!(result == 201 || responseCode == 201))
 		{
-			// This one would be some sort of server fail or some sort of conluding error 
+			var errorResponse = JsonSerializer.Deserialize<ApiErrorResponse>(json);
+			string errorMessage = errorResponse.error;
+			SetTextPopup(errorMessage);
 			return;
 		}
 		// If successful, swithc back to login mode
 		CreatingAccount = false;
-		GD.Print("Login Request sent");
+		SetTextPopup("Account Created!!");
 	}
 
 	private void LoginResponse(long result, long responseCode, string[] headers, byte[] body)
@@ -166,8 +194,11 @@ public partial class LoginMenu : Control
 		GD.Print(responseCode);
 		string json = System.Text.Encoding.UTF8.GetString(body);
 		GD.Print(json);
-		if (result != (long)HttpRequest.Result.Success || responseCode != 200)
+		if (responseCode != 200)
 		{
+			var errorResponse = JsonSerializer.Deserialize<ApiErrorResponse>(json);
+			string errorMessage = errorResponse.error;
+			SetTextPopup(errorMessage);
 			// GD.Print("Attempting mock login");
 			// PlayerStateManager.Instance.SetPlayerData(MockLogin());
 			// // TODO: Put some label that prevents them for conitnueing and ask them to try again

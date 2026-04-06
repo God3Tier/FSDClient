@@ -336,15 +336,18 @@ public partial class Gameloop : Node2D
 	// This is to handle the
 	private void HandleGameTimer(double delta)
 	{
-		// GD.Print("Called");
+		var bar = GetNode<ProgressBar>("TurnBarContainer/TurnBar");
+
 		if (TurnPause)
 		{
 			PauseTimer += delta;
+			bar.Value = PauseTimer / PAUSE_TIMER;
 		}
 		else
 		{
 			RegenInterval += delta;
 			GameTimer += delta;
+			bar.Value = (GameTimer - (ROUND_TIMER * (TurnRound - 1)) ) / ROUND_TIMER;
 		}
 		if (PauseTimer >= PAUSE_TIMER)
 		{

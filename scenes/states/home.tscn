@@ -329,6 +329,7 @@ scale = Vector2(0.61331284, 0.48444936)
 texture = ExtResource("7_s07j5")
 
 [node name="FriendButton" type="Button" parent="." unique_id=179885204]
+visible = false
 layout_mode = 0
 offset_left = 1657.0
 offset_top = 82.0
@@ -397,6 +398,7 @@ text = "2/10"
 vertical_alignment = 1
 
 [node name="Crystal" type="ColorRect" parent="Header/Row 1" unique_id=1576728251]
+visible = false
 custom_minimum_size = Vector2(200, 30)
 layout_mode = 2
 
@@ -422,6 +424,7 @@ text = "3,810"
 vertical_alignment = 1
 
 [node name="Gold" type="ColorRect" parent="Header/Row 1" unique_id=677711949]
+visible = false
 custom_minimum_size = Vector2(200, 30)
 layout_mode = 2
 
@@ -446,16 +449,11 @@ theme_override_font_sizes/font_size = 40
 text = "4,009"
 vertical_alignment = 1
 
-[node name="Row 2" type="HBoxContainer" parent="Header" unique_id=1672282126]
-custom_minimum_size = Vector2(0, 75)
-layout_mode = 2
-alignment = 1
-
-[node name="Name" type="ColorRect" parent="Header/Row 2" unique_id=863394471]
+[node name="Name" type="ColorRect" parent="Header/Row 1" unique_id=863394471]
 custom_minimum_size = Vector2(350, 30)
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Header/Row 2/Name" unique_id=615540022]
+[node name="Label" type="Label" parent="Header/Row 1/Name" unique_id=615540022]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -468,7 +466,14 @@ text = "John Doe"
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="Row 2" type="HBoxContainer" parent="Header" unique_id=1672282126]
+visible = false
+custom_minimum_size = Vector2(0, 75)
+layout_mode = 2
+alignment = 1
+
 [node name="Leaderboard" type="ColorRect" parent="Header/Row 2" unique_id=1078582662]
+visible = false
 custom_minimum_size = Vector2(250, 30)
 layout_mode = 2
 
