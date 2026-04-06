@@ -126,6 +126,11 @@ public partial class Gameloop : Node2D
 		GD.Print(HandArea);
 		GD.Print(CardManager._playerHand.Name);
 		HandArea.RaiseDeck();
+		
+		Card TempCard = (Card)CardBuilder.GenerateCard(10);
+		TempCard.CurrentSlotStatus = Card.SlotStatus.Deck;
+		CardManager.AddChild(TempCard);
+		HandArea._deckSpace.AddCard(TempCard);
 		GD.Print("Completed everything without a problem");
 	}
 
@@ -204,7 +209,7 @@ public partial class Gameloop : Node2D
 
 	public void ProcessEvent()
 	{
-		GD.Print("Calling Process Event");
+		// GD.Print("Calling Process Event");
 		if (EventQueue.TryDequeue(out AttackEvent attackEvent))
 		{
 		}

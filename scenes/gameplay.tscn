@@ -29,36 +29,42 @@ z_index = 1
 z_as_relative = false
 position = Vector2(733, 287)
 script = ExtResource("8_407ns")
+metadata/MySlot = false
 
 [node name="BattleSlot2" parent="OpponentBoard" unique_id=638562774 instance=ExtResource("7_s5y6v")]
 z_index = 1
 z_as_relative = false
 position = Vector2(961, 287)
 script = ExtResource("8_407ns")
+metadata/MySlot = false
 
 [node name="BattleSlot3" parent="OpponentBoard" unique_id=1301548259 instance=ExtResource("7_s5y6v")]
 z_index = 1
 z_as_relative = false
 position = Vector2(1181, 287)
 script = ExtResource("8_407ns")
+metadata/MySlot = false
 
 [node name="BattleSlot4" parent="OpponentBoard" unique_id=564311958 instance=ExtResource("7_s5y6v")]
 z_index = 1
 z_as_relative = false
 position = Vector2(733, 108)
 script = ExtResource("8_407ns")
+metadata/MySlot = false
 
 [node name="BattleSlot5" parent="OpponentBoard" unique_id=2129677265 instance=ExtResource("7_s5y6v")]
 z_index = 1
 z_as_relative = false
 position = Vector2(961, 108)
 script = ExtResource("8_407ns")
+metadata/MySlot = false
 
 [node name="BattleSlot6" parent="OpponentBoard" unique_id=1146781830 instance=ExtResource("7_s5y6v")]
 z_index = 1
 z_as_relative = false
 position = Vector2(1181, 108)
 script = ExtResource("8_407ns")
+metadata/MySlot = false
 
 [node name="Board" type="Control" parent="." unique_id=1055612847]
 layout_mode = 3
@@ -71,36 +77,42 @@ z_index = 1
 z_as_relative = false
 position = Vector2(733, 507)
 script = ExtResource("8_407ns")
+metadata/MySlot = true
 
 [node name="BattleSlot2" parent="Board" unique_id=1454064906 instance=ExtResource("7_s5y6v")]
 z_index = 1
 z_as_relative = false
 position = Vector2(961, 509)
 script = ExtResource("8_407ns")
+metadata/MySlot = true
 
 [node name="BattleSlot3" parent="Board" unique_id=1033699585 instance=ExtResource("7_s5y6v")]
 z_index = 1
 z_as_relative = false
 position = Vector2(1181, 510)
 script = ExtResource("8_407ns")
+metadata/MySlot = true
 
 [node name="BattleSlot4" parent="Board" unique_id=2119496540 instance=ExtResource("7_s5y6v")]
 z_index = 1
 z_as_relative = false
 position = Vector2(733, 691)
 script = ExtResource("8_407ns")
+metadata/MySlot = true
 
 [node name="BattleSlot5" parent="Board" unique_id=725847297 instance=ExtResource("7_s5y6v")]
 z_index = 1
 z_as_relative = false
 position = Vector2(961, 691)
 script = ExtResource("8_407ns")
+metadata/MySlot = true
 
 [node name="BattleSlot6" parent="Board" unique_id=658250543 instance=ExtResource("7_s5y6v")]
 z_index = 1
 z_as_relative = false
 position = Vector2(1181, 691)
 script = ExtResource("8_407ns")
+metadata/MySlot = true
 
 [node name="Battlefield" type="Node2D" parent="." unique_id=2051723885]
 
