@@ -34,8 +34,28 @@ public class CardQuantity
 	public int Quantity { get; set; }
 }
 
+public class UpdateDeckRequest
+{
+	[JsonPropertyName("deck_id")]
+	public int DeckId { get; set; }
+	
+	[JsonPropertyName("name")]
+	public string Name { get; set; } = "";
+	
+	[JsonPropertyName("card_ids")]
+	public List<int> CardIds { get; set; } = new();
+}
+
+public class GetActiveResponse
+{
+	[JsonPropertyName("active_deck_id")]
+	public int ActiveDeckId { get; set; }
+}
+
 public class GetDecksResponse
 {
+	[JsonPropertyName("count")]
+	public int Count { get; set; }
 	[JsonPropertyName("decks")]
 	public List<Deck> Decks { get; set; }
 }
@@ -73,9 +93,10 @@ public partial class CardManagement : Control
 	private PlayerStateManager CurrentPlayer { get; set; }
 	private NetworkManager Network { get; set; }
 	private PackedScene CardScene = GD.Load<PackedScene>("res://scenes/gameComponents/Card.tscn");
-	private List<Deck> Decks;
+	private GetDecksResponse Decks;
 	private List<Collection> Collections;
 	private int SelectedDeck = 0;
+	private int InitialActiveDeckId = 0;
 	
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
@@ -110,7 +131,7 @@ public partial class CardManagement : Control
 	
 	// Function to fetch collections from backend
 	private void FetchCollections(){
-		Network.SendRequestWithToken(NetworkManager.BASE_URL + NetworkManager.DECK + "/player/cards/not-in-decks", Godot.HttpClient.Method.Get, "", GetCollectionResponse);
+		Network.SendRequestWithToken(NetworkManager.BASE_URL + NetworkManager.DECK + "/players/me/cards/available", Godot.HttpClient.Method.Get, "", GetCollectionResponse);
 	}
 	
 	private void GetCollectionResponse(long result, long responseCode, string[] headers, byte[] body)
@@ -298,11 +319,17 @@ public partial class CardManagement : Control
 		ButtonContainer.AddChild(ButtonSet);
 	}
 	
-	// Function to fetch deck from backend TODO: make it fetch all instead of 1
+	// Function to fetch deck from backend 
 	private void FetchDecks(){
-		Network.SendRequestWithToken(NetworkManager.BASE_URL + NetworkManager.DECK + "/deck/get?deck_id=1", Godot.HttpClient.Method.Get, "", GetDecksResponse);
+		Network.SendRequestWithToken(NetworkManager.BASE_URL + NetworkManager.DECK + "/decks", Godot.HttpClient.Method.Get, "", GetDecksResponse);
 	}
 	
+	// Function to fetch active deck from backend
+	private void FetchActive(){
+		Network.SendRequestWithToken(NetworkManager.BASE_URL + NetworkManager.DECK + "/decks/active", Godot.HttpClient.Method.Get, "", GetActiveResponse);
+	}
+	
+	// response handler for get all decks	
 	private void GetDecksResponse(long result, long responseCode, string[] headers, byte[] body)
 	{
 		string json = System.Text.Encoding.UTF8.GetString(body);
@@ -315,8 +342,29 @@ public partial class CardManagement : Control
 		}
 
 
-		var data = JsonSerializer.Deserialize<Deck>(json);
-		Decks = new List<Deck> {data};
+		Decks = JsonSerializer.Deserialize<GetDecksResponse>(json);
+		FetchActive();
+	}
+	
+	//	response handler for get active deck
+	private void GetActiveResponse(long result, long responseCode, string[] headers, byte[] body)
+	{
+		string json = System.Text.Encoding.UTF8.GetString(body);
+		GD.Print(responseCode);
+		if (result != 200 && responseCode != 200)
+		{
+			GD.PrintErr("Failed to get a successful response when fetching active deck");
+			GD.PrintErr(json);
+			return;
+		}
+
+
+		InitialActiveDeckId = JsonSerializer.Deserialize<GetActiveResponse>(json).ActiveDeckId;
+		
+		// set active deck
+		for(int i = 0; i < Decks.Count; i++){
+			Decks.Decks[i].IsActive = (Decks.Decks[i].DeckId == InitialActiveDeckId);
+		}
 		GenerateDecks();
 	}
 
@@ -324,7 +372,7 @@ public partial class CardManagement : Control
 	private async Task GenerateDecks()
 	{
 		// Generate decks
-		for (int j = 0; j < Decks.Count; j++)
+		for (int j = 0; j < Decks.Decks.Count; j++)
 		{
 			int DeckIndex = j;
 			// insert cards into deck
@@ -333,13 +381,13 @@ public partial class CardManagement : Control
 			DeckContainer.Name = "DeckContainer";
 			
 			// Generate Cards
-			for (int i = 0; i < Decks[j].Cards.Count; i++)
+			for (int i = 0; i < Decks.Decks[j].Cards.Count; i++)
 			{
 				// to pass the values over to any functions (passing i will always pass max)
 				int CardIndex = i;
 				
 				// Create control that gives the card its size
-				var CardContainer = CreateCard("Deck", Decks[DeckIndex].Cards[CardIndex].CardId);
+				var CardContainer = CreateCard("Deck", Decks.Decks[DeckIndex].Cards[CardIndex].CardId);
 				
 				// Add the card into the main container
 				DeckContainer.AddChild(CardContainer);
@@ -455,8 +503,8 @@ public partial class CardManagement : Control
 		}
 		
 		// Add into deck data
-		Decks[SelectedDeck].CardIds.Add(CardId);
-		Decks[SelectedDeck].Cards.Add(new CardInfo {CardId = CardId, Position = Decks[SelectedDeck].Cards.Count});
+		Decks.Decks[SelectedDeck].CardIds.Add(CardId);
+		Decks.Decks[SelectedDeck].Cards.Add(new CardInfo {CardId = CardId, Position = Decks.Decks[SelectedDeck].Cards.Count});
 		
 		// Add visually
 		ScrollContainer DeckScrollContainer = GetNode<ScrollContainer>("MainCardContainer/DeckContainer/DeckColorContainer/ScrollContainer");
@@ -481,9 +529,9 @@ public partial class CardManagement : Control
 			Vector2 pos = CardContainer.Position;
 			if(pos.X == X && pos.Y == Y){
 				// remove from cardID
-				Decks[SelectedDeck].CardIds.Remove(Decks[SelectedDeck].CardIds[i]);
+				Decks.Decks[SelectedDeck].CardIds.Remove(Decks.Decks[SelectedDeck].CardIds[i]);
 				// remove from Cards
-				Decks[SelectedDeck].Cards.Remove(Decks[SelectedDeck].Cards[i]);
+				Decks.Decks[SelectedDeck].Cards.Remove(Decks.Decks[SelectedDeck].Cards[i]);
 				// queuefree
 				CardContainer.QueueFree();
 				
@@ -575,7 +623,7 @@ public partial class CardManagement : Control
 	{
 		Button IsActiveButton = GetNode<Button>("MainCardContainer/DeckContainer/TabRow/IsActiveButton");
 
-		if(Decks[SelectedDeck].IsActive){
+		if(Decks.Decks[SelectedDeck].IsActive){
 			StyleBox ButtonSuccess = GD.Load<StyleBox>("res://styles/button_success.tres");
 			StyleBox ButtonSuccessHover = GD.Load<StyleBox>("res://styles/button_success_hover.tres");
 			StyleBox ButtonSuccessPressed = GD.Load<StyleBox>("res://styles/button_success_pressed.tres");
@@ -652,42 +700,88 @@ public partial class CardManagement : Control
 				
 		for (int i = 0; i < Decks.Count; i++){
 			// Validate if theres 12 cards
-			if(Decks[i].CardIds.Count != 12){
-				SetTextPopup($"Deck {Decks[i].Name} does not have 12 cards");
+			if(Decks.Decks[i].CardIds.Count != 12){
+				SetTextPopup($"Deck {Decks.Decks[i].Name} does not have 12 cards");
 				return;
 			}
 			
 			// Validate max 2 unique cards
-			if(!HasNoMoreThanTwoDuplicates(Decks[i].CardIds)){
-				SetTextPopup($"Deck {Decks[i].Name} have more than 2 duplicate cards");
+			if(!HasNoMoreThanTwoDuplicates(Decks.Decks[i].CardIds)){
+				SetTextPopup($"Deck {Decks.Decks[i].Name} have more than 2 duplicate cards");
 				return;
 			}
 		}
-
-		// TODO: fetch to save
-		var jsonObj = new
-		{
-			deck_id = Decks[0].DeckId,
-			name = Decks[0].Name,
-			card_ids = Decks[0].CardIds
+		
+		List<UpdateDeckRequest> UpdatedDecks = new List<UpdateDeckRequest>();
+		
+		for(int i = 0;i < Decks.Count; i++){
+			UpdateDeckRequest DeckJsonObj = new UpdateDeckRequest
+			{
+				DeckId = Decks.Decks[i].DeckId,
+				Name = Decks.Decks[i].Name,
+				CardIds = Decks.Decks[i].CardIds
+			};
+			UpdatedDecks.Add(DeckJsonObj);
+			
+		}
+		
+		var jsonObj = new {
+			decks = UpdatedDecks
 		};
 		
 		var jsonString = JsonSerializer.Serialize(jsonObj);
 		GD.Print("Sending the update deck method");
-		Network.SendRequestWithToken(NetworkManager.BASE_URL + NetworkManager.DECK + "/deck/update", Godot.HttpClient.Method.Put, jsonString, UpdateDecksResponse);
-
+		Network.SendRequestWithToken(NetworkManager.BASE_URL + NetworkManager.DECK + "/players/me/decks", Godot.HttpClient.Method.Put, jsonString, UpdateDecksResponse);
+		
 		// Make save button invisible
 		SetSaveButtonVisibility(false);
 	}
 	
+	// handler for updating decks
 	private void UpdateDecksResponse(long result, long responseCode, string[] headers, byte[] body)
 	{
 		string json = System.Text.Encoding.UTF8.GetString(body);
 		GD.Print(responseCode);
-		GD.Print(json);
 		if (result != 200 && responseCode != 200)
 		{
 			GD.PrintErr("Failed to get a successful response when updating decks");
+			GD.PrintErr(json);
+			return;
+		}
+
+
+		// if active deck has been changed
+		int CurrentActiveDeckId = 0;
+		for(int i = 0;i < Decks.Count; i++){
+			if(Decks.Decks[i].IsActive){
+				CurrentActiveDeckId = Decks.Decks[i].DeckId;
+			}
+		}
+		
+		if(CurrentActiveDeckId != InitialActiveDeckId){
+			var jsonObj = new {
+				deck_id = CurrentActiveDeckId
+			};
+			
+			var jsonString = JsonSerializer.Serialize(jsonObj);
+			
+			
+			Network.SendRequestWithToken(NetworkManager.BASE_URL + NetworkManager.DECK + "/decks/active", Godot.HttpClient.Method.Put, jsonString, UpdateActiveDeckResponse);
+		}else{
+			// success
+			SetTextPopup("Deck has been updated successfully!");
+		}
+
+	}
+
+	// Handler for updating active deck
+	private void UpdateActiveDeckResponse(long result, long responseCode, string[] headers, byte[] body)
+	{
+		string json = System.Text.Encoding.UTF8.GetString(body);
+		GD.Print(responseCode);
+		if (result != 200 && responseCode != 200)
+		{
+			GD.PrintErr("Failed to get a successful response when updating active deck");
 			GD.PrintErr(json);
 			return;
 		}
@@ -696,7 +790,7 @@ public partial class CardManagement : Control
 		SetTextPopup("Deck has been updated successfully!");
 
 	}
-
+	
 	// Checks that theres atmost 2 of the same card in the deck
 	public bool HasNoMoreThanTwoDuplicates(List<int> cardIds)
 	{
@@ -730,7 +824,7 @@ public partial class CardManagement : Control
 	private void _OnIsActiveButtonPressed()
 	{
 		for(int i = 0; i < Decks.Count; i++){
-			Decks[i].IsActive = i==SelectedDeck;
+			Decks.Decks[i].IsActive = i==SelectedDeck;
 		}
 		
 		// Make save button visible
