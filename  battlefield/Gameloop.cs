@@ -209,8 +209,8 @@ public partial class Gameloop : Node2D
         var obj = new
         {
             card_id = battleslot.Card.CardID,
-            pos_x = battleslot.x,
-            pos_y = battleslot.y,
+            row = battleslot.x,
+            col = battleslot.y,
         };
 
         WriteToServer(RequestAction.CARD_PLACED, JsonSerializer.Serialize(obj));
