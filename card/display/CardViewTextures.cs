@@ -2,7 +2,7 @@ namespace FSDClient.card.display;
 
 using Godot;
 
-public record CardViewData(string Color, string IconName, int Cost, int Health, int Attack, double TimeToAttack);
+public record CardViewData(int CardID, string Color, string IconName, int Cost, int Health, int Attack, double TimeToAttack);
 
 public class CardViewTextures
 {
@@ -12,7 +12,7 @@ public class CardViewTextures
     private static readonly string ATTACK_LABEL = "res://assets/symbols/attack_symbol.png";
     private static readonly string DEFENCE_LABEL = "res://assets/symbols/defence_symbol.png";
 
-
+    public int CardID { get; set; }
     public Texture2D BorderTexture { get; set; }
     public Texture2D IconTexture { get; set; }
     public Texture2D LabelTexture { get; set; }
@@ -25,6 +25,7 @@ public class CardViewTextures
 
     public CardViewTextures(CardViewData CardViewData)
     {
+        CardID = CardViewData.CardID;
         string BorderUrl = BORDER_BASE_URL.Replace("PLACEHOLDER", CardViewData.Color);
         BorderTexture = GD.Load<Texture2D>(BorderUrl);
 

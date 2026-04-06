@@ -10,29 +10,23 @@ using FSDClient.autoLoad;
 using FSDClient.battlefield.responseType;
 using System.Collections.Concurrent;
 using System.Text.Json.Serialization;
-using System; 
+using System;
 using System.Text.Json;
-using FSDClient.battlefield.responseType;
+using FSDClient.battlefield.response;
 
 
 public partial class Gameloop : Node2D
 {
-    public static readonly string BASE_WEBSOCKET_URL = "ws://localhost:8083/ws?session_id=SESSIONID&user_id=USERID&username=USERNAME";
-    public static readonly string INITIAL_MESSAGE = @"{
-	""action"": ""JOIN_GAME"",
-	""params"": {},
-	""state_hash_after"": 0,
-	""sequence_number"": 0
-3}";
+	public static readonly string BASE_WEBSOCKET_URL = "ws://localhost:8002/ws?session_id=SESSIONID";
 
-    public static readonly double MAX_ELIXER = 8;
-    public static readonly double ROUND_TIMER = 10.0;
-    public static readonly double PAUSE_TIMER = 5.0;
-    public static readonly double SECONDS_PER_ELIXIR = 3f;
-    public static readonly int BASE_ELIXIR = 4;
+	public static readonly double MAX_ELIXER = 8;
+	public static readonly double ROUND_TIMER = 10.0;
+	public static readonly double PAUSE_TIMER = 5.0;
+	public static readonly double SECONDS_PER_ELIXIR = 3f;
+	public static readonly int BASE_ELIXIR = 4;
 
-    public NetworkManager NetworkManager { get; set; }
-    // Unsure to keep this as the state manager or make it it's own individual player data. TBD on a later date
+	public NetworkManager NetworkManager { get; set; }
+	// Unsure to keep this as the state manager or make it it's own individual player data. TBD on a later date
     public PlayerStateManager MainPlayer { get; set; }
     public PlayerData IncomingPlayer { get; set; }
 
@@ -62,13 +56,29 @@ public partial class Gameloop : Node2D
     private WebSocketPeer Socket = new WebSocketPeer();
     private readonly ConcurrentQueue<string> readQueue = new();
     private readonly ConcurrentQueue<string> writeQueue = new();
-
+    private double _reconnectTimer { get; set; }
+    private readonly double _reconnectDelay = 3.0;
 
     // I am of the assumption that this is what is being called by the
     // We put this in gameloop later
     public override void _Ready()
     {
-        Socket.ConnectToUrl(ConstructWebsocketUrl());
+        MainPlayer = PlayerStateManager.Instance;
+        try
+        {
+            var token = MainPlayer.Token;
+            GD.Print("Token ", token);
+            Socket.HandshakeHeaders = new string[]
+            {
+                "Authorization: Bearer " + token
+            };
+            Socket.ConnectToUrl(ConstructWebsocketUrl());
+
+        }
+        catch (Exception e)
+        {
+            GD.Print("Unable to connect to websocket becayse of ", e);
+        }
         HandArea = GetNode<HandArea>("HandArea");
 
 
@@ -84,7 +94,7 @@ public partial class Gameloop : Node2D
             if (childName.Contains("BattleSlot"))
             {
                 var BattleSlot = (BattleSlot)child;
-                int lastInt = (int)(childName[^1] - '1');
+				int lastInt = (int)(childName[^1] - '1');
 
                 BattleSlot.x = lastInt / 3;
                 BattleSlot.y = lastInt % 3;
@@ -108,7 +118,6 @@ public partial class Gameloop : Node2D
 
         //TODO: Add the logic to load the nonsence so I can start using the stuff for damage numbers
         // and whatnot
-        MainPlayer = PlayerStateManager.Instance;
         // IncomingPlayer = new PlayerData("Placeholder", "Placeholder", [], false);
         CardManager = (CardManager)FindChild("CardManager", true);
         CardManager._playerHand = GetNode<PlayerHand>("HandArea/PlayerHand");
@@ -151,13 +160,6 @@ public partial class Gameloop : Node2D
     {
         var session = PlayerStateManager.Instance.SessionId;
         string BaseUrl = BASE_WEBSOCKET_URL.Replace("SESSIONID", session);
-
-        var userId = PlayerStateManager.Instance.UserId; ;
-        BaseUrl = BaseUrl.Replace("USERID", userId.ToString());
-
-        var username = PlayerStateManager.Instance.PlayerData.Username;
-        BaseUrl = BaseUrl.Replace("USERNAME", username);
-
         GD.Print(BaseUrl);
         return BaseUrl;
     }
@@ -189,7 +191,16 @@ public partial class Gameloop : Node2D
     private void OnCardDropped(BattleSlot battleslot)
     {
         // TODO: Write to Server should be implemented once backend decides how to transfer information
-        // WriteToServer("");
+        var playerStateManager = PlayerStateManager.Instance;
+        var obj = new
+        {
+            player_id = playerStateManager.UserId,
+            card_id = battleslot.Card.CardID,
+            pos_x = battleslot.x,
+            pos_y = battleslot.y,
+        };
+
+        WriteToServer(RequestAction.CARD_PLACED, JsonSerializer.Serialize(obj));
         // Simulate delay of card
         // Thread.Sleep(1);
         battleslot.Card.ActiveY = battleslot.y;
@@ -203,162 +214,149 @@ public partial class Gameloop : Node2D
         Player2Health = player2Copy;
     }
 
-    // This is how to generate Elixir. Since client only ever knows about 1 player's resource
-    // i can do it within the gameplay loop itself
-    public override void _Process(double delta)
-    {
-        HandleWebSocket();
-        HandleGameTimer(delta);
-        HandleInputFromServer();
-    }
+	// This is how to generate Elixir. Since client only ever knows about 1 player's resource
+	// i can do it within the gameplay loop itself
+	public override void _Process(double delta)
+	{
+		HandleWebSocket();
+		HandleGameTimer(delta);
+		HandleInputFromServer();
+	}
 
-    private void HandleWebSocket()
-    {
-        Socket.Poll();
+	private void HandleWebSocket()
+	{
+		Socket.Poll();
+		var state = Socket.GetReadyState();
 
-        if (Socket.GetReadyState() != WebSocketPeer.State.Open)
-        {
-            // Do Some connection error and try to rehandle
-            Socket.ConnectToUrl(ConstructWebsocketUrl());
-            WriteToServer(RequestAction.RECONNECT);
-            return;
-        }
+		if (state == WebSocketPeer.State.Connecting)
+		{
+			return;
+		}
 
-        while (Socket.GetAvailablePacketCount() > 0)
-        {
-            readQueue.Enqueue(Socket.GetPacket().GetStringFromUtf8());
-        }
+		if (state != WebSocketPeer.State.Open)
+		{
+			// Do Some connection error and try to rehandle
+			_reconnectTimer += GetProcessDeltaTime();
+			if (_reconnectTimer < _reconnectDelay) return;
+			_reconnectTimer = 0;
+			try
+			{
+				Socket.ConnectToUrl(ConstructWebsocketUrl());
 
-        if (writeQueue.TryDequeue(out string msg))
-        {
-            Socket.SendText(msg);
-        }
+			}
+			catch (Exception e)
+			{
+				GD.Print("Unable to connect to websocket because of ", e);
+			}
+			WriteToServer(RequestAction.RECONNECT);
 
-    }
+			return;
+		}
 
-    private void HandleInputFromServer()
-    {
-        while (readQueue.TryDequeue(out string msg))
-        {
-            var Data = JsonSerializer.Deserialize<ResponseBase>(msg);
-            var msgType = Enum.Parse(typeof(FSDClient.battlefield.responseType.Action), Data.Action);
+		while (Socket.GetAvailablePacketCount() > 0)
+		{
+			readQueue.Enqueue(Socket.GetPacket().GetStringFromUtf8());
+		}
 
-            switch (msgType)
-            {
-                case FSDClient.battlefield.responseType.Action.JOIN_GAME:
-                    {
-                        PlayerState = JsonSerializer.Deserialize<PlayerState>(Data.StateView);
-                        break;
-                    }
-                case FSDClient.battlefield.responseType.Action.CARD_PLACED_ENEMY:
-                    {
-                        var NewInputData = JsonSerializer.Deserialize<CardPlacementResponse>(Data.StateView);
-                        if (!NewInputData.ValidInput)
-                        {
-                            // Do some false Response
-                            break;
-                        }
-                        var ResourceState = GetNode<ResourceManager>("res://autoLoad/ResourceManager");
-                        var CardInformation = ResourceState.CardStatsTable.cardInfo[NewInputData.CardID];
-                        var CardViewData = Builder.BuildCard(CardInformation);
-                        OpponentBoard[NewInputData.YPos][NewInputData.XPos].LoadDataTexture(CardViewData);
-                        OpponentBoard[NewInputData.YPos][NewInputData.XPos].EnterBattlefield();
-                        break;
-                    }
-                case FSDClient.battlefield.responseType.Action.CARD_PLACED:
-                    {
-                        GD.Print(Data);
-                        break;
-                    }
-                case FSDClient.battlefield.responseType.Action.CARD_DEAD:
-                    {
-                        break;
-                    }
-                default:
-                    {
-                        break;
-                    }
-            }
-            // Here, we somehow parse said information about card and then mess around with it. But to continue, I need to settle card Dictionary
-        }
-    }
+		if (writeQueue.TryDequeue(out string msg))
+		{
+			Socket.SendText(msg);
+		}
 
-    // This is to handle the
-    private void HandleGameTimer(double delta)
-    {
-        // GD.Print("Called");
-        if (TurnPause)
-        {
-            PauseTimer += delta;
-        }
-        else
-        {
-            RegenInterval += delta;
-            GameTimer += delta;
-        }
-        if (PauseTimer >= PAUSE_TIMER)
-        {
-            GD.Print("Pause Ended");
-            HandArea.LowerDeck();
-            CardManager.UnstuckCard();
-            CardManager._playerHand.ActivateCardsInHand();
-            TurnPause = false;
-            PauseTimer = 0;
-            TurnRound += 1;
-            var ElixirBar = (Elixir)FindChild("Elixir");
-            ElixirBar.UpdateRound(TurnRound);
-            return;
-        }
+	}
 
-        if (GameTimer >= ROUND_TIMER * TurnRound && !TurnPause)
-        {
-            GD.Print("Round updated");
-            // TODO: Trigger secondary draw card event
-            TurnPause = true;
-            HandArea.RaiseDeck();
-            CardManager.UnstuckCard();
-            CardManager._playerHand.PauseCardsInHand();
-        }
+	private void HandleInputFromServer()
+	{
+		while (readQueue.TryDequeue(out string msg))
+		{
+            GD.Print(msg);
+			try {
+			    var Data = JsonSerializer.Deserialize<TickUpdater>(msg);
+			
+			} catch (Exception e) {
+                GD.PrintErr("Unable to serialize ", e);
+			}
 
-        if (RegenInterval >= SECONDS_PER_ELIXIR)
-        {
-            if (Elixir >= TurnRound + BASE_ELIXIR || Elixir >= MAX_ELIXER)
-            {
-                return;
-            }
-            Elixir++;
-            RegenInterval = 0.0;
-            var ElixirBar = (Elixir)FindChild("Elixir");
-            ElixirBar.UpdateElixir(Elixir);
-        }
-    }
+			// Here, we somehow parse said information about card and then mess around with it. But to continue, I need to settle card Dictionary
+		}
+	}
 
-    public bool PlaceCardCheck(int Cost)
-    {
-        if (Elixir < Cost)
-        {
-            return false;
-        }
+	// This is to handle the
+	private void HandleGameTimer(double delta)
+	{
+		// GD.Print("Called");
+		if (TurnPause)
+		{
+			PauseTimer += delta;
+		}
+		else
+		{
+			RegenInterval += delta;
+			GameTimer += delta;
+		}
+		if (PauseTimer >= PAUSE_TIMER)
+		{
+			GD.Print("Pause Ended");
+			HandArea.LowerDeck();
+			CardManager.UnstuckCard();
+			CardManager._playerHand.ActivateCardsInHand();
+			TurnPause = false;
+			PauseTimer = 0;
+			TurnRound += 1;
+			var ElixirBar = (Elixir)FindChild("Elixir");
+			ElixirBar.UpdateRound(TurnRound);
+			return;
+		}
 
-        Elixir -= Cost;
+		if (GameTimer >= ROUND_TIMER * TurnRound && !TurnPause)
+		{
+			GD.Print("Round updated");
+			// TODO: Trigger secondary draw card event
+			TurnPause = true;
+			HandArea.RaiseDeck();
+			CardManager.UnstuckCard();
+			CardManager._playerHand.PauseCardsInHand();
+		}
 
-        return true;
-    }
+		if (RegenInterval >= SECONDS_PER_ELIXIR)
+		{
+			if (Elixir >= TurnRound + BASE_ELIXIR || Elixir >= MAX_ELIXER)
+			{
+				return;
+			}
+			Elixir++;
+			RegenInterval = 0.0;
+			var ElixirBar = (Elixir)FindChild("Elixir");
+			ElixirBar.UpdateElixir(Elixir);
+		}
+	}
 
-    /*
+	public bool PlaceCardCheck(int Cost)
+	{
+		if (Elixir < Cost)
+		{
+			return false;
+		}
+
+		Elixir -= Cost;
+
+		return true;
+	}
+
+	/*
 	* I am going on a whim here but this should be called within the main game loop
 	*/
-    public void WriteToServer(RequestAction req, string parameters = "")
-    {
-        RequestConstructor reqAck = new();
-        var message = reqAck.GenerateRequest(req, parameters, PlayerState); 
-        writeQueue.Enqueue(message);
-    }
+	public void WriteToServer(RequestAction req, string parameters = "")
+	{
+		RequestConstructor reqAck = new();
+		var message = reqAck.GenerateRequest(req, parameters, PlayerState);
+		writeQueue.Enqueue(message);
+	}
 
-    private void ReturnToHomeScreen()
-    {
-        GameStateManager.Instance.ChangeGameState(GameState.HOMESCREEN);
-    }
+	private void ReturnToHomeScreen()
+	{
+		GameStateManager.Instance.ChangeGameState(GameState.HOMESCREEN);
+	}
 }
 
 /*

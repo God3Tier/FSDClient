@@ -22,7 +22,7 @@ public partial class PlayerStateManager : Node
 	public int Crystal { get; private set; }
 	public int Gold { get;  private set; }
 	public string SessionId { get;  set;}
-	public string Token { get; private set; } = null;
+	public string Token { get; private set; } = "";
 	
 	public override void _Ready()
 	{

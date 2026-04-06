@@ -12,6 +12,7 @@ public partial class Card : Node2D
 
     public Vector2 StartingPosition { get; set; }
     public Tween MoveTween { get; set; }
+    public int CardID { get; set; }
     public int Health { get; set; }
     public int Attack { get; set; }
     public string Colour { get; set; }
@@ -84,6 +85,9 @@ public partial class Card : Node2D
     public void LoadDataTexture(CardViewTextures cardViewTextures)
     {
         GD.Print("Creating card");
+
+        CardID = cardViewTextures.CardID;
+        
         var BorderTexture = (Sprite2D)FindChild("Border", true);
         BorderTexture.Texture = cardViewTextures.BorderTexture;
         BorderTexture.Scale = new Vector2(0.500f, 0.500f);
