@@ -11,28 +11,28 @@ public partial class Card : Node2D
 	[Signal] public delegate void HoveredOffEventHandler(Card card);
 	[Signal] public delegate void AttackedEventHandler(Card card);
 
-    public Vector2 StartingPosition { get; set; }
-    public Tween MoveTween { get; set; }
-    public int CardID { get; set; }
-    public int Health { get; set; }
-    public int Attack { get; set; }
-    public string Colour { get; set; }
-    private bool BattleMode { get; set; } = false;
-    public double TimeToAttack { get; set; }
-    public double Timer { get; set; }
-    public int ActiveY { get; set; }
-    public int ActiveX { get; set; }
-    public bool IsEmpty { get; set; } = true;
-    // hi
-    public enum SlotStatus
-    {
-        Pack,
-        Deck,
-        HandTemp,
-        HandPause,
-        Hand,
-        Battle
-    }
+	public Vector2 StartingPosition { get; set; }
+	public Tween MoveTween { get; set; }
+	public int CardID { get; set; }
+	public int Health { get; set; }
+	public int Attack { get; set; }
+	public string Colour { get; set; }
+	private bool BattleMode { get; set; } = false;
+	public double TimeToAttack { get; set; }
+	public double Timer { get; set; }
+	public int ActiveY { get; set; }
+	public int ActiveX { get; set; }
+	public bool IsEmpty { get; set; } = true;
+	
+	public enum SlotStatus
+	{
+		Pack,
+		Deck,
+		HandTemp,
+		HandPause,
+		Hand,
+		Battle
+	}
 
 	public SlotStatus CurrentSlotStatus { get; set; }
 	// hi
@@ -83,15 +83,15 @@ public partial class Card : Node2D
 		ProgressBar.Value = Timer;
 	}
 
-    public void LoadDataTexture(CardViewTextures cardViewTextures)
-    {
-        GD.Print("Creating card");
+	public void LoadDataTexture(CardViewTextures cardViewTextures)
+	{
+		GD.Print("Creating card");
 
-        CardID = cardViewTextures.CardID;
-        
-        var BorderTexture = (Sprite2D)FindChild("Border", true);
-        BorderTexture.Texture = cardViewTextures.BorderTexture;
-        BorderTexture.Scale = new Vector2(0.500f, 0.500f);
+		CardID = cardViewTextures.CardID;
+		
+		var BorderTexture = (Sprite2D)FindChild("Border", true);
+		BorderTexture.Texture = cardViewTextures.BorderTexture;
+		BorderTexture.Scale = new Vector2(0.500f, 0.500f);
 
 		var IconTexture = (Sprite2D)FindChild("Icon", true);
 		IconTexture.Texture = cardViewTextures.IconTexture;
@@ -141,6 +141,7 @@ public partial class Card : Node2D
         else
         {
             GD.Print("Whoops");
+            return false;
         }
     }
 
@@ -182,7 +183,7 @@ public partial class Card : Node2D
         }
     }
 
-    public void AttackOpponent(EffectContext context)
+    public void AttackOpponent(Card[][] OpponentBoard, Card[][] Board, ref int player1Health, ref int player2Health)
     {
         if (OpponentBoard[0][ActiveY] == null && OpponentBoard[0][ActiveY] == null)
         {
@@ -208,36 +209,15 @@ public partial class Card : Node2D
         }
     }
 
-    public void SpawnCard(EffectContext context)
+    public void SpawnCard(Card[][] OpponentBoard, Card[][] Board, BattleSlot battleslot, ref int player1Health, ref int player2Health)
     {
         GD.Print("Updating Board");
         Board[battleslot.x][battleslot.y] = this;
         battleslot.Card.EnterBattlefield();
-        if (OnSummon != null) 
-        {
-        	ResolveSummon(context);
-        }
     }
 
-    public void OnDeath(EffectContext context)
+    public void OnDamaged(Card[][] OpponentBoard, Card[][] Board, int damageTaken,  int attackX, int attackY)
     {
-        if (OnDeath != null)
-        {
-        	ResolveDeath(context);
-        }
+    
     }
-
-    public void OnDamaged(EffectContext context)
-    {
-        Board[ActiveX][ActiveY].Health -= damageTaken;
-        if (Board[ActiveX][ActiveY].Health <= 0)
-        {
-            Board[ActiveX][ActiveY].OnDeath(OpponentBoard, Board);
-        }
-        else
-        {
-        	ResolveDamaged(context);
-        }
-    }
-
 }

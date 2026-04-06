@@ -1,7 +1,8 @@
 using FSDClient.card.display;
 using System.Collections.Generic;
+using FSDClient.battlefield.handManagement;
 
-namespace FSDClient.card.effects
+namespace FSDClient.card.mechanics.effects
 {
 	// For grouping all the parameters that the effects may possibly need
 	public class EffectContext
@@ -17,16 +18,8 @@ namespace FSDClient.card.effects
 		public List<Card> Targets { get; set; } = new();
 		
 		// Player Health points
-		public int Player1Health { get; set; };
-		public int Player2Health { get; set; };
-	}
-
-	public class CardAbilitySet
-	{
-		public ICardEffect? OnSummon { get; set; }
-		public ICardEffect? OnAttack { get; set; }
-		public ICardEffect? OnDamaged { get; set; }
-		public ICardEffect? OnDeath { get; set; }
+		public int Player1Health { get; set; }
+		public int Player2Health { get; set; }
 	}
 	
 	// Spawn in effects

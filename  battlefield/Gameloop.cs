@@ -365,7 +365,7 @@ public partial class Gameloop : Node2D
 	public void ProcessLeaderCounterAttack(AttackEvent state)
 	{
 		Card attacker = Board[state.attacker_row][state.attacker_col];
-		LeaderHP = Player2Health - state.Damage; // TODO: Hardcoded to only process enemy leader
+		var LeaderHP = Player2Health - state.damage; // TODO: Hardcoded to only process enemy leader
 		
 		if (LeaderHP <= 0)
 		{
