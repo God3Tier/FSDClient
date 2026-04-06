@@ -59,7 +59,7 @@ class AcceptMatchResponse
 
 public partial class Home : Control
 {
-    private static PackedScene CardScene = GD.Load<PackedScene>("res://scenes/gameComponents/Card.tscn");
+    private static readonly PackedScene CardScene = GD.Load<PackedScene>("res://scenes/gameComponents/Card.tscn");
     private volatile bool _searching = false;
     private volatile bool _cancelled = false;
     private volatile bool _accepted = false;
@@ -67,7 +67,7 @@ public partial class Home : Control
     private NetworkManager Network { get; set; }
     private string SessionID { get; set; }
     private string[] Header { get; } = new string[2];
-    private Dictionary<string, Texture2D> PackTextures = new Dictionary<string, Texture2D>
+    private readonly Dictionary<string, Texture2D> PackTextures = new Dictionary<string, Texture2D>
     {
         {"None", GD.Load<Texture2D>("res://assets/cards/pack.png")},
         {"Common", GD.Load<Texture2D>("res://assets/cards/CommonPack.png")},
@@ -159,7 +159,7 @@ public partial class Home : Control
     {
         ColorRect loadingNode = GetNode<ColorRect>("Loading");
         // 1. Add player to queue
-        Network.SendRequest(NetworkManager.BASE_URL + NetworkManager.MATCHMAKING + "/matchmaking/join", Godot.HttpClient.Method.Post, "", JoinResponse, Header);
+        Network.SendRequest(NetworkManager.BASE_URL + NetworkManager.MATCHMAKING + "/matchmaking/queue", Godot.HttpClient.Method.Post, "", JoinResponse, Header);
 
         // start animation
         AnimatedSprite2D LoadingSprite = GetNode<AnimatedSprite2D>("Loading/LoadingAnimation");
@@ -191,7 +191,7 @@ public partial class Home : Control
         };
 
         var jsonString = JsonSerializer.Serialize(obj);
-        Network.SendRequest(NetworkManager.BASE_URL + NetworkManager.MATCHMAKING + "/matchmaking/accept", Godot.HttpClient.Method.Post, jsonString, AcceptMatchResponse, Header);
+        Network.SendRequest(NetworkManager.BASE_URL + NetworkManager.MATCHMAKING + "/matchmaking/match/accept", Godot.HttpClient.Method.Post, jsonString, AcceptMatchResponse, Header);
 
     }
 
@@ -206,7 +206,7 @@ public partial class Home : Control
     public void _OnCancelButtonPressed()
     {
         // Send request to cancel the game connection
-        Network.SendRequest(NetworkManager.BASE_URL + NetworkManager.MATCHMAKING + "/matchmaking/leave", Godot.HttpClient.Method.Post, "", CancelMatchResponse, Header);
+        Network.SendRequest(NetworkManager.BASE_URL + NetworkManager.MATCHMAKING + "/matchmaking/matchmaking/queue", Godot.HttpClient.Method.Delete, "", CancelMatchResponse, Header);
         _cancelled = true;
 
         _searching = false;
