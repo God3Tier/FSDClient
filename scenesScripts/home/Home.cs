@@ -12,7 +12,7 @@ class MatchStatusResponse
 	[JsonPropertyName("matched")]
 	public bool Matched { get; set; }
 	[JsonPropertyName("session_id")]
-	public string SessionId { get; set; }
+	public string SessionID { get; set; }
 	[JsonPropertyName("opponent")]
 	public string Opponent { get; set; }
 	[JsonPropertyName("your_mmr")]
@@ -23,7 +23,7 @@ class MatchStatusResponse
 	public MatchStatusResponse(bool matched, string sessionId, string opponent, int yourMMR, int theirMMR)
 	{
 		Matched = matched;
-		SessionId = sessionId;
+		SessionID = sessionId;
 		Opponent = opponent;
 		YourMMR = yourMMR;
 		TheirMMR = theirMMR;
@@ -34,17 +34,22 @@ class AcceptMatchResponse
 {
 	[JsonPropertyName("message")]
 	public string Message { get; set; }
+	
 	[JsonPropertyName("session_id")]
-	public string SessionId;
+	public string SessionId { get; set; }
+	
 	[JsonPropertyName("status")]
-	public string Status;
+	public string Status { get; set; }
+	
 	[JsonPropertyName("player1_ready")]
-	public bool Player1Ready;
+	public bool Player1Ready { get; set; }
+	
 	[JsonPropertyName("player2_ready")]
-	public bool Player2Ready;
+	public bool Player2Ready { get; set; }
 
-	public AcceptMatchResponse(string message, string sessionId, string status, bool player1Ready, bool player2Ready) {
-		Message = message; 
+	public AcceptMatchResponse(string message, string sessionId, string status, bool player1Ready, bool player2Ready)
+	{
+		Message = message;
 		SessionId = sessionId;
 		Status = status;
 		Player1Ready = player1Ready;
@@ -150,11 +155,14 @@ public class PackCardData
 
 public partial class Home : Control
 {
-	private static PackedScene CardScene = GD.Load<PackedScene>("res://scenes/gameComponents/Card.tscn");
+	private static readonly PackedScene CardScene = GD.Load<PackedScene>("res://scenes/gameComponents/Card.tscn");
 	private volatile bool _searching = false;
+	private volatile bool _cancelled = false;
+	private volatile bool _accepted = false;
 	private PlayerStateManager CurrentPlayer { get; set; }
 	private NetworkManager Network { get; set; }
-	private Dictionary<string, Texture2D> PackTextures = new Dictionary<string, Texture2D>
+	private string SessionID { get; set; }
+	private readonly Dictionary<string, Texture2D> PackTextures = new Dictionary<string, Texture2D>
 	{
 		{"none", GD.Load<Texture2D>("res://assets/cards/pack.png")},
 		{"common", GD.Load<Texture2D>("res://assets/cards/CommonPack.png")},
@@ -184,7 +192,7 @@ public partial class Home : Control
 		{
 			GD.PrintErr("Whoops ", e);
 		}
-
+   
 		try
 		{
 			InitialisePlayerInformation();
@@ -227,18 +235,18 @@ public partial class Home : Control
 
 
 	}
-	
+
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
 	}
-
+	
 	//	Press Battle button
 	public async void _OnBattleButtonPressed()
 	{
 		ColorRect loadingNode = GetNode<ColorRect>("Loading");
 		// 1. Add player to queue
-		Network.SendRequestWithToken(NetworkManager.BASE_URL + NetworkManager.MATCHMAKING + "/matchmaking/join", Godot.HttpClient.Method.Post, "", MatchCheckResponse);
+		Network.SendRequestWithToken(NetworkManager.BASE_URL + NetworkManager.MATCHMAKING + "/matchmaking/queue", Godot.HttpClient.Method.Post, "", JoinResponse);
 
 		// start animation
 		AnimatedSprite2D LoadingSprite = GetNode<AnimatedSprite2D>("Loading/LoadingAnimation");
@@ -251,17 +259,26 @@ public partial class Home : Control
 		// find game stuff
 		while (_searching)
 		{
-
 			// 1 SECOND TIMEOUT - Godot way
-			await ToSignal(GetTree().CreateTimer(1.0f), "timeout");
+			await ToSignal(GetTree().CreateTimer(1.5f), "timeout");
 
 			// 2. Check if the player has been matched
 			Network.SendRequestWithToken(NetworkManager.BASE_URL + NetworkManager.MATCHMAKING + "/matchmaking/match", Godot.HttpClient.Method.Get, "", MatchCheckResponse);
 		}
 
 
+		if (_cancelled)
+		{
+			return;
+		}
 		// 3. Accept the match and proceed
-		Network.SendRequestWithToken(NetworkManager.BASE_URL + NetworkManager.MATCHMAKING + "/matchmaking/accept", Godot.HttpClient.Method.Post, "", AcceptMatchResponse);
+		var obj = new
+		{
+			session_id = SessionID
+		};
+
+		var jsonString = JsonSerializer.Serialize(obj);
+		Network.SendRequestWithToken(NetworkManager.BASE_URL + NetworkManager.MATCHMAKING + "/matchmaking/match/accept", Godot.HttpClient.Method.Post, jsonString, AcceptMatchResponse);
 
 	}
 
@@ -276,7 +293,8 @@ public partial class Home : Control
 	public void _OnCancelButtonPressed()
 	{
 		// Send request to cancel the game connection
-		Network.SendRequestWithToken(NetworkManager.BASE_URL + NetworkManager.MATCHMAKING + "/matchmaking/leave", Godot.HttpClient.Method.Post, "", CancelMatchResponse);
+		Network.SendRequestWithToken(NetworkManager.BASE_URL + NetworkManager.MATCHMAKING + "/matchmaking/queue", Godot.HttpClient.Method.Delete, "", CancelMatchResponse);
+		_cancelled = true;
 
 		_searching = false;
 		Control loadingNode = GetNode<ColorRect>("Loading");
@@ -319,12 +337,29 @@ public partial class Home : Control
 		FriendPopupContainerNode.Visible = false;
 	}
 
-	
+
 	/*
 	*  Network helper functions and managers
 	*/
+	private void JoinResponse(long result, long responseCode, string[] headers, byte[] body)
+	{
+		GD.Print("MATCH CHECK JOIN LOGGING");
+		string json = System.Text.Encoding.UTF8.GetString(body);
+		GD.Print(responseCode);
+		if (result != 200 && responseCode != 200)
+		{
+			GD.PrintErr("Failed to get a successful response about state of matchmaking");
+			GD.PrintErr(json);
+			return;
+		}
+
+		_searching = true;
+
+	}
+
 	private void MatchCheckResponse(long result, long responseCode, string[] headers, byte[] body)
 	{
+		GD.Print("MATCH CHECK RESPONSE LOGGING");
 		string json = System.Text.Encoding.UTF8.GetString(body);
 		GD.Print(responseCode);
 		if (result != 200 && responseCode != 200)
@@ -338,14 +373,19 @@ public partial class Home : Control
 		var data = JsonSerializer.Deserialize<MatchStatusResponse>(json);
 		if (data.Matched == false)
 		{
+			GD.Print("Not matched");
 			return;
 		}
 
+		var PlayerStateManager = GetNode<PlayerStateManager>("/root/PlayerStateManager");
+		PlayerStateManager.SessionId = data.SessionID;
+		SessionID = data.SessionID;
 		_searching = false;
 	}
 
 	private void CancelMatchResponse(long result, long responseCode, string[] headers, byte[] body)
 	{
+		GD.Print("CANCEL MATCH RESPONSE LOGGING");
 		GD.Print(responseCode);
 		GD.Print(System.Text.Encoding.UTF8.GetString(body));
 		if (result != 200 && responseCode != 200)
@@ -357,6 +397,7 @@ public partial class Home : Control
 
 	private void AcceptMatchResponse(long result, long responseCode, string[] headers, byte[] body)
 	{
+		GD.Print("ACCEPTING MATCH RESPONSE LOGGING");
 		string json = System.Text.Encoding.UTF8.GetString(body);
 		GD.Print(responseCode);
 		GD.Print(json);
@@ -366,11 +407,19 @@ public partial class Home : Control
 			GD.PrintErr("Unable to accept value");
 			return;
 		}
-		
-		var Response = JsonSerializer.Deserialize<AcceptMatchResponse>(json);
-		PlayerStateManager.Instance.SessionId = Response.SessionId;
-		
-		Network.SendRequestWithToken(NetworkManager.BASE_URL + NetworkManager.DECK + "/decks/active", Godot.HttpClient.Method.Get, "", ActiveDeckIdResponse);
+		try
+		{
+			var Response = JsonSerializer.Deserialize<AcceptMatchResponse>(json);
+			PlayerStateManager.Instance.SessionId = Response.SessionId;
+			Network.SendRequestWithToken(NetworkManager.BASE_URL + NetworkManager.DECK + "/decks/active", Godot.HttpClient.Method.Get, "", ActiveDeckIdResponse);
+
+		}
+		catch (Exception e)
+		{
+			GD.Print(e);
+		}
+
+		GD.Print("Successfully able to end thus properly");
 	}
 	
 		private void ActiveDeckIdResponse(long result, long responseCode, string[] headers, byte[] body)
@@ -401,7 +450,8 @@ public partial class Home : Control
 		}
 		
 		ActiveDeckResponse ActiveDeck = JsonSerializer.Deserialize<ActiveDeckResponse>(json);	
-		GD.Print(ActiveDeck.DeckId);
+		_searching = false;
+		_accepted = true;
 		var GameStateManager = GetNode<GameStateManager>("/root/GameStateManager");
 		GameStateManager.ChangeGameState(GameState.INGAMEMODE);
 	}
@@ -472,14 +522,14 @@ public partial class Home : Control
 				PackImage.SetMeta("PackId", default(Variant));
 		}
 	}
-	
+
 	// When the pack slot is being pressed
 	private void OnPackSlotPressed(int index)
 	{	
 		Button PackSlot = GetNode<Button>("Packs/PackSlot" + index);
-		
+
 		TextureRect Pack = PackSlot.GetNode<TextureRect>("PackImage");
-		
+
 		// if got pack then call
 		if(Pack.HasMeta("PackId"))
 		{
@@ -550,7 +600,7 @@ public partial class Home : Control
 	private static VBoxContainer CreateCard(string rarity, int CardId, int count){
 		var CardContainer = new VBoxContainer();
 		CardContainer.CustomMinimumSize = new Vector2(226, 346);
-		
+
 		// add Rarity label into CardContainer
 		var RarityLabel = new Label();
 		RarityLabel.Text = rarity;
@@ -558,20 +608,20 @@ public partial class Home : Control
 		RarityLabel.AddThemeColorOverride("font_color", new Color(255, 255, 255));
 		RarityLabel.HorizontalAlignment = HorizontalAlignment.Center;
 		CardContainer.AddChild(RarityLabel);
-		
+
 		// Create CardControl with card inside
 		var CardControl = new Control();
 		CardControl.CustomMinimumSize = new Vector2(200, 230);
 		CardControl.Position = new Vector2(13, 58);
 		CardControl.SizeFlagsHorizontal = (Control.SizeFlags)SizeFlags.ShrinkCenter;
-		
+
 		// Create the card itself
 		var Card = CardScene.Instantiate<Node2D>();
 		Card.Position = new Vector2(100, 115);
-		
+
 		CardControl.AddChild(Card);
 		CardContainer.AddChild(CardControl);
-		
+
 		// Add CardCountLabel and add into CardContainer
 		var CardCountLabel = new Label();
 		CardCountLabel.Text = "X" + count;
@@ -579,32 +629,35 @@ public partial class Home : Control
 		CardCountLabel.AddThemeColorOverride("font_color", new Color(255, 255, 255));
 		CardCountLabel.HorizontalAlignment = HorizontalAlignment.Center;
 		CardContainer.AddChild(CardCountLabel);
-		
+
 		return CardContainer;
 	}
 	// When clicking the background
 	public void _OnPacksPopupBackgroundPressed()
 	{
-		
+
 		ColorRect PacksPopupContainer = GetNode<ColorRect>("PacksPopupContainer");
 		Control IndivCardContainer = PacksPopupContainer.GetNode<Control>("IndivCardContainer");
 		HFlowContainer FinalCardsResult = PacksPopupContainer.GetNode<HFlowContainer>("PacksPopupBackground/FinalCardsResultScroll/FinalCardsResult");
 
 		// if still have card to show
-		if(IndivCardContainer.GetChildCount() > 1){
-			// make bottom card visible	
+		if (IndivCardContainer.GetChildCount() > 1)
+		{
+			// make bottom card visible
 			VBoxContainer NewCardContainer = IndivCardContainer.GetChild(1) as VBoxContainer;
 			NewCardContainer.Visible = true;
-			
+
 			// move card animation
 			VBoxContainer CardContainer = IndivCardContainer.GetChild(0) as VBoxContainer;
 			SlideOutAndDelete(CardContainer);
-		}else if (IndivCardContainer.GetChildCount() == 1){
-		// no more card to show afterwards
+		}
+		else if (IndivCardContainer.GetChildCount() == 1)
+		{
+			// no more card to show afterwards
 			// move card animation
 			VBoxContainer CardContainer = IndivCardContainer.GetChild(0) as VBoxContainer;
 			SlideOutAndDelete(CardContainer);
-			
+
 			// display all cards (set to visible)
 			FinalCardsResult.Visible = true;
 		}else{
@@ -616,12 +669,12 @@ public partial class Home : Control
 			{
 				FinalCardsResult.GetChild(i).QueueFree();
 			}
-		
+
 			PacksPopupContainer.Visible = false;
 		}
-			
+
 	}
-	
+
 	// Animation to slide out and delete
 	private static void SlideOutAndDelete(Node node)
 	{

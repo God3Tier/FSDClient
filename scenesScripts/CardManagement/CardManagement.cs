@@ -1,41 +1,102 @@
 using Godot;
 using System;
-using System.Collections.Generic; 
 using System.Threading.Tasks;
 using System.Linq;
+using FSDClient.autoLoad;
+using System.Collections.Generic;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 	
+public class GetCollectionResponse
+{
+	[JsonPropertyName("decks")]
+	public List<Collection> Decks { get; set; }
+}
+
 public class Collection
-	{
-		public List<CardQuantity> Cards { get; set; } = new();
-	}
+{
+	[JsonPropertyName("deck_id")]
+	public int DeckId { get; set; }
+
+	[JsonPropertyName("deck_name")]
+	public string DeckName { get; set; }
+
+	[JsonPropertyName("cards_not_in_deck")]
+	public List<CardQuantity> CardsNotInDeck { get; set; }
+}
 
 public class CardQuantity
-	{
-		public int CardID { get; set; } = new();
-		public int Quantity { get; set; } = new();
-	}
+{
+	[JsonPropertyName("card_id")]
+	public int CardId { get; set; }
+
+	[JsonPropertyName("quantity")]
+	public int Quantity { get; set; }
+}
+
+public class UpdateDeckRequest
+{
+	[JsonPropertyName("deck_id")]
+	public int DeckId { get; set; }
+	
+	[JsonPropertyName("name")]
+	public string Name { get; set; } = "";
+	
+	[JsonPropertyName("card_ids")]
+	public List<int> CardIds { get; set; } = new();
+}
+
+public class GetActiveResponse
+{
+	[JsonPropertyName("active_deck_id")]
+	public int ActiveDeckId { get; set; }
+}
+
+public class GetDecksResponse
+{
+	[JsonPropertyName("count")]
+	public int Count { get; set; }
+	[JsonPropertyName("decks")]
+	public List<Deck> Decks { get; set; }
+}
+
 
 public class Deck
-	{
-		public int DeckID { get; set; }
-		public string Name { get; set; } = "";
-		public List<int> CardIDs { get; set; } = new();
-		public List<CardInfo> Cards { get; set; } = new();
-		public bool IsActive { get; set; } = false;
-	}
+{
+	[JsonPropertyName("deck_id")]
+	public int DeckId { get; set; }
+	
+	[JsonPropertyName("name")]
+	public string Name { get; set; } = "";
+	
+	[JsonPropertyName("card_ids")]
+	public List<int> CardIds { get; set; } = new();
+	
+	[JsonPropertyName("cards")]
+	public List<CardInfo> Cards { get; set; } = new();
+	
+	[JsonPropertyName("is_active")]
+	public bool IsActive { get; set; } = false;
+}
 
 public class CardInfo
-	{
-		public int CardID { get; set; }
-		public int Position { get; set; }
-	}
+{
+	[JsonPropertyName("card_id")]
+	public int CardId { get; set; }
+	
+	[JsonPropertyName("position")]
+	public int Position { get; set; }
+}
 	
 public partial class CardManagement : Control
 {
+	private PlayerStateManager CurrentPlayer { get; set; }
+	private NetworkManager Network { get; set; }
 	private PackedScene CardScene = GD.Load<PackedScene>("res://scenes/gameComponents/Card.tscn");
-	private List<Deck> Decks;
+	private GetDecksResponse Decks;
 	private List<Collection> Collections;
 	private int SelectedDeck = 0;
+	private int InitialActiveDeckId = 0;
 	
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
@@ -45,71 +106,70 @@ public partial class CardManagement : Control
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		Collections = FetchCollections();
-		GenerateCollection();
-		Decks = FetchDecks();
-		GenerateDecks();
-		UpdateActiveButton();
-	}
-	
-	// TODO: Function to fetch collections from backend
-	private List<Collection> FetchCollections(){
-		var Collections = new List<Collection>
+		Network = NetworkManager.Instance;
+		try
 		{
-			new Collection
+			CurrentPlayer = PlayerStateManager.Instance;
+			GD.Print(CurrentPlayer.ToString());
+			if (CurrentPlayer.PlayerData == null)
 			{
-				Cards = new List<CardQuantity>
-				{
-					new CardQuantity { CardID = 2, Quantity = 3 },
-					new CardQuantity { CardID = 3, Quantity = 3 },
-					new CardQuantity { CardID = 4, Quantity = 2 },
-					new CardQuantity { CardID = 5, Quantity = 2 },
-					new CardQuantity { CardID = 6, Quantity = 2 },
-					new CardQuantity { CardID = 7, Quantity = 2 },
-					new CardQuantity { CardID = 8, Quantity = 2 },
-					new CardQuantity { CardID = 9, Quantity = 2 },
-					new CardQuantity { CardID = 10, Quantity = 2 }
-				}
-			},
-
-			new Collection
-			{
-				Cards = new List<CardQuantity>
-				{
-					new CardQuantity { CardID = 2, Quantity = 1 },
-					new CardQuantity { CardID = 3, Quantity = 2 },
-					new CardQuantity { CardID = 4, Quantity = 2 },
-					new CardQuantity { CardID = 5, Quantity = 2 },
-					new CardQuantity { CardID = 6, Quantity = 2 },
-					new CardQuantity { CardID = 7, Quantity = 2 },
-					new CardQuantity { CardID = 8, Quantity = 2 },
-					new CardQuantity { CardID = 9, Quantity = 2 },
-					new CardQuantity { CardID = 10, Quantity = 2 }
-				}
+				GD.Print("The PlayerData is empty");
+				var GameStateManager = GetNode<GameStateManager>("/root/GameStateManager");
+				GameStateManager.ChangeGameState(GameState.LOGIN);
+				return;
 			}
-		};
-		
-		return Collections;
+
+		}
+		catch (Exception e)
+		{
+			GD.PrintErr("Whoops ", e);
+		}
+
+		FetchCollections();
+		FetchDecks();
 	}
 	
+	// Function to fetch collections from backend
+	private void FetchCollections(){
+		Network.SendRequestWithToken(NetworkManager.BASE_URL + NetworkManager.DECK + "/players/me/cards/available", Godot.HttpClient.Method.Get, "", GetCollectionResponse);
+	}
+	
+	private void GetCollectionResponse(long result, long responseCode, string[] headers, byte[] body)
+	{
+		string json = System.Text.Encoding.UTF8.GetString(body);
+		GD.Print(responseCode);
+		if (result != 200 && responseCode != 200)
+		{
+			GD.PrintErr("Failed to get a successful response when fetching collections");
+			GD.PrintErr(json);
+			return;
+		}
+
+
+		var data = JsonSerializer.Deserialize<GetCollectionResponse>(json);
+		Collections = data.Decks;
+		GenerateCollection();
+	}
+
 	// Function to generate card collection
 	public void GenerateCollection()
 	{
-		// Generate decks
+		// Generate collections
 		for (int j = 0; j < Collections.Count; j++)
 		{
 			int CollectionIndex = j;
 			var CollectionContainer = new HFlowContainer();
 			CollectionContainer.CustomMinimumSize = new Vector2(1000, 650);
 			CollectionContainer.Name = "CollectionContainer";
+			CollectionContainer.SetMeta("CollectionId", Collections[CollectionIndex].DeckId);
 			
 			// Generate collection cards
-			for (int i = 0; i < Collections[j].Cards.Count; i++)
+			for (int i = 0; i < Collections[j].CardsNotInDeck.Count; i++)
 			{
 				// to pass the values over to any functions (passing i will always pass max)
 				int CardIndex = i;
 				
-				var CardContainer =  CreateCardWithLabel("Collection", Collections[CollectionIndex].Cards[CardIndex].CardID, Collections[j].Cards[i].Quantity);
+				var CardContainer =  CreateCardWithLabel("Collection", Collections[CollectionIndex].CardsNotInDeck[CardIndex].CardId, Collections[j].CardsNotInDeck[i].Quantity);
 				
 				// Add the card into the main container
 				CollectionContainer.AddChild(CardContainer);
@@ -131,7 +191,7 @@ public partial class CardManagement : Control
 	}
 	
 	// When a Card is being pressed
-	private void OnCardPressed(string Location, int CardID, Vector2 pos){
+	private void OnCardPressed(string Location, int CardId, Vector2 pos){
 		Control ButtonContainer;
 		Panel AllCardsContainer;
 		if(Location == "Collection"){
@@ -154,7 +214,7 @@ public partial class CardManagement : Control
 		// Button does not exist yet
 		if(ButtonIndex == -1){
 			// Create button
-			CreateCardButton(pos.X, pos.Y, CardID, Location, ButtonContainer);
+			CreateCardButton(pos.X, pos.Y, CardId, Location, ButtonContainer);
 			RefreshScrollbar(AllCardsContainer);
 		}else{
 			// Else deletes it
@@ -204,7 +264,7 @@ public partial class CardManagement : Control
 	}
 	
 	// Function to create the 2 buttons
-	private void CreateCardButton(float X, float Y, int CardID, string Location, Control ButtonContainer){
+	private void CreateCardButton(float X, float Y, int CardId, string Location, Control ButtonContainer){
 		var ButtonSet = new Control();
 		ButtonSet.Position = new Vector2(X + 10, Y + 200);
 		
@@ -245,12 +305,12 @@ public partial class CardManagement : Control
 		AddOrRemoveDeckButton.AddThemeStyleboxOverride("pressed", ButtonPressed);
 			
 		// Connect pressed to a function
-		InfoButton.Pressed += () => OpenCardPopup(CardID);
+		InfoButton.Pressed += () => OpenCardPopup(CardId);
 		
 		if(Location == "Collection"){
-			AddOrRemoveDeckButton.Pressed += () => AddIntoDeck(CardID);
+			AddOrRemoveDeckButton.Pressed += () => AddIntoDeck(CardId);
 		}else{
-			AddOrRemoveDeckButton.Pressed += () => RemoveFromDeck(CardID, X, Y);
+			AddOrRemoveDeckButton.Pressed += () => RemoveFromDeck(CardId, X, Y);
 		}
 		
 		ButtonSet.AddChild(InfoButton);
@@ -259,45 +319,60 @@ public partial class CardManagement : Control
 		ButtonContainer.AddChild(ButtonSet);
 	}
 	
-	// TODO: Function to fetch deck from backend
-	private List<Deck> FetchDecks(){
-		var Decks = new List<Deck>
-			{
-				new Deck
-				{
-					DeckID = 1,
-					Name = "name1",
-					CardIDs = new List<int> { 1, 2 },
-					Cards = new List<CardInfo>
-					{
-						new CardInfo { CardID = 1, Position = 1 },
-						new CardInfo { CardID = 2, Position = 2 }
-					},
-					IsActive = false,
-				},
-				new Deck
-				{
-					DeckID = 2,
-					Name = "name2",
-					CardIDs = new List<int> { 1, 2, 3 },
-					Cards = new List<CardInfo>
-					{
-						new CardInfo { CardID = 1, Position = 1 },
-						new CardInfo { CardID = 2, Position = 2 },
-						new CardInfo { CardID = 3, Position = 3 }
-					},
-					IsActive = true,
-				}
-			};
-		
-		return Decks;
+	// Function to fetch deck from backend 
+	private void FetchDecks(){
+		Network.SendRequestWithToken(NetworkManager.BASE_URL + NetworkManager.DECK + "/decks", Godot.HttpClient.Method.Get, "", GetDecksResponse);
 	}
 	
+	// Function to fetch active deck from backend
+	private void FetchActive(){
+		Network.SendRequestWithToken(NetworkManager.BASE_URL + NetworkManager.DECK + "/decks/active", Godot.HttpClient.Method.Get, "", GetActiveResponse);
+	}
+	
+	// response handler for get all decks	
+	private void GetDecksResponse(long result, long responseCode, string[] headers, byte[] body)
+	{
+		string json = System.Text.Encoding.UTF8.GetString(body);
+		GD.Print(responseCode);
+		if (result != 200 && responseCode != 200)
+		{
+			GD.PrintErr("Failed to get a successful response when fetching decks");
+			GD.PrintErr(json);
+			return;
+		}
+
+
+		Decks = JsonSerializer.Deserialize<GetDecksResponse>(json);
+		FetchActive();
+	}
+	
+	//	response handler for get active deck
+	private void GetActiveResponse(long result, long responseCode, string[] headers, byte[] body)
+	{
+		string json = System.Text.Encoding.UTF8.GetString(body);
+		GD.Print(responseCode);
+		if (result != 200 && responseCode != 200)
+		{
+			GD.PrintErr("Failed to get a successful response when fetching active deck");
+			GD.PrintErr(json);
+			return;
+		}
+
+
+		InitialActiveDeckId = JsonSerializer.Deserialize<GetActiveResponse>(json).ActiveDeckId;
+		
+		// set active deck
+		for(int i = 0; i < Decks.Count; i++){
+			Decks.Decks[i].IsActive = (Decks.Decks[i].DeckId == InitialActiveDeckId);
+		}
+		GenerateDecks();
+	}
+
 	// Function to generate Decks
 	private async Task GenerateDecks()
 	{
 		// Generate decks
-		for (int j = 0; j < Decks.Count; j++)
+		for (int j = 0; j < Decks.Decks.Count; j++)
 		{
 			int DeckIndex = j;
 			// insert cards into deck
@@ -306,13 +381,13 @@ public partial class CardManagement : Control
 			DeckContainer.Name = "DeckContainer";
 			
 			// Generate Cards
-			for (int i = 0; i < Decks[j].Cards.Count; i++)
+			for (int i = 0; i < Decks.Decks[j].Cards.Count; i++)
 			{
 				// to pass the values over to any functions (passing i will always pass max)
 				int CardIndex = i;
 				
 				// Create control that gives the card its size
-				var CardContainer = CreateCard("Deck", Decks[DeckIndex].Cards[CardIndex].CardID);
+				var CardContainer = CreateCard("Deck", Decks.Decks[DeckIndex].Cards[CardIndex].CardId);
 				
 				// Add the card into the main container
 				DeckContainer.AddChild(CardContainer);
@@ -333,14 +408,16 @@ public partial class CardManagement : Control
 			DecksScrollContainer.MoveChild(ButtonContainer, DecksScrollContainer.GetChildCount() - 1);
 		}
 		
-		// Chain to tabs AFTER decks finish (main thread safe)
+		// Chain to tabs AFTER decks finish
 		CallDeferred(MethodName.CreateDynamicTabs);
+		
+		UpdateActiveButton();
 	}
 	
 	// Create Card with count (For collection)
-	private VBoxContainer CreateCardWithLabel(string Location, int CardID, int Quantity)
+	private VBoxContainer CreateCardWithLabel(string Location, int CardId, int Quantity)
 	{
-		var CardContainer = CreateCard(Location, CardID);
+		var CardContainer = CreateCard(Location, CardId);
 		
 		var CardCount = new Label();
 		CardCount.Name = "CardCount";
@@ -356,12 +433,12 @@ public partial class CardManagement : Control
 	}
 	
 	// Create just Card
-	private VBoxContainer CreateCard(string Location, int CardID)
+	private VBoxContainer CreateCard(string Location, int CardId)
 	{
 		// Create control that gives the card its size
 		var CardContainer = new VBoxContainer();
 		CardContainer.CustomMinimumSize = new Vector2(190, 200);
-		CardContainer.Name = "" + CardID;
+		CardContainer.Name = "" + CardId;
 		
 		// Create control that gives the card its size
 		var CardControl = new Control();
@@ -391,7 +468,7 @@ public partial class CardManagement : Control
 		CardButtonOverlay.AddThemeStyleboxOverride("focus", Transparent);
 		CardButtonOverlay.AddThemeStyleboxOverride("disabled", Transparent);
 
-		CardButtonOverlay.Pressed += () => OnCardPressed(Location, CardID, CardContainer.Position);
+		CardButtonOverlay.Pressed += () => OnCardPressed(Location, CardId, CardContainer.Position);
 		CardControl.AddChild(CardButtonOverlay);
 			
 		// Add the card into the container
@@ -402,7 +479,7 @@ public partial class CardManagement : Control
 	}
 	
 	// function to add a card into deck (called by button)
-	private void AddIntoDeck(int CardID)
+	private void AddIntoDeck(int CardId)
 	{
 		// Remove collection		
 		ScrollContainer CollectionScrollContainer = GetNode<ScrollContainer>("MainCardContainer/CollectionContainer/CollectionColorContainer/ScrollContainer");
@@ -411,28 +488,28 @@ public partial class CardManagement : Control
 		for(int i = 0; i < CollectionContainer.GetChildCount(); i++){
 			CardContainer = CollectionContainer.GetChild(i) as VBoxContainer;
 			
-			if(CardContainer.Name == "" + CardID){
-				Collections[SelectedDeck].Cards[i].Quantity -= 1;
+			if(CardContainer.Name == "" + CardId){
+				Collections[SelectedDeck].CardsNotInDeck[i].Quantity -= 1;
 				// No more in collection
-				if(Collections[SelectedDeck].Cards[i].Quantity <= 0){
+				if(Collections[SelectedDeck].CardsNotInDeck[i].Quantity <= 0){
 					CardContainer.QueueFree();
-					Collections[SelectedDeck].Cards.Remove(Collections[SelectedDeck].Cards[i]);
+					Collections[SelectedDeck].CardsNotInDeck.Remove(Collections[SelectedDeck].CardsNotInDeck[i]);
 				}else{
 				// just update count
 					Label CardCount = CardContainer.GetNode<Label>("CardCount");
-					CardCount.Text = "X" + Collections[SelectedDeck].Cards[i].Quantity;
+					CardCount.Text = "X" + Collections[SelectedDeck].CardsNotInDeck[i].Quantity;
 				}
 			}
 		}
 		
 		// Add into deck data
-		Decks[SelectedDeck].CardIDs.Add(CardID);
-		Decks[SelectedDeck].Cards.Add(new CardInfo {CardID = CardID, Position = Decks[SelectedDeck].Cards.Count});
+		Decks.Decks[SelectedDeck].CardIds.Add(CardId);
+		Decks.Decks[SelectedDeck].Cards.Add(new CardInfo {CardId = CardId, Position = Decks.Decks[SelectedDeck].Cards.Count});
 		
 		// Add visually
 		ScrollContainer DeckScrollContainer = GetNode<ScrollContainer>("MainCardContainer/DeckContainer/DeckColorContainer/ScrollContainer");
 		HFlowContainer DeckContainer = DeckScrollContainer.GetChild(SelectedDeck) as HFlowContainer;
-		CardContainer = CreateCard("Deck", CardID);
+		CardContainer = CreateCard("Deck", CardId);
 		DeckContainer.AddChild(CardContainer);
 		
 		// Make save button visible
@@ -442,7 +519,7 @@ public partial class CardManagement : Control
 		RemoveButtonContainers();
 	}
 	
-	private void RemoveFromDeck(int CardID, float X, float Y){
+	private void RemoveFromDeck(int CardId, float X, float Y){
 		// Remove card from deck
 		ScrollContainer DeckScrollContainer = GetNode<ScrollContainer>("MainCardContainer/DeckContainer/DeckColorContainer/ScrollContainer");
 		HFlowContainer DeckContainer = DeckScrollContainer.GetChild(SelectedDeck) as HFlowContainer;
@@ -452,9 +529,9 @@ public partial class CardManagement : Control
 			Vector2 pos = CardContainer.Position;
 			if(pos.X == X && pos.Y == Y){
 				// remove from cardID
-				Decks[SelectedDeck].CardIDs.Remove(Decks[SelectedDeck].CardIDs[i]);
+				Decks.Decks[SelectedDeck].CardIds.Remove(Decks.Decks[SelectedDeck].CardIds[i]);
 				// remove from Cards
-				Decks[SelectedDeck].Cards.Remove(Decks[SelectedDeck].Cards[i]);
+				Decks.Decks[SelectedDeck].Cards.Remove(Decks.Decks[SelectedDeck].Cards[i]);
 				// queuefree
 				CardContainer.QueueFree();
 				
@@ -472,12 +549,12 @@ public partial class CardManagement : Control
 			CardContainer = CollectionContainer.GetChild(i) as VBoxContainer;
 			
 			// If there is atleast 1 still in collection
-			if(CardContainer.Name == "" + CardID){
-				Collections[SelectedDeck].Cards[i].Quantity += 1;
+			if(CardContainer.Name == "" + CardId){
+				Collections[SelectedDeck].CardsNotInDeck[i].Quantity += 1;
 				
 				// Update count
 				Label CardCount = CardContainer.GetNode<Label>("CardCount");
-				CardCount.Text = "X" + Collections[SelectedDeck].Cards[i].Quantity;
+				CardCount.Text = "X" + Collections[SelectedDeck].CardsNotInDeck[i].Quantity;
 				
 				CardExist = true;
 				
@@ -487,10 +564,10 @@ public partial class CardManagement : Control
 		// if card did not exist in collection
 		if(!CardExist){
 			// insert into collection data
-			Collections[SelectedDeck].Cards.Add(new CardQuantity {CardID = CardID, Quantity = 1});
+			Collections[SelectedDeck].CardsNotInDeck.Add(new CardQuantity {CardId = CardId, Quantity = 1});
 			
 			// Insert visually
-			CardContainer = CreateCardWithLabel("Collection", CardID, 1);
+			CardContainer = CreateCardWithLabel("Collection", CardId, 1);
 			CollectionContainer.AddChild(CardContainer);
 		}
 		
@@ -545,7 +622,8 @@ public partial class CardManagement : Control
 	private void UpdateActiveButton()
 	{
 		Button IsActiveButton = GetNode<Button>("MainCardContainer/DeckContainer/TabRow/IsActiveButton");
-		if(Decks[SelectedDeck].IsActive){
+
+		if(Decks.Decks[SelectedDeck].IsActive){
 			StyleBox ButtonSuccess = GD.Load<StyleBox>("res://styles/button_success.tres");
 			StyleBox ButtonSuccessHover = GD.Load<StyleBox>("res://styles/button_success_hover.tres");
 			StyleBox ButtonSuccessPressed = GD.Load<StyleBox>("res://styles/button_success_pressed.tres");
@@ -600,11 +678,11 @@ public partial class CardManagement : Control
 		CloseCardPopup();
 	}	
 	
-	private void OpenCardPopup(int CardID)
+	private void OpenCardPopup(int CardId)
 	{
 		Control CardPopupContainerNode = GetNode<Control>("CardPopupContainer");
 		
-		// Turn it OFF (make visible false)
+		// Turn it On (make visible true)
 		CardPopupContainerNode.Visible = true;
 	}	
 	
@@ -619,32 +697,107 @@ public partial class CardManagement : Control
 	// When pressing save button
 	private void _OnSaveButtonPressed()
 	{
+				
 		for (int i = 0; i < Decks.Count; i++){
 			// Validate if theres 12 cards
-			if(Decks[i].CardIDs.Count != 12){
-				SetErrorPopup($"Deck {Decks[i].Name} does not have 12 cards");
+			if(Decks.Decks[i].CardIds.Count != 12){
+				SetTextPopup($"Deck {Decks.Decks[i].Name} does not have 12 cards");
 				return;
 			}
 			
 			// Validate max 2 unique cards
-			if(!HasNoMoreThanTwoDuplicates(Decks[i].CardIDs)){
-				SetErrorPopup($"Deck {Decks[i].Name} have more than 2 duplicate cards");
+			if(!HasNoMoreThanTwoDuplicates(Decks.Decks[i].CardIds)){
+				SetTextPopup($"Deck {Decks.Decks[i].Name} have more than 2 duplicate cards");
 				return;
 			}
 		}
-		// TODO: fetch to save
+		
+		List<UpdateDeckRequest> UpdatedDecks = new List<UpdateDeckRequest>();
+		
+		for(int i = 0;i < Decks.Count; i++){
+			UpdateDeckRequest DeckJsonObj = new UpdateDeckRequest
+			{
+				DeckId = Decks.Decks[i].DeckId,
+				Name = Decks.Decks[i].Name,
+				CardIds = Decks.Decks[i].CardIds
+			};
+			UpdatedDecks.Add(DeckJsonObj);
+			
+		}
+		
+		var jsonObj = new {
+			decks = UpdatedDecks
+		};
+		
+		var jsonString = JsonSerializer.Serialize(jsonObj);
+		GD.Print("Sending the update deck method");
+		Network.SendRequestWithToken(NetworkManager.BASE_URL + NetworkManager.DECK + "/players/me/decks", Godot.HttpClient.Method.Put, jsonString, UpdateDecksResponse);
 		
 		// Make save button invisible
 		SetSaveButtonVisibility(false);
 	}
 	
+	// handler for updating decks
+	private void UpdateDecksResponse(long result, long responseCode, string[] headers, byte[] body)
+	{
+		string json = System.Text.Encoding.UTF8.GetString(body);
+		GD.Print(responseCode);
+		if (result != 200 && responseCode != 200)
+		{
+			GD.PrintErr("Failed to get a successful response when updating decks");
+			GD.PrintErr(json);
+			return;
+		}
+
+
+		// if active deck has been changed
+		int CurrentActiveDeckId = 0;
+		for(int i = 0;i < Decks.Count; i++){
+			if(Decks.Decks[i].IsActive){
+				CurrentActiveDeckId = Decks.Decks[i].DeckId;
+			}
+		}
+		
+		if(CurrentActiveDeckId != InitialActiveDeckId){
+			var jsonObj = new {
+				deck_id = CurrentActiveDeckId
+			};
+			
+			var jsonString = JsonSerializer.Serialize(jsonObj);
+			
+			
+			Network.SendRequestWithToken(NetworkManager.BASE_URL + NetworkManager.DECK + "/decks/active", Godot.HttpClient.Method.Put, jsonString, UpdateActiveDeckResponse);
+		}else{
+			// success
+			SetTextPopup("Deck has been updated successfully!");
+		}
+
+	}
+
+	// Handler for updating active deck
+	private void UpdateActiveDeckResponse(long result, long responseCode, string[] headers, byte[] body)
+	{
+		string json = System.Text.Encoding.UTF8.GetString(body);
+		GD.Print(responseCode);
+		if (result != 200 && responseCode != 200)
+		{
+			GD.PrintErr("Failed to get a successful response when updating active deck");
+			GD.PrintErr(json);
+			return;
+		}
+
+		// success
+		SetTextPopup("Deck has been updated successfully!");
+
+	}
+	
 	// Checks that theres atmost 2 of the same card in the deck
-	public bool HasNoMoreThanTwoDuplicates(List<int> cardIDs)
+	public bool HasNoMoreThanTwoDuplicates(List<int> cardIds)
 	{
 		// use dictionary to check count of each item
 		var counts = new Dictionary<int, int>();
 
-		foreach (int id in cardIDs)
+		foreach (int id in cardIds)
 		{
 			if (!counts.ContainsKey(id))
 				counts[id] = 0;
@@ -658,20 +811,20 @@ public partial class CardManagement : Control
 		return true;
 	}
 
-	// function to make error popup visible and set the text
-	private void SetErrorPopup(string Text)
+	// function to make text popup visible and set the text
+	private void SetTextPopup(string Text)
 	{
-		Control ErrorPopupContainer = GetNode<Control>("ErrorPopupContainer");
-		Label ErrorLabel = ErrorPopupContainer.GetNode<Label>("ErrorBackgroundContainer/MarginErrorContainer/ErrorLabel");
-		ErrorPopupContainer.Visible = true;
-		ErrorLabel.Text = Text;
+		Control TextPopupContainer = GetNode<Control>("TextPopupContainer");
+		Label TextLabel = TextPopupContainer.GetNode<Label>("TextBackgroundContainer/MarginTextContainer/TextLabel");
+		TextPopupContainer.Visible = true;
+		TextLabel.Text = Text;
 	}
 
 	// When pressing the "Active" OR "Set Active" Button
 	private void _OnIsActiveButtonPressed()
 	{
 		for(int i = 0; i < Decks.Count; i++){
-			Decks[i].IsActive = i==SelectedDeck;
+			Decks.Decks[i].IsActive = i==SelectedDeck;
 		}
 		
 		// Make save button visible
@@ -688,8 +841,8 @@ public partial class CardManagement : Control
 		SaveButton.Visible = visible;
 	}
 	
-	private void _OnErrorPopupBackgroundPressed(){
-		Control ErrorPopupContainer = GetNode<Control>("ErrorPopupContainer");
-		ErrorPopupContainer.Visible = false;
+	private void _OnTextPopupBackgroundPressed(){
+		Control TextPopupContainer = GetNode<Control>("TextPopupContainer");
+		TextPopupContainer.Visible = false;
 	}
 }
