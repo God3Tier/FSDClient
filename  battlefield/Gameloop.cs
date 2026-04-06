@@ -195,7 +195,6 @@ public partial class Gameloop : Node2D
         var playerStateManager = PlayerStateManager.Instance;
         var obj = new
         {
-            player_id = playerStateManager.UserId,
             card_id = battleslot.Card.CardID,
             pos_x = battleslot.x,
             pos_y = battleslot.y,
@@ -230,10 +229,37 @@ public partial class Gameloop : Node2D
         if (EventQueue.TryDequeue(out AttackEvent attackEvent))
         {
             // Manage it here
-            
-            
-            
-            
+            // I have no idea if this is correct or not 
+            if (MainPlayer.UserId != attackEvent.AttackerId)
+            {
+
+                if (attackEvent.TargetIsLeader)
+                {
+                    Player2Health -= attackEvent.Damage;
+                    OpponentBoard[attackEvent.AttackerCol][attackEvent.AttackerRow].Health -= attackEvent.CounterDamage;
+                }
+                else
+                {
+                    Board[attackEvent.TargetCol][attackEvent.TargetRow].OnDamaged(Board, OpponentBoard, attackEvent.Damage, attackEvent.TargetCol, attackEvent.TargetRow);
+                }
+
+            }
+            else
+            {
+                if (attackEvent.TargetIsLeader)
+                {
+                    Player1Health -= attackEvent.Damage;
+                    Board[attackEvent.AttackerCol][attackEvent.AttackerRow].Health -= attackEvent.CounterDamage;
+                }
+                else
+                {
+                    OpponentBoard[attackEvent.TargetCol][attackEvent.TargetRow].OnDamaged(OpponentBoard, Board, attackEvent.Damage, attackEvent.TargetCol, attackEvent.TargetRow);
+                }
+            }
+
+
+
+
         }
     }
 
@@ -287,12 +313,16 @@ public partial class Gameloop : Node2D
             try
             {
                 var Data = JsonSerializer.Deserialize<ResponseManager>(msg);
+                if (Data.Result.Equals("failure"))
+                {
+                    // Some error handling
+                    return;
+                }
 
                 if (Enum.TryParse<ActionType>(Data.ActionType, out var actionType))
                 {
                     switch (actionType)
                     {
-
                         case ActionType.CardPlaced:
                             {
                                 PlayerState = JsonSerializer.Deserialize<PlayerState>(Data.Parameters);
@@ -315,7 +345,7 @@ public partial class Gameloop : Node2D
                                         OpponentBoard[board.Col][board.Row].IsEmpty = false;
                                     }
                                 }
-                                
+
                                 break;
                             }
                         default:
@@ -323,6 +353,7 @@ public partial class Gameloop : Node2D
                                 break;
                             }
                     }
+                    PlayerState = JsonSerializer.Deserialize<PlayerState>(Data.Parameters);
                 }
 
             }

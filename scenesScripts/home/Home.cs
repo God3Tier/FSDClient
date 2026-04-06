@@ -9,208 +9,208 @@ using System.Text.Json.Serialization;
 
 class MatchStatusResponse
 {
-    [JsonPropertyName("matched")]
-    public bool Matched { get; set; }
-    [JsonPropertyName("session_id")]
-    public string SessionID { get; set; }
-    [JsonPropertyName("opponent")]
-    public string Opponent { get; set; }
-    [JsonPropertyName("your_mmr")]
-    public int YourMMR { get; set; }
-    [JsonPropertyName("their_mmr")]
-    public int TheirMMR { get; set; }
+	[JsonPropertyName("matched")]
+	public bool Matched { get; set; }
+	[JsonPropertyName("session_id")]
+	public string SessionID { get; set; }
+	[JsonPropertyName("opponent")]
+	public string Opponent { get; set; }
+	[JsonPropertyName("your_mmr")]
+	public int YourMMR { get; set; }
+	[JsonPropertyName("their_mmr")]
+	public int TheirMMR { get; set; }
 
-    public MatchStatusResponse(bool matched, string sessionId, string opponent, int yourMMR, int theirMMR)
-    {
-        Matched = matched;
-        SessionID = sessionId;
-        Opponent = opponent;
-        YourMMR = yourMMR;
-        TheirMMR = theirMMR;
-    }
+	public MatchStatusResponse(bool matched, string sessionId, string opponent, int yourMMR, int theirMMR)
+	{
+		Matched = matched;
+		SessionID = sessionId;
+		Opponent = opponent;
+		YourMMR = yourMMR;
+		TheirMMR = theirMMR;
+	}
 }
 
 class AcceptMatchResponse
 {
-    [JsonPropertyName("message")]
-    public string Message { get; set; }
+	[JsonPropertyName("message")]
+	public string Message { get; set; }
 
-    [JsonPropertyName("session_id")]
-    public string SessionId { get; set; }
+	[JsonPropertyName("session_id")]
+	public string SessionId { get; set; }
 
-    [JsonPropertyName("status")]
-    public string Status { get; set; }
+	[JsonPropertyName("status")]
+	public string Status { get; set; }
 
-    [JsonPropertyName("player1_ready")]
-    public bool Player1Ready { get; set; }
+	[JsonPropertyName("player1_ready")]
+	public bool Player1Ready { get; set; }
 
-    [JsonPropertyName("player2_ready")]
-    public bool Player2Ready { get; set; }
+	[JsonPropertyName("player2_ready")]
+	public bool Player2Ready { get; set; }
 
-    public AcceptMatchResponse(string message, string sessionId, string status, bool player1Ready, bool player2Ready)
-    {
-        Message = message;
-        SessionId = sessionId;
-        Status = status;
-        Player1Ready = player1Ready;
-        Player2Ready = player2Ready;
-    }
+	public AcceptMatchResponse(string message, string sessionId, string status, bool player1Ready, bool player2Ready)
+	{
+		Message = message;
+		SessionId = sessionId;
+		Status = status;
+		Player1Ready = player1Ready;
+		Player2Ready = player2Ready;
+	}
 }
 
 public class GetActiveResponse
 {
-    [JsonPropertyName("active_deck_id")]
-    public int ActiveDeckId { get; set; }
+	[JsonPropertyName("active_deck_id")]
+	public int ActiveDeckId { get; set; }
 }
 
 public class ActiveDeckResponse
 {
-    [JsonPropertyName("deck_id")]
-    public int DeckId { get; set; }
+	[JsonPropertyName("deck_id")]
+	public int DeckId { get; set; }
 
-    [JsonPropertyName("name")]
-    public string Name { get; set; } = "";
+	[JsonPropertyName("name")]
+	public string Name { get; set; } = "";
 
-    [JsonPropertyName("card_ids")]
-    public List<int> CardIds { get; set; } = new();
+	[JsonPropertyName("card_ids")]
+	public List<int> CardIds { get; set; } = new();
 
-    [JsonPropertyName("cards")]
-    public List<CardInfo> Cards { get; set; } = new();
+	[JsonPropertyName("cards")]
+	public List<CardInfo> Cards { get; set; } = new();
 
-    [JsonPropertyName("is_active")]
-    public bool IsActive { get; set; } = false;
+	[JsonPropertyName("is_active")]
+	public bool IsActive { get; set; } = false;
 }
 
 public class GetPacksResponse
 {
-    [JsonPropertyName("packs")]
-    public List<PackData> Packs { get; set; }
+	[JsonPropertyName("packs")]
+	public List<PackData> Packs { get; set; }
 
-    public GetPacksResponse(List<PackData> packs)
-    {
-        Packs = packs;
-    }
+	public GetPacksResponse(List<PackData> packs)
+	{
+		Packs = packs;
+	}
 }
 
 public class PackData
 {
-    [JsonPropertyName("pack_id")]
-    public int PackId { get; set; }
+	[JsonPropertyName("pack_id")]
+	public int PackId { get; set; }
 
-    [JsonPropertyName("pack_type")]
-    public string PackType { get; set; }
+	[JsonPropertyName("pack_type")]
+	public string PackType { get; set; }
 
-    [JsonPropertyName("is_opened")]
-    public bool IsOpened { get; set; }
+	[JsonPropertyName("is_opened")]
+	public bool IsOpened { get; set; }
 
-    [JsonPropertyName("created_at")]
-    public string CreatedAt { get; set; }
+	[JsonPropertyName("created_at")]
+	public string CreatedAt { get; set; }
 
-    public PackData(int packId, string packType, bool isOpened, string createdAt)
-    {
-        PackId = packId;
-        PackType = packType;
-        IsOpened = isOpened;
-        CreatedAt = createdAt;
-    }
+	public PackData(int packId, string packType, bool isOpened, string createdAt)
+	{
+		PackId = packId;
+		PackType = packType;
+		IsOpened = isOpened;
+		CreatedAt = createdAt;
+	}
 }
 
 public class OpenPackResponse
 {
-    [JsonPropertyName("pack_id")]
-    public int PackId { get; set; }
+	[JsonPropertyName("pack_id")]
+	public int PackId { get; set; }
 
-    [JsonPropertyName("pack_type")]
-    public string PackType { get; set; }
+	[JsonPropertyName("pack_type")]
+	public string PackType { get; set; }
 
-    [JsonPropertyName("cards")]
-    public List<PackCardData> Cards { get; set; }
+	[JsonPropertyName("cards")]
+	public List<PackCardData> Cards { get; set; }
 
-    public OpenPackResponse(int packId, string packType, List<PackCardData> cards)
-    {
-        PackId = packId;
-        PackType = packType;
-        Cards = cards;
-    }
+	public OpenPackResponse(int packId, string packType, List<PackCardData> cards)
+	{
+		PackId = packId;
+		PackType = packType;
+		Cards = cards;
+	}
 }
 
 public class PackCardData
 {
-    [JsonPropertyName("card_id")]
-    public int CardId { get; set; }
+	[JsonPropertyName("card_id")]
+	public int CardId { get; set; }
 
-    [JsonPropertyName("card_name")]
-    public string CardName { get; set; }
+	[JsonPropertyName("card_name")]
+	public string CardName { get; set; }
 
-    [JsonPropertyName("rarity")]
-    public string Rarity { get; set; }
+	[JsonPropertyName("rarity")]
+	public string Rarity { get; set; }
 
-    public PackCardData(int cardId, string cardName, string rarity)
-    {
-        CardId = cardId;
-        CardName = cardName;
-        Rarity = rarity;
-    }
+	public PackCardData(int cardId, string cardName, string rarity)
+	{
+		CardId = cardId;
+		CardName = cardName;
+		Rarity = rarity;
+	}
 }
 
 public partial class Home : Control
 {
-    private static readonly PackedScene CardScene = GD.Load<PackedScene>("res://scenes/gameComponents/Card.tscn");
-    private volatile bool _searching = false;
-    private volatile bool _cancelled = false;
-    private volatile bool _accepted = false;
-    private PlayerStateManager CurrentPlayer { get; set; }
-    private NetworkManager Network { get; set; }
-    private string SessionID { get; set; }
-    private readonly Dictionary<string, Texture2D> PackTextures = new Dictionary<string, Texture2D>
-    {
-        {"none", GD.Load<Texture2D>("res://assets/cards/pack.png")},
-        {"common", GD.Load<Texture2D>("res://assets/cards/CommonPack.png")},
-        {"rare", GD.Load<Texture2D>("res://assets/cards/RarePack.png")},
-        {"epic", GD.Load<Texture2D>("res://assets/cards/EpicPack.png")},
-        {"legendary", GD.Load<Texture2D>("res://assets/cards/LegendaryPack.png")}
-    };
+	private static readonly PackedScene CardScene = GD.Load<PackedScene>("res://scenes/gameComponents/Card.tscn");
+	private volatile bool _searching = false;
+	private volatile bool _cancelled = false;
+	private volatile bool _accepted = false;
+	private PlayerStateManager CurrentPlayer { get; set; }
+	private NetworkManager Network { get; set; }
+	private string SessionID { get; set; }
+	private readonly Dictionary<string, Texture2D> PackTextures = new Dictionary<string, Texture2D>
+	{
+		{"none", GD.Load<Texture2D>("res://assets/cards/pack.png")},
+		{"common", GD.Load<Texture2D>("res://assets/cards/CommonPack.png")},
+		{"rare", GD.Load<Texture2D>("res://assets/cards/RarePack.png")},
+		{"epic", GD.Load<Texture2D>("res://assets/cards/EpicPack.png")},
+		{"legendary", GD.Load<Texture2D>("res://assets/cards/LegendaryPack.png")}
+	};
 
-    // Called when the node enters the scene tree for the first time.
-    public override void _Ready()
-    {
-        Network = NetworkManager.Instance;
-        try
-        {
-            CurrentPlayer = PlayerStateManager.Instance;
-            GD.Print(CurrentPlayer.ToString());
-            if (CurrentPlayer.PlayerData == null)
-            {
-                GD.Print("The PlayerData is empty");
-                var GameStateManager = GetNode<GameStateManager>("/root/GameStateManager");
-                GameStateManager.ChangeGameState(GameState.LOGIN);
-                return;
-            }
+	// Called when the node enters the scene tree for the first time.
+	public override void _Ready()
+	{
+		Network = NetworkManager.Instance;
+		try
+		{
+			CurrentPlayer = PlayerStateManager.Instance;
+			GD.Print(CurrentPlayer.ToString());
+			if (CurrentPlayer.PlayerData == null)
+			{
+				GD.Print("The PlayerData is empty");
+				var GameStateManager = GetNode<GameStateManager>("/root/GameStateManager");
+				GameStateManager.ChangeGameState(GameState.LOGIN);
+				return;
+			}
 
-        }
-        catch (Exception e)
-        {
-            GD.PrintErr("Whoops ", e);
-        }
+		}
+		catch (Exception e)
+		{
+			GD.PrintErr("Whoops ", e);
+		}
 
-        try
-        {
-            InitialisePlayerInformation();
+		try
+		{
+			InitialisePlayerInformation();
 
-            // Update packs on pressed function
-            UpdatePackSlotPressedFunction();
-            // Function to get pack
-            FetchPacks();
-        }
-        catch (Exception e)
-        {
-            GD.PrintErr("Whoops", e);
-        }
-    }
+			// Update packs on pressed function
+			UpdatePackSlotPressedFunction();
+			// Function to get pack
+			FetchPacks();
+		}
+		catch (Exception e)
+		{
+			GD.PrintErr("Whoops", e);
+		}
+	}
 
-    private void InitialisePlayerInformation()
-    {
-        // Set player Icon TODO: I need Windy's code to be merged before I can do this
+	private void InitialisePlayerInformation()
+	{
+		// Set player Icon TODO: I need Windy's code to be merged before I can do this
 
         var Header = (BoxContainer)FindChild("Header");
         var Row1 = (BoxContainer)Header.FindChild("Row 1");
@@ -236,7 +236,7 @@ public partial class Home : Control
 
     }
 
-    // Called every frame. 'delta' is the elapsed time since the previous frame.
+	// Called every frame. 'delta' is the elapsed time since the previous frame.
     public override void _Process(double delta)
     {
     }
