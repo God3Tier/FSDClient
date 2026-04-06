@@ -12,6 +12,10 @@ public partial class ResourceManager : Node
 		GD.Print("Resource intiallised");
 		CardStatsTable = new CardStatsTable();
 	}
+<<<<<<< Updated upstream
 	
 	
 }
+=======
+}
+>>>>>>> Stashed changes

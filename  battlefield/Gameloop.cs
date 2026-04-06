@@ -222,6 +222,19 @@ public partial class Gameloop : Node2D
         HandleWebSocket();
         HandleGameTimer(delta);
         HandleInputFromServer();
+        ProcessEvent();
+    }
+
+    public void ProcessEvent()
+    {
+        if (EventQueue.TryDequeue(out AttackEvent attackEvent))
+        {
+            // Manage it here
+            
+            
+            
+            
+        }
     }
 
     private void HandleWebSocket()
@@ -288,10 +301,21 @@ public partial class Gameloop : Node2D
                         case ActionType.TickUpdate:
                             {
                                 var tickUpdate = JsonSerializer.Deserialize<TickUpdater>(Data.Parameters);
-                                foreach (var playerupdate in tickUpdate.AttackEvent)
+
+                                foreach (var action in tickUpdate.AttackEvent)
                                 {
-                                    
+                                    EventQueue.Enqueue(action);
                                 }
+
+                                foreach (var board in tickUpdate.EnemyBoard)
+                                {
+                                    if (OpponentBoard[board.Col][board.Row].IsEmpty)
+                                    {
+                                        CardBuilder.LoadTextureFromId(board.CardID, OpponentBoard[board.Col][board.Row]);
+                                        OpponentBoard[board.Col][board.Row].IsEmpty = false;
+                                    }
+                                }
+                                
                                 break;
                             }
                         default:

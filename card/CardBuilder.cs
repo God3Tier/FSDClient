@@ -17,21 +17,28 @@ using FSDClient.card.mechanics.yellow;
 
 public class CardBuilder
 {
-	private static CardStatsTable Reference =>
-	((SceneTree)Engine.GetMainLoop()).Root
-		.GetNode<ResourceManager>("/root/ResourceManager")
-		.CardStatsTable;
-	private static readonly PackedScene packedScene = ResourceLoader.Load<PackedScene>("res://scenes/gameComponents/Card.tscn");
-	
+    private static CardStatsTable Reference =>
+    ((SceneTree)Engine.GetMainLoop()).Root
+        .GetNode<ResourceManager>("/root/ResourceManager")
+        .CardStatsTable;
+    private static readonly PackedScene packedScene = ResourceLoader.Load<PackedScene>("res://scenes/gameComponents/Card.tscn");
 
-	
-	public static Card GenerateCard(int cardID)
-	{
-		var stats = Reference.cardInfo[cardID];
-		var textures = Builder.BuildCard(stats);
-		var CardScene = GD.Load<PackedScene>("res://scenes/gameComponents/Card.tscn");
-		var CardTemp = CardScene.Instantiate<Card>();
-		CardTemp.LoadDataTexture(textures);
-		return CardTemp;
-	}
+
+
+    public static Card GenerateCard(int cardID)
+    {
+        var stats = Reference.cardInfo[cardID];
+        var textures = Builder.BuildCard(stats);
+        var CardScene = GD.Load<PackedScene>("res://scenes/gameComponents/Card.tscn");
+        var CardTemp = CardScene.Instantiate<Card>();
+        CardTemp.LoadDataTexture(textures);
+        return CardTemp;
+    }
+
+    public static void LoadTextureFromId(int cardID, Card card)
+    {
+        var stats = Reference.cardInfo[cardID];
+        var textures = Builder.BuildCard(stats);
+        card.LoadDataTexture(textures);
+    }
 }

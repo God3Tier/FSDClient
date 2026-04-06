@@ -5,6 +5,7 @@ using FSDClient.player;
 using FSDClient.card;
 using Godot;
 using FSDClient.sceneScripts.login;
+using FSDClient.home; 
 
 /*
 	Upon Client being opened, it is expected to have all user data instantly, hence it is an autoloaded class. 
@@ -16,7 +17,7 @@ public partial class PlayerStateManager : Node
 {
 	public static PlayerStateManager Instance { get; private set; }
 	public PlayerData PlayerData { get; private set; }
-	public List<CardData> DeckCardDatas { get; set; }
+	public ActiveDeckResponse ActiveDeck { get; set; }
 	public long UserId { get; private set; }
 	public int Level { get; private set; }
 	public int Crystal { get; private set; }
