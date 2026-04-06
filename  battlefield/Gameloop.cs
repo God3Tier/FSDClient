@@ -31,8 +31,8 @@ public partial class Gameloop : Node2D
     public PlayerData IncomingPlayer { get; set; }
 
     // Deal with card placement and card movement
-    private Card[][] Board { get; set; } = new Card[2][];
-    private Card[][] OpponentBoard { get; set; } = new Card[2][];
+    private Slot[] Board { get; set; } = new BattleSlot[6];
+    private Slot[] OpponentBoard { get; set; } = new BattleSlot[6];
     private CardManager CardManager;
     private HandArea HandArea;
     private DeckSpace DeckSpace;
@@ -88,8 +88,9 @@ public partial class Gameloop : Node2D
             Board[i] = new Card[3];
             OpponentBoard[i] = new Card[3];
         }
-
-        foreach (Node child in GetChildren())
+        
+        var BoardNode = (Control)FindChild("Board");
+        foreach (Node child in BoardNode.GetChildren())
         {
             string childName = child.Name.ToString();
             if (childName.Contains("BattleSlot"))
@@ -97,9 +98,7 @@ public partial class Gameloop : Node2D
                 var BattleSlot = (BattleSlot)child;
 				int lastInt = (int)(childName[^1] - '1');
 
-                BattleSlot.x = lastInt / 3;
-                BattleSlot.y = lastInt % 3;
-                GD.Print(child.Name);
+                Board[lastInt] = BattleSlot;
 
             }
 
