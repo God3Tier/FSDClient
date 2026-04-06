@@ -81,14 +81,8 @@ public partial class Gameloop : Node2D
 			GD.Print("Unable to connect to websocket becayse of ", e);
 		}
 		HandArea = GetNode<HandArea>("HandArea");
-
-
-		for (int i = 0; i < 2; i++)
-		{
-			Board[i] = new Card[3];
-			OpponentBoard[i] = new Card[3];
-		}
 		
+		// Load the battle slots for the player
 		var BoardNode = (Control)FindChild("Board");
 		foreach (Node child in BoardNode.GetChildren())
 		{
@@ -97,22 +91,20 @@ public partial class Gameloop : Node2D
 			{
 				var BattleSlot = (BattleSlot)child;
 				int lastInt = (int)(childName[^1] - '1');
-
 				Board[lastInt] = BattleSlot;
-
 			}
-
 		}
-
-		var opponentsCards = (Control)FindChild("OpponentsCards");
-
-		foreach (Node child in opponentsCards.GetChildren())
+		
+		// Load the battle slots for the opponent
+		var OpponentBoardNode = (Control)FindChild("OpponentBoard");
+		foreach (Node child in OpponentBoardNode.GetChildren())
 		{
-			if (child is Card c)
+			string childName = child.Name.ToString();
+			if (childName.Contains("BattleSlot"))
 			{
-				GD.Print("Found opponent card removing texture it");
-				c.EmptyTexture();
-				// c.Scale =  -> Set scale
+				var BattleSlot = (BattleSlot)child;
+				int lastInt = (int)(childName[^1] - '1');
+				OpponentBoard[lastInt] = BattleSlot;
 			}
 		}
 
@@ -176,29 +168,6 @@ public partial class Gameloop : Node2D
 		return BaseUrl;
 	}
 
-	private void OnAttacked(Card card)
-	{
-		int ActiveY = card.ActiveY;
-		if (OpponentBoard[0][ActiveY] == null && OpponentBoard[0][ActiveY] == null)
-		{
-			// Handle logic for player getting attacked and opponent getting counterAttack
-			GD.Print("Counter attack succesful");
-		}
-		else if (OpponentBoard[0][ActiveY] == null)
-		{
-			OpponentBoard[1][ActiveY].UpdateHealth(card.Attack);
-		}
-		else
-		{
-			OpponentBoard[0][ActiveY].UpdateHealth(card.Attack);
-		}
-		int player1Copy = Player1Health;
-		int player2Copy = Player2Health;
-		card.AttackOpponent(OpponentBoard, Board, ref player1Copy, ref player2Copy);
-		Player1Health = player1Copy;
-		Player2Health = player2Copy;
-	}
-
 	// This function is a proof of concept
 	private void OnCardDropped(BattleSlot battleslot)
 	{
@@ -216,11 +185,9 @@ public partial class Gameloop : Node2D
 		// Thread.Sleep(1);
 		battleslot.Card.ActiveY = battleslot.y;
 		battleslot.Card.ActiveX = battleslot.x;
-		battleslot.Card.Attacked += OnAttacked;
 
 		int player1Copy = Player1Health;
 		int player2Copy = Player2Health;
-		battleslot.Card.SpawnCard(OpponentBoard, Board, battleslot, ref player1Copy, ref player2Copy);
 		Player1Health = player1Copy;
 		Player2Health = player2Copy;
 	}
@@ -240,55 +207,6 @@ public partial class Gameloop : Node2D
 		GD.Print("Calling Process Event");
 		if (EventQueue.TryDequeue(out AttackEvent attackEvent))
 		{
-			// Manage it here
-			// I have no idea if this is correct or not
-			var opponentDead = false;
-			var selfDead = false;
-			if (MainPlayer.UserId != attackEvent.AttackerId)
-			{
-
-				if (attackEvent.TargetIsLeader)
-				{
-					Player2Health -= attackEvent.Damage;
-					opponentDead = OpponentBoard[attackEvent.AttackerCol][attackEvent.AttackerRow].UpdateHealth(attackEvent.CounterDamage);
-					if (opponentDead) {
-						OpponentBoard[attackEvent.AttackerRow][attackEvent.AttackerCol].EmptyTexture();
-						OpponentBoard[attackEvent.AttackerRow][attackEvent.AttackerCol].IsEmpty = true; 
-					}
-				}
-				else
-				{
-					selfDead = Board[attackEvent.TargetCol][attackEvent.TargetRow].UpdateHealth(attackEvent.Damage);
-					if (selfDead) {
-						int slot = attackEvent.TargetCol + attackEvent.TargetRow * 3 + 1;
-						var battleSlot = (BattleSlot)FindChild("BattleSlot" + slot);
-						battleSlot.RemoveCard();
-					}
-				}
-			
-			}
-			else
-			{
-				if (attackEvent.TargetIsLeader)
-				{
-					Player1Health -= attackEvent.Damage;
-					selfDead = Board[attackEvent.AttackerCol][attackEvent.AttackerRow].UpdateHealth(attackEvent.CounterDamage);
-					if (selfDead) {
-						int slot = attackEvent.AttackerCol + attackEvent.AttackerRow * 3 + 1;
-						var battleSlot = (BattleSlot)FindChild("BattleSlot" + slot);
-						battleSlot.RemoveCard();
-					}
-				}
-				else
-				{
-					opponentDead = OpponentBoard[attackEvent.TargetCol][attackEvent.TargetRow].UpdateHealth(attackEvent.Damage);
-					if (opponentDead) {
-						OpponentBoard[attackEvent.TargetRow][attackEvent.TargetCol].EmptyTexture();
-						OpponentBoard[attackEvent.TargetRow][attackEvent.TargetCol].IsEmpty = true; 
-					}
-				}
-			}
-			
 		}
 	}
 
@@ -383,10 +301,10 @@ public partial class Gameloop : Node2D
 
 								foreach (var board in tickUpdate.EnemyBoard)
 								{
-									if (OpponentBoard[board.Col][board.Row].IsEmpty)
+									if (!OpponentBoard[board.Row*3+board.Col].CardInSlot)
 									{
-										CardBuilder.LoadTextureFromId(board.CardID, OpponentBoard[board.Col][board.Row]);
-										OpponentBoard[board.Col][board.Row].IsEmpty = false;
+										Card card = CardBuilder.GenerateCard(board.CardID);
+										OpponentBoard[board.Row*3+board.Col].AddCard(card);
 									}
 								}
 

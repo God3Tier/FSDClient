@@ -3,7 +3,6 @@ namespace FSDClient.card.display;
 using Godot;
 using System;
 using FSDClient.battlefield.handManagement;
-using FSDClient.card.mechanics.effects;
 
 public partial class Card : Node2D
 {

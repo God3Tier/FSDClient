@@ -1,14 +1,13 @@
 [gd_scene format=3 uid="uid://4qrorpyul053"]
 
 [ext_resource type="Script" uid="uid://juxgwh0vufqt" path="res:// battlefield/Gameloop.cs" id="1_4bh5q"]
-[ext_resource type="Texture2D" uid="uid://07difjkgj3x6" path="res://assets/battlefield/background/Battlefield_background.png" id="2_4bh5q"]
-[ext_resource type="PackedScene" uid="uid://csm0ojou5aa2g" path="res://scenes/gameComponents/Card.tscn" id="3_qixtg"]
+[ext_resource type="Texture2D" uid="uid://dli414t1f1cvv" path="res://assets/battlefield/background/Battlefield_background.png" id="2_4bh5q"]
 [ext_resource type="Script" uid="uid://dn8g5j3fg63ie" path="res:// battlefield/handManagement/CardManager.cs" id="6_bhmdk"]
-[ext_resource type="PackedScene" path="res://scenes/Elixir.tscn" id="7_4bh5q"]
+[ext_resource type="PackedScene" uid="uid://ca1aeqga504up" path="res://scenes/Elixir.tscn" id="7_4bh5q"]
 [ext_resource type="PackedScene" uid="uid://diapfb1ab512i" path="res://scenes/gameComponents/battle_slot.tscn" id="7_s5y6v"]
 [ext_resource type="Script" uid="uid://l6honkscejd0" path="res:// battlefield/handManagement/BattleSlot.cs" id="8_407ns"]
 [ext_resource type="Script" uid="uid://ctdq1xh1g58s7" path="res:// battlefield/HandArea.cs" id="8_ctvyo"]
-[ext_resource type="Texture2D" uid="uid://dw7yqqe5tf2ko" path="res://assets/battlefield/background/Battlefield_background_deck.png" id="8_e124b"]
+[ext_resource type="Texture2D" uid="uid://b58d0v0r51p6b" path="res://assets/battlefield/background/Battlefield_background_deck.png" id="8_e124b"]
 [ext_resource type="PackedScene" uid="uid://dm6qn8g7e0lbi" path="res://scenes/gameComponents/hand_slot.tscn" id="9_101mb"]
 [ext_resource type="Script" uid="uid://c2otjqq67dmh1" path="res:// battlefield/handManagement/PlayerHand.cs" id="9_w3w6i"]
 [ext_resource type="PackedScene" uid="uid://b823yg0wlvck2" path="res://scenes/gameComponents/card_slot.tscn" id="10_hbo4f"]
@@ -18,6 +17,90 @@
 [node name="Gameplay" type="Node2D" unique_id=419605887]
 visibility_layer = 3
 script = ExtResource("1_4bh5q")
+
+[node name="OpponentBoard" type="Control" parent="." unique_id=146736537]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="BattleSlot1" parent="OpponentBoard" unique_id=1553162117 instance=ExtResource("7_s5y6v")]
+z_index = 1
+z_as_relative = false
+position = Vector2(733, 287)
+script = ExtResource("8_407ns")
+
+[node name="BattleSlot2" parent="OpponentBoard" unique_id=638562774 instance=ExtResource("7_s5y6v")]
+z_index = 1
+z_as_relative = false
+position = Vector2(961, 287)
+script = ExtResource("8_407ns")
+
+[node name="BattleSlot3" parent="OpponentBoard" unique_id=1301548259 instance=ExtResource("7_s5y6v")]
+z_index = 1
+z_as_relative = false
+position = Vector2(1181, 287)
+script = ExtResource("8_407ns")
+
+[node name="BattleSlot4" parent="OpponentBoard" unique_id=564311958 instance=ExtResource("7_s5y6v")]
+z_index = 1
+z_as_relative = false
+position = Vector2(733, 108)
+script = ExtResource("8_407ns")
+
+[node name="BattleSlot5" parent="OpponentBoard" unique_id=2129677265 instance=ExtResource("7_s5y6v")]
+z_index = 1
+z_as_relative = false
+position = Vector2(961, 108)
+script = ExtResource("8_407ns")
+
+[node name="BattleSlot6" parent="OpponentBoard" unique_id=1146781830 instance=ExtResource("7_s5y6v")]
+z_index = 1
+z_as_relative = false
+position = Vector2(1181, 108)
+script = ExtResource("8_407ns")
+
+[node name="Board" type="Control" parent="." unique_id=1055612847]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="BattleSlot1" parent="Board" unique_id=1972134176 instance=ExtResource("7_s5y6v")]
+z_index = 1
+z_as_relative = false
+position = Vector2(733, 507)
+script = ExtResource("8_407ns")
+
+[node name="BattleSlot2" parent="Board" unique_id=1454064906 instance=ExtResource("7_s5y6v")]
+z_index = 1
+z_as_relative = false
+position = Vector2(961, 509)
+script = ExtResource("8_407ns")
+
+[node name="BattleSlot3" parent="Board" unique_id=1033699585 instance=ExtResource("7_s5y6v")]
+z_index = 1
+z_as_relative = false
+position = Vector2(1181, 510)
+script = ExtResource("8_407ns")
+
+[node name="BattleSlot4" parent="Board" unique_id=2119496540 instance=ExtResource("7_s5y6v")]
+z_index = 1
+z_as_relative = false
+position = Vector2(733, 691)
+script = ExtResource("8_407ns")
+
+[node name="BattleSlot5" parent="Board" unique_id=725847297 instance=ExtResource("7_s5y6v")]
+z_index = 1
+z_as_relative = false
+position = Vector2(961, 691)
+script = ExtResource("8_407ns")
+
+[node name="BattleSlot6" parent="Board" unique_id=658250543 instance=ExtResource("7_s5y6v")]
+z_index = 1
+z_as_relative = false
+position = Vector2(1181, 691)
+script = ExtResource("8_407ns")
 
 [node name="Battlefield" type="Node2D" parent="." unique_id=2051723885]
 
@@ -34,62 +117,8 @@ offset_top = 507.0
 offset_right = 773.0
 offset_bottom = 547.0
 
-[node name="Card" parent="OpponentsCards" unique_id=1192453098 instance=ExtResource("3_qixtg")]
-position = Vector2(-3, -410)
-
-[node name="Card2" parent="OpponentsCards" unique_id=704287023 instance=ExtResource("3_qixtg")]
-position = Vector2(236, -410)
-
-[node name="Card3" parent="OpponentsCards" unique_id=1749591841 instance=ExtResource("3_qixtg")]
-position = Vector2(443, -407)
-
-[node name="Card4" parent="OpponentsCards" unique_id=1787420247 instance=ExtResource("3_qixtg")]
-position = Vector2(-6, -209)
-
-[node name="Card5" parent="OpponentsCards" unique_id=1853996861 instance=ExtResource("3_qixtg")]
-position = Vector2(234, -207)
-
-[node name="Card6" parent="OpponentsCards" unique_id=2022523424 instance=ExtResource("3_qixtg")]
-position = Vector2(444, -203)
-
 [node name="CardManager" type="Node2D" parent="." unique_id=30739936]
 script = ExtResource("6_bhmdk")
-
-[node name="BattleSlot1" parent="." unique_id=1553162117 instance=ExtResource("7_s5y6v")]
-z_index = 1
-z_as_relative = false
-position = Vector2(733, 507)
-script = ExtResource("8_407ns")
-
-[node name="BattleSlot2" parent="." unique_id=1454064906 instance=ExtResource("7_s5y6v")]
-z_index = 1
-z_as_relative = false
-position = Vector2(961, 509)
-script = ExtResource("8_407ns")
-
-[node name="BattleSlot3" parent="." unique_id=1033699585 instance=ExtResource("7_s5y6v")]
-z_index = 1
-z_as_relative = false
-position = Vector2(1181, 510)
-script = ExtResource("8_407ns")
-
-[node name="BattleSlot4" parent="." unique_id=2119496540 instance=ExtResource("7_s5y6v")]
-z_index = 1
-z_as_relative = false
-position = Vector2(733, 691)
-script = ExtResource("8_407ns")
-
-[node name="BattleSlot5" parent="." unique_id=725847297 instance=ExtResource("7_s5y6v")]
-z_index = 1
-z_as_relative = false
-position = Vector2(961, 691)
-script = ExtResource("8_407ns")
-
-[node name="BattleSlot6" parent="." unique_id=658250543 instance=ExtResource("7_s5y6v")]
-z_index = 1
-z_as_relative = false
-position = Vector2(1181, 691)
-script = ExtResource("8_407ns")
 
 [node name="PlayerHand" type="Node2D" parent="." unique_id=1397496898]
 
