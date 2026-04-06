@@ -129,15 +129,16 @@ public partial class Gameloop : Node2D
 		HandArea._deckSpace = CardManager._deckSpace;
 		GD.Print(HandArea);
 		GD.Print(CardManager._playerHand.Name);
+		
 
-		TestCard("Card1");
-		TestCard("Card2");
-		TestCard("Card3");
-		TestCard("Card4");
-		TestCard("Card5");
-		TestCard("Card6");
-		TestCard("Card7");
-		TestCard("Card8");
+		// TestCard("Card1");
+		// TestCard("Card2");
+		// TestCard("Card3");
+		// TestCard("Card4");
+		// TestCard("Card5");
+		// TestCard("Card6");
+		// TestCard("Card7");
+		// TestCard("Card8");
 		HandArea.RaiseDeck();
 		GD.Print("Completed everything without a problem");
 	}
