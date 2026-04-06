@@ -27,192 +27,192 @@ public partial class Gameloop : Node2D
 
 	public NetworkManager NetworkManager { get; set; }
 	// Unsure to keep this as the state manager or make it it's own individual player data. TBD on a later date
-    public PlayerStateManager MainPlayer { get; set; }
-    public PlayerData IncomingPlayer { get; set; }
+	public PlayerStateManager MainPlayer { get; set; }
+	public PlayerData IncomingPlayer { get; set; }
 
-    // Deal with card placement and card movement
-    private Card[][] Board { get; set; } = new Card[2][];
-    private Card[][] OpponentBoard { get; set; } = new Card[2][];
-    private CardManager CardManager;
-    private HandArea HandArea;
-    private DeckSpace DeckSpace;
+	// Deal with card placement and card movement
+	private Card[][] Board { get; set; } = new Card[2][];
+	private Card[][] OpponentBoard { get; set; } = new Card[2][];
+	private CardManager CardManager;
+	private HandArea HandArea;
+	private DeckSpace DeckSpace;
 
-    // Deal with active gameplay
-    public int Player1Health;
-    public int Player2Health;
-    public PlayerState PlayerState { get; set; }
+	// Deal with active gameplay
+	public int Player1Health;
+	public int Player2Health;
+	public PlayerState PlayerState { get; set; }
 
-    // Parameters for game state to be managed
-    private int Elixir { get; set; }
-    private int RoundNumber { get; set; }
-    private double GameTimer { get; set; } = 0;
-    private double RegenInterval { get; set; } = 1;
-    private bool TurnPause { get; set; } = true;
-    private double PauseTimer { get; set; } = 0;
-    private int TurnRound = 1;
-    private bool GameEnd { get; set; } = false;
+	// Parameters for game state to be managed
+	private int Elixir { get; set; }
+	private int RoundNumber { get; set; }
+	private double GameTimer { get; set; } = 0;
+	private double RegenInterval { get; set; } = 1;
+	private bool TurnPause { get; set; } = true;
+	private double PauseTimer { get; set; } = 0;
+	private int TurnRound = 1;
+	private bool GameEnd { get; set; } = false;
 
-    // Websocket Connection and managing concurrency
-    private WebSocketPeer Socket = new WebSocketPeer();
-    private readonly ConcurrentQueue<string> readQueue = new();
-    private readonly ConcurrentQueue<string> writeQueue = new();
-    private double _reconnectTimer { get; set; }
-    private readonly double _reconnectDelay = 3.0;
+	// Websocket Connection and managing concurrency
+	private WebSocketPeer Socket = new WebSocketPeer();
+	private readonly ConcurrentQueue<string> readQueue = new();
+	private readonly ConcurrentQueue<string> writeQueue = new();
+	private double _reconnectTimer { get; set; }
+	private readonly double _reconnectDelay = 3.0;
 
-    // I am of the assumption that this is what is being called by the
-    // We put this in gameloop later
-    public override void _Ready()
-    {
-        MainPlayer = PlayerStateManager.Instance;
-        try
-        {
-            var token = MainPlayer.Token;
-            GD.Print("Token ", token);
-            Socket.HandshakeHeaders = new string[]
-            {
-                "Authorization: Bearer " + token
-            };
-            Socket.ConnectToUrl(ConstructWebsocketUrl());
+	// I am of the assumption that this is what is being called by the
+	// We put this in gameloop later
+	public override void _Ready()
+	{
+		MainPlayer = PlayerStateManager.Instance;
+		try
+		{
+			var token = MainPlayer.Token;
+			GD.Print("Token ", token);
+			Socket.HandshakeHeaders = new string[]
+			{
+				"Authorization: Bearer " + token
+			};
+			Socket.ConnectToUrl(ConstructWebsocketUrl());
 
-        }
-        catch (Exception e)
-        {
-            GD.Print("Unable to connect to websocket becayse of ", e);
-        }
-        HandArea = GetNode<HandArea>("HandArea");
+		}
+		catch (Exception e)
+		{
+			GD.Print("Unable to connect to websocket becayse of ", e);
+		}
+		HandArea = GetNode<HandArea>("HandArea");
 
 
-        for (int i = 0; i < 2; i++)
-        {
-            Board[i] = new Card[3];
-            OpponentBoard[i] = new Card[3];
-        }
+		for (int i = 0; i < 2; i++)
+		{
+			Board[i] = new Card[3];
+			OpponentBoard[i] = new Card[3];
+		}
 
-        foreach (Node child in GetChildren())
-        {
-            string childName = child.Name.ToString();
-            if (childName.Contains("BattleSlot"))
-            {
-                var BattleSlot = (BattleSlot)child;
+		foreach (Node child in GetChildren())
+		{
+			string childName = child.Name.ToString();
+			if (childName.Contains("BattleSlot"))
+			{
+				var BattleSlot = (BattleSlot)child;
 				int lastInt = (int)(childName[^1] - '1');
 
-                BattleSlot.x = lastInt / 3;
-                BattleSlot.y = lastInt % 3;
-                GD.Print(child.Name);
+				BattleSlot.x = lastInt / 3;
+				BattleSlot.y = lastInt % 3;
+				GD.Print(child.Name);
 
-            }
+			}
 
-        }
+		}
 
-        var opponentsCards = (Control)FindChild("OpponentsCards");
+		var opponentsCards = (Control)FindChild("OpponentsCards");
 
-        foreach (Node child in opponentsCards.GetChildren())
-        {
-            if (child is Card c)
-            {
-                GD.Print("Found opponent card removing texture it");
-                c.EmptyTexture();
-                // c.Scale =  -> Set scale
-            }
-        }
+		foreach (Node child in opponentsCards.GetChildren())
+		{
+			if (child is Card c)
+			{
+				GD.Print("Found opponent card removing texture it");
+				c.EmptyTexture();
+				// c.Scale =  -> Set scale
+			}
+		}
 
-        //TODO: Add the logic to load the nonsence so I can start using the stuff for damage numbers
-        // and whatnot
-        // IncomingPlayer = new PlayerData("Placeholder", "Placeholder", [], false);
-        CardManager = (CardManager)FindChild("CardManager", true);
-        CardManager._playerHand = GetNode<PlayerHand>("HandArea/PlayerHand");
-        CardManager._deckSpace = GetNode<DeckSpace>("HandArea/DeckSpace");
-        CardManager.CardDropped += OnCardDropped;
-        // Testing the HandArea
-        HandArea = GetNode<HandArea>("HandArea");
-        HandArea._playerHand = CardManager._playerHand;
-        HandArea._deckSpace = CardManager._deckSpace;
-        GD.Print(HandArea);
-        GD.Print(CardManager._playerHand.Name);
+		//TODO: Add the logic to load the nonsence so I can start using the stuff for damage numbers
+		// and whatnot
+		// IncomingPlayer = new PlayerData("Placeholder", "Placeholder", [], false);
+		CardManager = (CardManager)FindChild("CardManager", true);
+		CardManager._playerHand = GetNode<PlayerHand>("HandArea/PlayerHand");
+		CardManager._deckSpace = GetNode<DeckSpace>("HandArea/DeckSpace");
+		CardManager.CardDropped += OnCardDropped;
+		// Testing the HandArea
+		HandArea = GetNode<HandArea>("HandArea");
+		HandArea._playerHand = CardManager._playerHand;
+		HandArea._deckSpace = CardManager._deckSpace;
+		GD.Print(HandArea);
+		GD.Print(CardManager._playerHand.Name);
 
-        TestCard("Card1");
-        TestCard("Card2");
-        TestCard("Card3");
-        TestCard("Card4");
-        TestCard("Card5");
-        TestCard("Card6");
-        TestCard("Card7");
-        TestCard("Card8");
-        HandArea.RaiseDeck();
-        GD.Print("Completed everything without a problem");
-    }
+		TestCard("Card1");
+		TestCard("Card2");
+		TestCard("Card3");
+		TestCard("Card4");
+		TestCard("Card5");
+		TestCard("Card6");
+		TestCard("Card7");
+		TestCard("Card8");
+		HandArea.RaiseDeck();
+		GD.Print("Completed everything without a problem");
+	}
 
-    private void TestCard(string Name)
-    {
-        var TestCard = new CardData(10, "farmer", Colour.RED, 100, 10, 5);
-        var CardTexture = Builder.BuildCard(TestCard);
-        var CardScene = GD.Load<PackedScene>("res://scenes/gameComponents/Card.tscn");
-        var CardTemp = CardScene.Instantiate<Card>();
-        CardTemp.Name = Name;
-        CardTemp.CurrentSlotStatus = Card.SlotStatus.Deck;
-        CardTemp.ZIndex = 4;
-        CardTemp.LoadDataTexture(CardTexture);
-        CardManager.AddChild(CardTemp);
-        CardManager._deckSpace.AddCard(CardTemp);
-    }
+	private void TestCard(string Name)
+	{
+		var TestCard = new CardData(10, "farmer", Colour.RED, 100, 10, 5);
+		var CardTexture = Builder.BuildCard(TestCard);
+		var CardScene = GD.Load<PackedScene>("res://scenes/gameComponents/Card.tscn");
+		var CardTemp = CardScene.Instantiate<Card>();
+		CardTemp.Name = Name;
+		CardTemp.CurrentSlotStatus = Card.SlotStatus.Deck;
+		CardTemp.ZIndex = 4;
+		CardTemp.LoadDataTexture(CardTexture);
+		CardManager.AddChild(CardTemp);
+		CardManager._deckSpace.AddCard(CardTemp);
+	}
 
-    private string ConstructWebsocketUrl()
-    {
-        var session = PlayerStateManager.Instance.SessionId;
-        string BaseUrl = BASE_WEBSOCKET_URL.Replace("SESSIONID", session);
-        GD.Print(BaseUrl);
-        return BaseUrl;
-    }
+	private string ConstructWebsocketUrl()
+	{
+		var session = PlayerStateManager.Instance.SessionId;
+		string BaseUrl = BASE_WEBSOCKET_URL.Replace("SESSIONID", session);
+		GD.Print(BaseUrl);
+		return BaseUrl;
+	}
 
-    private void OnAttacked(Card card)
-    {
-        int ActiveY = card.ActiveY;
-        if (OpponentBoard[0][ActiveY] == null && OpponentBoard[0][ActiveY] == null)
-        {
-            // Handle logic for player getting attacked and opponent getting counterAttack
-            GD.Print("Counter attack succesful");
-        }
-        else if (OpponentBoard[0][ActiveY] == null)
-        {
-            OpponentBoard[1][ActiveY].UpdateHealth(card.Attack);
-        }
-        else
-        {
-            OpponentBoard[0][ActiveY].UpdateHealth(card.Attack);
-        }
-        int player1Copy = Player1Health;
-        int player2Copy = Player2Health;
-        card.AttackOpponent(OpponentBoard, Board, ref player1Copy, ref player2Copy);
-        Player1Health = player1Copy;
-        Player2Health = player2Copy;
-    }
+	private void OnAttacked(Card card)
+	{
+		int ActiveY = card.ActiveY;
+		if (OpponentBoard[0][ActiveY] == null && OpponentBoard[0][ActiveY] == null)
+		{
+			// Handle logic for player getting attacked and opponent getting counterAttack
+			GD.Print("Counter attack succesful");
+		}
+		else if (OpponentBoard[0][ActiveY] == null)
+		{
+			OpponentBoard[1][ActiveY].UpdateHealth(card.Attack);
+		}
+		else
+		{
+			OpponentBoard[0][ActiveY].UpdateHealth(card.Attack);
+		}
+		int player1Copy = Player1Health;
+		int player2Copy = Player2Health;
+		card.AttackOpponent(OpponentBoard, Board, ref player1Copy, ref player2Copy);
+		Player1Health = player1Copy;
+		Player2Health = player2Copy;
+	}
 
-    // This function is a proof of concept
-    private void OnCardDropped(BattleSlot battleslot)
-    {
-        // TODO: Write to Server should be implemented once backend decides how to transfer information
-        var playerStateManager = PlayerStateManager.Instance;
-        var obj = new
-        {
-            player_id = playerStateManager.UserId,
-            card_id = battleslot.Card.CardID,
-            pos_x = battleslot.x,
-            pos_y = battleslot.y,
-        };
+	// This function is a proof of concept
+	private void OnCardDropped(BattleSlot battleslot)
+	{
+		// TODO: Write to Server should be implemented once backend decides how to transfer information
+		var playerStateManager = PlayerStateManager.Instance;
+		var obj = new
+		{
+			player_id = playerStateManager.UserId,
+			card_id = battleslot.Card.CardID,
+			pos_x = battleslot.x,
+			pos_y = battleslot.y,
+		};
 
-        WriteToServer(RequestAction.CARD_PLACED, JsonSerializer.Serialize(obj));
-        // Simulate delay of card
-        // Thread.Sleep(1);
-        battleslot.Card.ActiveY = battleslot.y;
-        battleslot.Card.ActiveX = battleslot.x;
-        battleslot.Card.Attacked += OnAttacked;
+		WriteToServer(RequestAction.CARD_PLACED, JsonSerializer.Serialize(obj));
+		// Simulate delay of card
+		// Thread.Sleep(1);
+		battleslot.Card.ActiveY = battleslot.y;
+		battleslot.Card.ActiveX = battleslot.x;
+		battleslot.Card.Attacked += OnAttacked;
 
-        int player1Copy = Player1Health;
-        int player2Copy = Player2Health;
-        battleslot.Card.SpawnCard(OpponentBoard, Board, battleslot, ref player1Copy, ref player2Copy);
-        Player1Health = player1Copy;
-        Player2Health = player2Copy;
-    }
+		int player1Copy = Player1Health;
+		int player2Copy = Player2Health;
+		battleslot.Card.SpawnCard(OpponentBoard, Board, battleslot, ref player1Copy, ref player2Copy);
+		Player1Health = player1Copy;
+		Player2Health = player2Copy;
+	}
 
 	// This is how to generate Elixir. Since client only ever knows about 1 player's resource
 	// i can do it within the gameplay loop itself
@@ -284,15 +284,18 @@ public partial class Gameloop : Node2D
 	// This is to handle the
 	private void HandleGameTimer(double delta)
 	{
-		// GD.Print("Called");
+		var bar = GetNode<ProgressBar>("TurnBarContainer/TurnBar");
+
 		if (TurnPause)
 		{
 			PauseTimer += delta;
+			bar.Value = PauseTimer / PAUSE_TIMER;
 		}
 		else
 		{
 			RegenInterval += delta;
 			GameTimer += delta;
+			bar.Value = (GameTimer - (ROUND_TIMER * (TurnRound - 1)) ) / ROUND_TIMER;
 		}
 		if (PauseTimer >= PAUSE_TIMER)
 		{
