@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="CardStats" format=3 uid="uid://d0iershlnogw0"]
+
+[ext_resource type="Texture2D" uid="uid://d0l0c46ll1csi" path="res://assets/characters/Pufferfish.png" id="1_qlo6v"]
+[ext_resource type="Script" uid="uid://b2r5pcvph5drw" path="res://resource/CardStats.cs" id="2_gvnmc"]
+
+[resource]
+script = ExtResource("2_gvnmc")
+id = 16
+Image = ExtResource("1_qlo6v")
+Name = "Pufferfish"
+Colour = "Blue"
+Rarity = "rare"
+Cost = 4
+Attack = 15
+Health = 15
+Effect = "summon: return an enemy unit in front to opponent's hand"
+Summon = "bounce"
+OnAttack = "basic"
+OnDamaged = "basic"
+OnDeath = "basic"

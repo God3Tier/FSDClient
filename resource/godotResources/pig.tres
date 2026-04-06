@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="CardStats" format=3 uid="uid://c7hxb1ild7p55"]
+
+[ext_resource type="Texture2D" uid="uid://cjoypktlmjkdr" path="res://assets/characters/Pig.png" id="1_edrwt"]
+[ext_resource type="Script" uid="uid://b2r5pcvph5drw" path="res://resource/CardStats.cs" id="2_8l10u"]
+
+[resource]
+script = ExtResource("2_8l10u")
+id = 1
+Image = ExtResource("1_edrwt")
+Name = "Pig"
+Colour = "Grey"
+Rarity = "common"
+Cost = 1
+Attack = 5
+Health = 5
+Effect = "summon: 1/2048 chance to transform into 999/5 technoblade"
+Summon = "technoblade"
+OnAttack = "basic"
+OnDamaged = "basic"
+OnDeath = "basic"

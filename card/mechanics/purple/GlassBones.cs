@@ -1,4 +1,4 @@
-namespace FSDClient.card.purple.mechanics;
+namespace FSDClient.card.mechanics.purple;
 
 using FSDClient.card.display;
 using FSDClient.battlefield.handManagement;

@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="CardStats" format=3 uid="uid://kq6x84xhvgqo"]
+
+[ext_resource type="Texture2D" uid="uid://dbfr7iag25lt0" path="res://assets/characters/Bombadier.png" id="1_ynhhh"]
+[ext_resource type="Script" uid="uid://b2r5pcvph5drw" path="res://resource/CardStats.cs" id="2_nev4l"]
+
+[resource]
+script = ExtResource("2_nev4l")
+id = 9
+Image = ExtResource("1_ynhhh")
+Name = "Bombadier"
+Colour = "Red"
+Rarity = "rare"
+Cost = 4
+Attack = 25
+Health = 15
+Effect = "summon: deal 15 to enemy leader"
+Summon = "deal_damage"
+OnAttack = "basic"
+OnDamaged = "basic"
+OnDeath = "basic"

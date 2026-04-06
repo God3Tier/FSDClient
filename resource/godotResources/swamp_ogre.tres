@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="CardStats" format=3 uid="uid://be0io1jh8kto7"]
+
+[ext_resource type="Texture2D" uid="uid://crt1483bumhpq" path="res://assets/characters/Swamp_Ogre.png" id="1_kasca"]
+[ext_resource type="Script" uid="uid://b2r5pcvph5drw" path="res://resource/CardStats.cs" id="2_lac70"]
+
+[resource]
+script = ExtResource("2_lac70")
+id = 19
+Image = ExtResource("1_kasca")
+Name = "Swamp Ogre"
+Colour = "Green"
+Rarity = "common"
+Cost = 4
+Attack = 20
+Health = 20
+Effect = "summon: 1/2048 chance to bounce all enemy units in the front row"
+Summon = "bounce"
+OnAttack = "basic"
+OnDamaged = "basic"
+OnDeath = "basic"

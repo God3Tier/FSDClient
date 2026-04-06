@@ -3,8 +3,8 @@ namespace FSDClient.sceneScripts.login;
 using Godot;
 using System;
 using System.Text.Json;
-using FSDClient.autoLoad;
 using System.Text.Json.Serialization;
+using FSDClient.autoLoad;
 
 public class LoginResponse
 {
@@ -163,14 +163,14 @@ public partial class LoginMenu : Control
 
 	private void LoginResponse(long result, long responseCode, string[] headers, byte[] body)
 	{
-		GD.Print(responseCode); ;
+		GD.Print(responseCode);
 		string json = System.Text.Encoding.UTF8.GetString(body);
 		GD.Print(json);
 		if (result != (long)HttpRequest.Result.Success || responseCode != 200)
 		{
 			// GD.Print("Attempting mock login");
 			// PlayerStateManager.Instance.SetPlayerData(MockLogin());
-			// TODO: Put some label that prevents them for conitnueing and ask them to try again
+			// // TODO: Put some label that prevents them for conitnueing and ask them to try again
 			// GD.Print("Going Home");
 			return;
 		}

@@ -18,7 +18,7 @@ public partial class CardStatsTable : Resource
 			while (fileName != "")
 			{
 				var cardTemp = GD.Load<CardStats>(BASE_DIRECTORY + "/" + fileName);
-				cardInfo.Add(cardTemp.CardId, cardTemp);
+				cardInfo.Add(cardTemp.id, cardTemp);
 				GD.Print($"Found file: {fileName}");
 				fileName = dir.GetNext();
 			}

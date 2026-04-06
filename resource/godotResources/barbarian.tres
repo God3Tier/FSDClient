@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="CardStats" format=3 uid="uid://b6xr7oxty408j"]
+
+[ext_resource type="Texture2D" uid="uid://dvhso2xpj5c3v" path="res://assets/characters/Barbarian.png" id="1_87qlb"]
+[ext_resource type="Script" uid="uid://b2r5pcvph5drw" path="res://resource/CardStats.cs" id="2_pp7yd"]
+
+[resource]
+script = ExtResource("2_pp7yd")
+id = 7
+Image = ExtResource("1_87qlb")
+Name = "Barbarian"
+Colour = "Red"
+Rarity = "common"
+Cost = 3
+Attack = 20
+Health = 10
+Effect = "summon: 1/2048 chance to double attack speed"
+Summon = "double_attack_speed"
+OnAttack = "basic"
+OnDamaged = "basic"
+OnDeath = "basic"

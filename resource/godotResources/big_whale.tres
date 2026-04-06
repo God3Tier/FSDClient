@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="CardStats" format=3 uid="uid://cdr37i5a0y17n"]
+
+[ext_resource type="Texture2D" uid="uid://7ekhdqg7f6h6" path="res://assets/characters/Big_Whale.png" id="1_7altw"]
+[ext_resource type="Script" uid="uid://b2r5pcvph5drw" path="res://resource/CardStats.cs" id="2_8jo8x"]
+
+[resource]
+script = ExtResource("2_8jo8x")
+id = 18
+Image = ExtResource("1_7altw")
+Name = "Big Whale"
+Colour = "Blue"
+Rarity = "legendary"
+Cost = 7
+Attack = 30
+Health = 40
+Effect = "Whenever a unit attacks this unit, deal damage equal to its attack"
+Summon = "basic"
+OnAttack = "basic"
+OnDamaged = "reflect"
+OnDeath = "basic"

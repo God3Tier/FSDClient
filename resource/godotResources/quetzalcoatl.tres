@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="CardStats" format=3 uid="uid://ct01va8k6wtdj"]
+
+[ext_resource type="Texture2D" uid="uid://b3sbyfwy3s1h7" path="res://assets/characters/Quetzalcoatl_.png" id="1_4yhgv"]
+[ext_resource type="Script" uid="uid://b2r5pcvph5drw" path="res://resource/CardStats.cs" id="2_roh5h"]
+
+[resource]
+script = ExtResource("2_roh5h")
+id = 24
+Image = ExtResource("1_4yhgv")
+Name = "Quetzalcoatl"
+Colour = "Green"
+Rarity = "legendary"
+Cost = 7
+Attack = 15
+Health = 15
+Effect = "summon: give all friendly units +10/+10"
+Summon = "buff_all_allies"
+OnAttack = "basic"
+OnDamaged = "basic"
+OnDeath = "basic"

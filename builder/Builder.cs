@@ -14,16 +14,17 @@ using FSDClient.resource;
 // This class is to be depricated
 public class Builder
 {
+    private static readonly int TIME_TO_ATTACK = 10;
 	// This constructs the card from the CardData class 
 	public static CardViewTextures BuildCard(CardData CardData)
 	{
-		var data = new CardViewData(CardData.Color.ToString().ToLower(), CardData.Name, CardData.Cost, CardData.Health, CardData.Attack, CardData.TimeToAttack);
+		var data = new CardViewData(0, CardData.Color.ToString().ToLower(), CardData.Name, CardData.Cost, CardData.Health, CardData.Attack, CardData.TimeToAttack);
 		return new CardViewTextures(data);
 	}
 	
 	public static CardViewTextures BuildCard(CardStats CardStats)
 	{
-		var data = new CardViewData(CardStats.CardColour.ToLower(), CardStats.Name, CardStats.Cost, CardStats.Health, CardStats.Attack, CardStats.TimeToAttack);
+		var data = new CardViewData(CardStats.id, CardStats.Colour.ToLower(), CardStats.Name, CardStats.Cost, CardStats.Health, CardStats.Attack, TIME_TO_ATTACK);
 		return new CardViewTextures(data);
 	}
 
