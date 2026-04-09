@@ -735,6 +735,7 @@ text = "1. A
 "
 
 [node name="PacksPopupContainer" type="ColorRect" parent="." unique_id=582498593]
+visible = false
 z_index = 1
 custom_minimum_size = Vector2(1920, 1080)
 layout_mode = 0
