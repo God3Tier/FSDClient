@@ -31,6 +31,9 @@ public class CardQuantity
 {
 	[JsonPropertyName("card_id")]
 	public int CardId { get; set; }
+	
+	[JsonPropertyName("level")]
+	public int Level { get; set; } = 1;
 
 	[JsonPropertyName("quantity")]
 	public int Quantity { get; set; }
@@ -88,6 +91,10 @@ public class CardInfo
 	
 	[JsonPropertyName("position")]
 	public int Position { get; set; }
+	
+	[JsonPropertyName("level")]
+	public int Level { get; set; } = 1;
+
 }
 	
 public partial class CardManagement : Control
@@ -336,7 +343,7 @@ public partial class CardManagement : Control
 		AddOrRemoveDeckButton.AddThemeStyleboxOverride("pressed", ButtonPressed);
 			
 		// Connect pressed to a function
-		InfoButton.Pressed += () => OpenCardPopup(CardId);
+		InfoButton.Pressed += () => OpenCardPopup(CardId, Location);
 		
 		if(Location == "Collection"){
 			AddOrRemoveDeckButton.Pressed += () => AddIntoDeck(CardId);
@@ -710,8 +717,23 @@ public partial class CardManagement : Control
 		CloseCardPopup();
 	}	
 	
-	private void OpenCardPopup(int CardId)
+	private void OpenCardPopup(int CardId, string Location)
 	{
+		int Level = 1;
+		if (Location == "Collection"){
+			for (int i = 0; i < Collections[SelectedDeck].CardsNotInDeck.Count; i++){
+				if(Collections[SelectedDeck].CardsNotInDeck[i].CardId == CardId){
+					Level = Collections[SelectedDeck].CardsNotInDeck[i].Level;
+				}
+			}
+		}else{
+			for (int i = 0; i < Decks.Decks[SelectedDeck].Cards.Count; i++){
+				if(Decks.Decks[SelectedDeck].Cards[i].CardId == CardId){
+					Level = Decks.Decks[SelectedDeck].Cards[i].Level;
+				}
+			}
+		}
+		
 		Control CardPopupContainerNode = GetNode<Control>("CardPopupContainer");
 		
 		// Update the values
@@ -737,12 +759,18 @@ public partial class CardManagement : Control
 		
 		// Power
 		Label PowerTextLabel = CardPopupBox.GetNode<Label>("CardDetails/RightCardDetails/CardStats/PowerContainer/PowerLevelContainer/PowerTextLabel");
-		PowerTextLabel.Text = CardValues.Attack.ToString();
+		PowerTextLabel.Text = CardBuilder.LevelStatsCalculator(CardValues.Attack, Level).ToString();
+		// Power level
+		Label PowerLevelLabel = CardPopupBox.GetNode<Label>("CardDetails/RightCardDetails/CardStats/PowerContainer/PowerLevelContainer/PowerLevelLabel");
+		PowerLevelLabel.Text = "+" + (CardBuilder.LevelStatsCalculator(CardValues.Attack, Level + 1) -  CardBuilder.LevelStatsCalculator(CardValues.Attack, Level)).ToString();
 
 		// HP
 		Label HPTextLabel = CardPopupBox.GetNode<Label>("CardDetails/RightCardDetails/CardStats/HPContainer/HPLevelContainer/HPTextLabel");
-		HPTextLabel.Text = CardValues.Health.ToString();
-		
+		HPTextLabel.Text = CardBuilder.LevelStatsCalculator(CardValues.Health, Level).ToString();
+		// HP level
+		Label HPLevelLabel = CardPopupBox.GetNode<Label>("CardDetails/RightCardDetails/CardStats/HPContainer/HPLevelContainer/HPLevelLabel");
+		HPLevelLabel.Text = "+" + (CardBuilder.LevelStatsCalculator(CardValues.Health, Level + 1) -  CardBuilder.LevelStatsCalculator(CardValues.Health, Level)).ToString();
+
 		// Effect
 		Label AbilityTextLabel = CardPopupBox.GetNode<Label>("CardDetails/RightCardDetails/AbilityContainer/AbilityTextLabel");
 		AbilityTextLabel.Text = CardValues.Effect;

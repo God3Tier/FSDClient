@@ -370,7 +370,6 @@ theme_override_styles/hover = ExtResource("9_knx5m")
 text = "Save"
 
 [node name="CardPopupContainer" type="Control" parent="." unique_id=664893130]
-visible = false
 z_index = 4
 anchors_preset = 0
 offset_right = 40.0
@@ -558,7 +557,6 @@ text = "4"
 horizontal_alignment = 1
 
 [node name="PowerLevelLabel" type="Label" parent="CardPopupContainer/CardPopupBox/CardDetails/RightCardDetails/CardStats/PowerContainer/PowerLevelContainer" unique_id=1153669387]
-visible = false
 layout_mode = 2
 theme_override_colors/font_color = Color(0, 0.8392157, 0.3529412, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
@@ -593,7 +591,6 @@ text = "2"
 horizontal_alignment = 1
 
 [node name="HPLevelLabel" type="Label" parent="CardPopupContainer/CardPopupBox/CardDetails/RightCardDetails/CardStats/HPContainer/HPLevelContainer" unique_id=883056675]
-visible = false
 layout_mode = 2
 theme_override_colors/font_color = Color(0, 0.8398252, 0.35469672, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
