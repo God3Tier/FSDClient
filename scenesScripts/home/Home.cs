@@ -87,10 +87,6 @@ public class GetPacksResponse
 	[JsonPropertyName("packs")]
 	public List<PackData> Packs { get; set; }
 
-	public GetPacksResponse(List<PackData> packs)
-	{
-		Packs = packs;
-	}
 }
 
 public class PackData
@@ -107,13 +103,6 @@ public class PackData
 	[JsonPropertyName("created_at")]
 	public string CreatedAt { get; set; }
 
-	public PackData(int packId, string packType, bool isOpened, string createdAt)
-	{
-		PackId = packId;
-		PackType = packType;
-		IsOpened = isOpened;
-		CreatedAt = createdAt;
-	}
 }
 
 public class OpenPackResponse
@@ -124,15 +113,11 @@ public class OpenPackResponse
 	[JsonPropertyName("pack_type")]
 	public string PackType { get; set; }
 
+	[JsonPropertyName("crystal")]
+	public int Crystal { get; set; } = 100;
+
 	[JsonPropertyName("cards")]
 	public List<PackCardData> Cards { get; set; }
-
-	public OpenPackResponse(int packId, string packType, List<PackCardData> cards)
-	{
-		PackId = packId;
-		PackType = packType;
-		Cards = cards;
-	}
 }
 
 public class PackCardData
@@ -146,12 +131,6 @@ public class PackCardData
 	[JsonPropertyName("rarity")]
 	public string Rarity { get; set; }
 
-	public PackCardData(int cardId, string cardName, string rarity)
-	{
-		CardId = cardId;
-		CardName = cardName;
-		Rarity = rarity;
-	}
 }
 
 public partial class Home : Control
@@ -577,18 +556,20 @@ public partial class Home : Control
 		// create a screen showing all cards (Visibility off)
 		FinalCardsResult.Visible = false;
 
-		List<PackCardData> Cards = data.Cards;
+		// create crystal card (need duplicate since 1st and 2nd need to be using diff pointers if not it will affect each other)
+		VBoxContainer CrystalContainer = CreateCrystalCard(data.Crystal);
+		IndivCardContainer.AddChild(CrystalContainer);
+		VBoxContainer CrystalContainer2 = CreateCrystalCard(data.Crystal);
+		FinalCardsResult.AddChild(CrystalContainer2);
 
-		// set generate cards one on top of another
+		List<PackCardData> Cards = data.Cards;
 		for (int i = 0; i < Cards.Count; i++)
 		{
+			// set generate cards one on top of another
 			VBoxContainer CardContainer = CreateCard(Cards[i].Rarity, Cards[i].CardId, 1);
 
 			// Set visibility to false (for all but 1st)
-			if (i != 0)
-			{
-				CardContainer.Visible = false;
-			}
+			CardContainer.Visible = false;
 
 			IndivCardContainer.AddChild(CardContainer);
 
@@ -640,6 +621,35 @@ public partial class Home : Control
 
 		return CardContainer;
 	}
+
+	// Function to create Crystal value card for display
+	private static VBoxContainer CreateCrystalCard(int quantity)
+	{
+		var CardContainer = new VBoxContainer();
+		CardContainer.CustomMinimumSize = new Vector2(226, 346);
+		CardContainer.Position = new Vector2(0, 58);
+
+		// Create Crystal
+		var CrystalTextureRect = new TextureRect();
+		CrystalTextureRect.Texture = GD.Load<Texture2D>("res://assets/header/crystal_colored.png");
+		CrystalTextureRect.CustomMinimumSize = new Vector2(200, 230);
+		CrystalTextureRect.Position = new Vector2(13, 58);
+		CrystalTextureRect.ExpandMode = TextureRect.ExpandModeEnum.FitWidthProportional;
+		CrystalTextureRect.StretchMode = TextureRect.StretchModeEnum.KeepAspectCentered;
+
+		CardContainer.AddChild(CrystalTextureRect);
+
+		// Add CardCountLabel and add into CardContainer
+		var CardCountLabel = new Label();
+		CardCountLabel.Text = "X" + quantity;
+		CardCountLabel.AddThemeFontSizeOverride("font_size", 39);
+		CardCountLabel.AddThemeColorOverride("font_color", new Color(255, 255, 255));
+		CardCountLabel.HorizontalAlignment = HorizontalAlignment.Center;
+		CardContainer.AddChild(CardCountLabel);
+
+		return CardContainer;
+	}
+
 	// When clicking the background
 	public void _OnPacksPopupBackgroundPressed()
 	{

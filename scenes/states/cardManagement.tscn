@@ -132,6 +132,7 @@ layout_mode = 2
 alignment = 1
 
 [node name="XP" type="ColorRect" parent="Header/Row 1" unique_id=652607707]
+visible = false
 custom_minimum_size = Vector2(200, 30)
 layout_mode = 2
 
@@ -171,7 +172,6 @@ text = "2/10"
 vertical_alignment = 1
 
 [node name="Crystal" type="ColorRect" parent="Header/Row 1" unique_id=1575892907]
-visible = false
 custom_minimum_size = Vector2(200, 30)
 layout_mode = 2
 

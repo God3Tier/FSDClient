@@ -359,6 +359,7 @@ layout_mode = 2
 alignment = 1
 
 [node name="XP" type="ColorRect" parent="Header/Row 1" unique_id=306432142]
+visible = false
 custom_minimum_size = Vector2(200, 30)
 layout_mode = 2
 
@@ -398,7 +399,6 @@ text = "2/10"
 vertical_alignment = 1
 
 [node name="Crystal" type="ColorRect" parent="Header/Row 1" unique_id=1576728251]
-visible = false
 custom_minimum_size = Vector2(200, 30)
 layout_mode = 2
 
@@ -735,7 +735,6 @@ text = "1. A
 "
 
 [node name="PacksPopupContainer" type="ColorRect" parent="." unique_id=582498593]
-visible = false
 z_index = 1
 custom_minimum_size = Vector2(1920, 1080)
 layout_mode = 0
