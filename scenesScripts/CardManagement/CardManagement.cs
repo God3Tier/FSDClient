@@ -343,7 +343,7 @@ public partial class CardManagement : Control
 		AddOrRemoveDeckButton.AddThemeStyleboxOverride("pressed", ButtonPressed);
 			
 		// Connect pressed to a function
-		InfoButton.Pressed += () => OpenCardPopup(CardId, Location);
+		InfoButton.Pressed += () => OpenCardPopup(CardId);
 		
 		if(Location == "Collection"){
 			AddOrRemoveDeckButton.Pressed += () => AddIntoDeck(CardId);
@@ -717,20 +717,20 @@ public partial class CardManagement : Control
 		CloseCardPopup();
 	}	
 	
-	private void OpenCardPopup(int CardId, string Location)
+	private void OpenCardPopup(int CardId)
 	{
 		int Level = 1;
-		if (Location == "Collection"){
-			for (int i = 0; i < Collections[SelectedDeck].CardsNotInDeck.Count; i++){
-				if(Collections[SelectedDeck].CardsNotInDeck[i].CardId == CardId){
-					Level = Collections[SelectedDeck].CardsNotInDeck[i].Level;
-				}
+		int Quantity = 0;
+		for (int i = 0; i < Collections[SelectedDeck].CardsNotInDeck.Count; i++){
+			if(Collections[SelectedDeck].CardsNotInDeck[i].CardId == CardId){
+				Level = Collections[SelectedDeck].CardsNotInDeck[i].Level;
+				Quantity = Collections[SelectedDeck].CardsNotInDeck[i].Quantity;
 			}
-		}else{
-			for (int i = 0; i < Decks.Decks[SelectedDeck].Cards.Count; i++){
-				if(Decks.Decks[SelectedDeck].Cards[i].CardId == CardId){
-					Level = Decks.Decks[SelectedDeck].Cards[i].Level;
-				}
+		}
+		for (int i = 0; i < Decks.Decks[SelectedDeck].Cards.Count; i++){
+			if(Decks.Decks[SelectedDeck].Cards[i].CardId == CardId){
+				Level = Decks.Decks[SelectedDeck].Cards[i].Level;
+				Quantity++;
 			}
 		}
 		
@@ -774,6 +774,18 @@ public partial class CardManagement : Control
 		// Effect
 		Label AbilityTextLabel = CardPopupBox.GetNode<Label>("CardDetails/RightCardDetails/AbilityContainer/AbilityTextLabel");
 		AbilityTextLabel.Text = CardValues.Effect;
+		
+		// Level
+		ProgressBar LevelProgressBar = CardPopupBox.GetNode<ProgressBar>("CardDetails/RightCardDetails/LevelContainer/LevelProgressBar");
+		int CardCost = CardBuilder.CardCostCalculator(Level);
+		LevelProgressBar.Value = (float)Quantity / CardCost;
+		
+		Label ProgressLabel = CardPopupBox.GetNode<Label>("CardDetails/RightCardDetails/LevelContainer/LevelProgressBar/ProgressLabel");
+		ProgressLabel.Text = Quantity + " / " + CardCost + " Copies";
+		
+		Button LevelButton = CardPopupBox.GetNode<Button>("CardDetails/RightCardDetails/LevelContainer/LevelButton");
+		int CrystalCost = CardBuilder.CrystalCostCalculator(Level);
+		LevelButton.Text = "Level Up!\n" + CrystalCost + " Crystals";
 		
 		// Turn it On (make visible true)
 		CardPopupContainerNode.Visible = true;
