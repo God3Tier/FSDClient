@@ -8,12 +8,6 @@ using FSDClient.resource;
 using FSDClient.autoLoad;
 using FSDClient.card.display;
 using System.Collections.Generic;
-using FSDClient.card.mechanics.grey;
-using FSDClient.card.mechanics.red;
-using FSDClient.card.mechanics.blue;
-using FSDClient.card.mechanics.green;
-using FSDClient.card.mechanics.purple;
-using FSDClient.card.mechanics.yellow;
 
 public class CardBuilder
 {

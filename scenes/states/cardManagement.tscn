@@ -172,6 +172,7 @@ text = "2/10"
 vertical_alignment = 1
 
 [node name="Crystal" type="ColorRect" parent="Header/Row 1" unique_id=1575892907]
+visible = false
 custom_minimum_size = Vector2(200, 30)
 layout_mode = 2
 
@@ -197,6 +198,7 @@ text = "3,810"
 vertical_alignment = 1
 
 [node name="Gold" type="ColorRect" parent="Header/Row 1" unique_id=1111243495]
+visible = false
 custom_minimum_size = Vector2(200, 30)
 layout_mode = 2
 
@@ -219,6 +221,23 @@ grow_vertical = 2
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 40
 text = "4,009"
+vertical_alignment = 1
+
+[node name="Name" type="ColorRect" parent="Header/Row 1" unique_id=660524962]
+custom_minimum_size = Vector2(350, 30)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Header/Row 1/Name" unique_id=1693858536]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 40
+text = "John Doe"
+horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="MainCardContainer" type="HBoxContainer" parent="." unique_id=582091809]
@@ -442,6 +461,7 @@ text = "Common"
 horizontal_alignment = 1
 
 [node name="RaceContainer" type="VBoxContainer" parent="CardPopupContainer/CardPopupBox/CardDetails/LeftCardDetails/CardDescription" unique_id=1032764242]
+visible = false
 layout_mode = 2
 
 [node name="RaceTitleLabel" type="Label" parent="CardPopupContainer/CardPopupBox/CardDetails/LeftCardDetails/CardDescription/RaceContainer" unique_id=409399399]
@@ -457,6 +477,7 @@ text = "Human"
 horizontal_alignment = 1
 
 [node name="DeckLimitContainer" type="VBoxContainer" parent="CardPopupContainer/CardPopupBox/CardDetails/LeftCardDetails/CardDescription" unique_id=1149281734]
+visible = false
 layout_mode = 2
 
 [node name="DeckLimitTitleLabel" type="Label" parent="CardPopupContainer/CardPopupBox/CardDetails/LeftCardDetails/CardDescription/DeckLimitContainer" unique_id=1311334668]
@@ -537,6 +558,7 @@ text = "4"
 horizontal_alignment = 1
 
 [node name="PowerLevelLabel" type="Label" parent="CardPopupContainer/CardPopupBox/CardDetails/RightCardDetails/CardStats/PowerContainer/PowerLevelContainer" unique_id=1153669387]
+visible = false
 layout_mode = 2
 theme_override_colors/font_color = Color(0, 0.8392157, 0.3529412, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
@@ -571,6 +593,7 @@ text = "2"
 horizontal_alignment = 1
 
 [node name="HPLevelLabel" type="Label" parent="CardPopupContainer/CardPopupBox/CardDetails/RightCardDetails/CardStats/HPContainer/HPLevelContainer" unique_id=883056675]
+visible = false
 layout_mode = 2
 theme_override_colors/font_color = Color(0, 0.8398252, 0.35469672, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)

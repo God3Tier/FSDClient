@@ -30,6 +30,26 @@ cache/0/50/0/underline_position = 0.0
 cache/0/50/0/underline_thickness = 0.0
 cache/0/50/0/scale = 1.0
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4hsiq"]
+bg_color = Color(0.47058824, 0.54901963, 0.54901963, 1)
+
+[sub_resource type="FontVariation" id="FontVariation_kh21s"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_p8xg2"]
+bg_color = Color(0, 0, 0, 0.75686276)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0jqec"]
+bg_color = Color(0, 0, 0, 0.75686276)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5p2g6"]
+bg_color = Color(0, 0, 0, 0.75686276)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_scrln"]
+bg_color = Color(0, 0, 0, 0.75686276)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0gauk"]
+bg_color = Color(0, 0, 0, 0.75686276)
+
 [node name="Login_menu" type="Control" unique_id=1086706066]
 layout_mode = 3
 anchors_preset = 0
@@ -105,7 +125,7 @@ offset_right = 550.0
 offset_bottom = 341.0
 theme_override_fonts/font = SubResource("FontFile_x2epc")
 theme_override_font_sizes/font_size = 50
-text = "Welcome back"
+text = "Welcome Back"
 
 [node name="UsernameInput" type="LineEdit" parent="RightPanel" unique_id=1548967841]
 layout_mode = 0
@@ -129,17 +149,6 @@ theme_override_styles/normal = ExtResource("4_x2epc")
 placeholder_text = "Password"
 emoji_menu_enabled = false
 
-[node name="SendInformation" type="Button" parent="RightPanel" unique_id=1486221930]
-layout_mode = 0
-offset_left = 105.0
-offset_top = 638.0
-offset_right = 693.0
-offset_bottom = 674.0
-mouse_default_cursor_shape = 2
-theme_override_font_sizes/font_size = 20
-theme_override_styles/normal = ExtResource("5_4hsiq")
-text = "Login"
-
 [node name="StateChanger" type="Button" parent="RightPanel" unique_id=197976993]
 layout_mode = 0
 offset_left = 104.0
@@ -151,5 +160,66 @@ theme_override_font_sizes/font_size = 20
 theme_override_styles/normal = ExtResource("5_4hsiq")
 text = "No account? Click here"
 
-[connection signal="pressed" from="RightPanel/SendInformation" to="." method="_OnInformationReady"]
+[node name="SendInformation" type="Button" parent="RightPanel" unique_id=1486221930]
+layout_mode = 0
+offset_left = 105.0
+offset_top = 638.0
+offset_right = 693.0
+offset_bottom = 674.0
+mouse_default_cursor_shape = 2
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = ExtResource("5_4hsiq")
+text = "Login"
+
+[node name="TextPopupContainer" type="Control" parent="." unique_id=601829436]
+visible = false
+z_index = 4
+anchors_preset = 0
+offset_right = 1920.0
+offset_bottom = 1080.0
+
+[node name="TextBackgroundContainer" type="PanelContainer" parent="TextPopupContainer" unique_id=950892453]
+z_index = 2
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -561.5
+offset_top = -41.5
+offset_right = 561.5
+offset_bottom = 41.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_4hsiq")
+
+[node name="MarginTextContainer" type="MarginContainer" parent="TextPopupContainer/TextBackgroundContainer" unique_id=1476915956]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 5
+theme_override_constants/margin_left = 10
+
+[node name="TextLabel" type="Label" parent="TextPopupContainer/TextBackgroundContainer/MarginTextContainer" unique_id=1044141]
+custom_minimum_size = Vector2(1100, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = SubResource("FontVariation_kh21s")
+theme_override_font_sizes/font_size = 60
+autowrap_mode = 3
+
+[node name="TextPopupBackground" type="Button" parent="TextPopupContainer" unique_id=1311675483]
+z_index = 1
+layout_mode = 0
+offset_right = 1920.0
+offset_bottom = 1080.0
+mouse_default_cursor_shape = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_p8xg2")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_0jqec")
+theme_override_styles/hover = SubResource("StyleBoxFlat_5p2g6")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_scrln")
+theme_override_styles/focus = SubResource("StyleBoxFlat_0gauk")
+
 [connection signal="pressed" from="RightPanel/StateChanger" to="." method="_onStateChangerPressed"]
+[connection signal="pressed" from="RightPanel/SendInformation" to="." method="_OnInformationReady"]
+[connection signal="pressed" from="TextPopupContainer/TextPopupBackground" to="." method="_OnTextPopupBackgroundPressed"]

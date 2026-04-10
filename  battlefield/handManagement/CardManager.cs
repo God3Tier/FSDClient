@@ -106,7 +106,8 @@ public partial class CardManager : Node2D
 		// then check if the card is currently allowed to be added
 		if (slotFound is BattleSlot battleSlotFound &&
 			!battleSlotFound.CardInSlot &&
-			cardBeingDragged.CurrentSlotStatus == Card.SlotStatus.Hand)
+			cardBeingDragged.CurrentSlotStatus == Card.SlotStatus.Hand &&
+			(bool)battleSlotFound.GetMeta("MySlot"))
 		{
 			IntoBattleSlot(battleSlotFound);
 		}
