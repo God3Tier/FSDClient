@@ -35,4 +35,11 @@ public class CardBuilder
         var textures = Builder.BuildCard(stats);
         card.LoadDataTexture(textures);
     }
+
+    // Get card values (specifically for cardmanagement page)
+    public static CardStats GetCardValues(int cardID)
+	{
+		CardStats stats = Reference.cardInfo[cardID];
+		return stats;
+	}
 }
