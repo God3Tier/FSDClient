@@ -17,16 +17,16 @@ using FSDClient.battlefield.response;
 
 public partial class Gameloop : Node2D
 {
-    public static readonly string BASE_WEBSOCKET_URL = "ws://localhost:8002/ws?session_id=SESSIONID";
+	public static readonly string BASE_WEBSOCKET_URL = "ws://localhost:8002/ws?session_id=SESSIONID";
 
-    public static readonly double MAX_ELIXER = 8;
-    public static readonly double ROUND_TIMER = 10.0;
-    public static readonly double PAUSE_TIMER = 10.0;
-    public static readonly double SECONDS_PER_ELIXIR = 3f;
-    public static readonly int BASE_ELIXIR = 4;
+	public static readonly double MAX_ELIXER = 8;
+	public static readonly double ROUND_TIMER = 10.0;
+	public static readonly double PAUSE_TIMER = 10.0;
+	public static readonly double SECONDS_PER_ELIXIR = 3f;
+	public static readonly int BASE_ELIXIR = 4;
 
-    public NetworkManager NetworkManager { get; set; }
-    // Unsure to keep this as the state manager or make it it's own individual player data. TBD on a later date
+	public NetworkManager NetworkManager { get; set; }
+	// Unsure to keep this as the state manager or make it it's own individual player data. TBD on a later date
     public PlayerStateManager MainPlayer { get; set; }
     public PlayerData IncomingPlayer { get; set; }
 
@@ -90,7 +90,7 @@ public partial class Gameloop : Node2D
             if (childName.Contains("BattleSlot"))
             {
                 var BattleSlot = (BattleSlot)child;
-                int lastInt = (int)(childName[^1] - '1');
+				int lastInt = (int)(childName[^1] - '1');
                 Board[lastInt] = BattleSlot;
             }
         }
@@ -103,7 +103,7 @@ public partial class Gameloop : Node2D
             if (childName.Contains("BattleSlot"))
             {
                 var BattleSlot = (BattleSlot)child;
-                int lastInt = (int)(childName[^1] - '1');
+				int lastInt = (int)(childName[^1] - '1');
                 OpponentBoard[lastInt] = BattleSlot;
             }
         }
@@ -198,255 +198,255 @@ public partial class Gameloop : Node2D
         Player2Health = player2Copy;
     }
 
-    // This is how to generate Elixir. Since client only ever knows about 1 player's resource
-    // i can do it within the gameplay loop itself
-    public override void _Process(double delta)
-    {
-        HandleWebSocket();
-        HandleGameTimer(delta);
-        HandleInputFromServer();
-        ProcessEvent();
-    }
+	// This is how to generate Elixir. Since client only ever knows about 1 player's resource
+	// i can do it within the gameplay loop itself
+	public override void _Process(double delta)
+	{
+		HandleWebSocket();
+		HandleGameTimer(delta);
+		HandleInputFromServer();
+		ProcessEvent();
+	}
 
-    public void ProcessEvent()
-    {
-        // GD.Print("Calling Process Event");
-        if (EventQueue.TryDequeue(out AttackEvent attackEvent))
-        {
-        }
-    }
+	public void ProcessEvent()
+	{
+		// GD.Print("Calling Process Event");
+		if (EventQueue.TryDequeue(out AttackEvent attackEvent))
+		{
+		}
+	}
 
-    private void HandleWebSocket()
-    {
-        Socket.Poll();
-        var state = Socket.GetReadyState();
+	private void HandleWebSocket()
+	{
+		Socket.Poll();
+		var state = Socket.GetReadyState();
 
-        if (state == WebSocketPeer.State.Connecting)
-        {
-            return;
-        }
+		if (state == WebSocketPeer.State.Connecting)
+		{
+			return;
+		}
 
-        if (state != WebSocketPeer.State.Open)
-        {
-            // Do Some connection error and try to rehandle
-            _reconnectTimer += GetProcessDeltaTime();
-            if (_reconnectTimer < _reconnectDelay) return;
-            _reconnectTimer = 0;
-            try
-            {
-                Socket.ConnectToUrl(ConstructWebsocketUrl());
+		if (state != WebSocketPeer.State.Open)
+		{
+			// Do Some connection error and try to rehandle
+			_reconnectTimer += GetProcessDeltaTime();
+			if (_reconnectTimer < _reconnectDelay) return;
+			_reconnectTimer = 0;
+			try
+			{
+				Socket.ConnectToUrl(ConstructWebsocketUrl());
 
-            }
-            catch (Exception e)
-            {
-                GD.Print("Unable to connect to websocket because of ", e);
-            }
-            WriteToServer(RequestAction.RECONNECT);
+			}
+			catch (Exception e)
+			{
+				GD.Print("Unable to connect to websocket because of ", e);
+			}
+			WriteToServer(RequestAction.RECONNECT);
 
-            return;
-        }
+			return;
+		}
 
-        while (Socket.GetAvailablePacketCount() > 0)
-        {
-            readQueue.Enqueue(Socket.GetPacket().GetStringFromUtf8());
-        }
+		while (Socket.GetAvailablePacketCount() > 0)
+		{
+			readQueue.Enqueue(Socket.GetPacket().GetStringFromUtf8());
+		}
 
-    }
+	}
 
-    private void HandleInputFromServer()
-    {
-        while (readQueue.TryDequeue(out string msg))
-        {
-            GD.Print(msg);
-            try
-            {
-                var Data = JsonSerializer.Deserialize<ResponseManager>(msg);
-                if (Data.Result != null && Data.Result.Equals("failure"))
-                {
-                    // Some error handling
-                    return;
-                }
-
-
-                if (Enum.TryParse<ActionType>(Data.ActionType, out var actionType))
-                {
-                    switch (actionType)
-                    {
-                        case ActionType.CARD_PLACED:
-                            {
-                                PlayerState = JsonSerializer.Deserialize<PlayerState>(Data.Parameters);
-                                break;
-                            }
-                        case ActionType.TICK_UPDATE:
-                            {
-                                if (Data.Parameters.ValueKind == JsonValueKind.Undefined ||
-                                       Data.Parameters.ValueKind == JsonValueKind.Null)
-                                    break;
-                                GD.Print("Received tick update");
-                                var tickUpdate = JsonSerializer.Deserialize<TickUpdater>(Data.Parameters);
-
-                                if (TurnPause && CardManager._deckSpace._cardCount == 0)
-                                {
-                                    foreach (var card in CardManager._deckSpace._cardList)
-                                    {
-                                        if (card != null)
-                                        {
-                                            CardManager._deckSpace.RemoveCard(card);
-                                        }
-                                    }
-                                    foreach (var card in tickUpdate.DrawPile)
-                                    {
-                                        try
-                                        {
-                                            var cardTemp = CardBuilder.GenerateCard(card.CardID);
-                                            cardTemp.CurrentSlotStatus = Card.SlotStatus.Deck;
-                                            CardManager.AddChild(cardTemp);
-                                            cardTemp.ZIndex = 4;
-                                            CardManager._deckSpace.AddCard(cardTemp);
-                                        }
-                                        catch (Exception e)
-                                        {
-                                            GD.PrintErr(e);
-                                        }
+	private void HandleInputFromServer()
+	{
+		while (readQueue.TryDequeue(out string msg))
+		{
+			GD.Print(msg);
+			try
+			{
+				var Data = JsonSerializer.Deserialize<ResponseManager>(msg);
+				if (Data.Result != null && Data.Result.Equals("failure"))
+				{
+					// Some error handling
+					return;
+				}
 
 
-                                    }
+				if (Enum.TryParse<ActionType>(Data.ActionType, out var actionType))
+				{
+					switch (actionType)
+					{
+						case ActionType.CARD_PLACED:
+							{
+								PlayerState = JsonSerializer.Deserialize<PlayerState>(Data.Parameters);
+								break;
+							}
+						case ActionType.TICK_UPDATE:
+							{
+								if (Data.Parameters.ValueKind == JsonValueKind.Undefined ||
+									   Data.Parameters.ValueKind == JsonValueKind.Null)
+									break;
+								GD.Print("Received tick update");
+								var tickUpdate = JsonSerializer.Deserialize<TickUpdater>(Data.Parameters);
 
-                                    return;
-
-                                }
-                                if (tickUpdate == null)
-                                {
-                                    return;
-                                }
-                                
-                                // for (var card ) {
-                                //     if (OpponentBoard[i]
-                                // }
-                                
-                                // if (tickUpdate.AttackEvent != null)
-                                // {
-                                //     if (!OpponentBoard[board.Row * 3 + board.Col].CardInSlot)
-                                //     {
-                                //         Card card = CardBuilder.GenerateCard(board.CardID);
-                                //         OpponentBoard[board.Row * 3 + board.Col].AddCard(card);
-                                //     }
-                                // }
-
-                                // if (tickUpdate.EnemyBoard != null)
-                                // {
-                                //     foreach (var board in tickUpdate.EnemyBoard)
-                                //     {
-                                //         if (OpponentBoard[board.Col][board.Row].IsEmpty)
-                                //         {
-                                //             CardBuilder.LoadTextureFromId(board.CardID, OpponentBoard[board.Col][board.Row]);
-                                //             OpponentBoard[board.Col][board.Row].IsEmpty = false;
-                                //         }
-                                //     }
-                                // }
+								if (TurnPause && CardManager._deckSpace._cardCount == 0)
+								{
+									foreach (var card in CardManager._deckSpace._cardList)
+									{
+										if (card != null)
+										{
+											CardManager._deckSpace.RemoveCard(card);
+										}
+									}
+									foreach (var card in tickUpdate.DrawPile)
+									{
+										try
+										{
+											var cardTemp = CardBuilder.GenerateCard(card.CardID);
+											cardTemp.CurrentSlotStatus = Card.SlotStatus.Deck;
+											CardManager.AddChild(cardTemp);
+											cardTemp.ZIndex = 4;
+											CardManager._deckSpace.AddCard(cardTemp);
+										}
+										catch (Exception e)
+										{
+											GD.PrintErr(e);
+										}
 
 
+									}
 
-                                break;
-                            }
-                        default:
-                            {
-                                break;
-                            }
-                    }
-                    PlayerState = JsonSerializer.Deserialize<PlayerState>(Data.Parameters);
-                }
+									return;
 
-            }
-            catch (Exception e)
-            {
-                GD.PrintErr("Unable to serialize ", e);
-            }
+								}
+								if (tickUpdate == null)
+								{
+									return;
+								}
+								
+								// for (var card ) {
+								//     if (OpponentBoard[i]
+								// }
+								
+								// if (tickUpdate.AttackEvent != null)
+								// {
+								//     if (!OpponentBoard[board.Row * 3 + board.Col].CardInSlot)
+								//     {
+								//         Card card = CardBuilder.GenerateCard(board.CardID);
+								//         OpponentBoard[board.Row * 3 + board.Col].AddCard(card);
+								//     }
+								// }
 
-            // Here, we somehow parse said information about card and then mess around with it. But to continue, I need to settle card Dictionary
-        }
-    }
+								// if (tickUpdate.EnemyBoard != null)
+								// {
+								//     foreach (var board in tickUpdate.EnemyBoard)
+								//     {
+								//         if (OpponentBoard[board.Col][board.Row].IsEmpty)
+								//         {
+								//             CardBuilder.LoadTextureFromId(board.CardID, OpponentBoard[board.Col][board.Row]);
+								//             OpponentBoard[board.Col][board.Row].IsEmpty = false;
+								//         }
+								//     }
+								// }
 
-    // This is to handle the
-    private void HandleGameTimer(double delta)
-    {
-        var bar = GetNode<ProgressBar>("TurnBarContainer/TurnBar");
 
-        if (TurnPause)
-        {
-            PauseTimer += delta;
-            bar.Value = PauseTimer / PAUSE_TIMER;
-        }
-        else
-        {
-            RegenInterval += delta;
-            GameTimer += delta;
-            bar.Value = (GameTimer - (ROUND_TIMER * (TurnRound - 1))) / ROUND_TIMER;
-        }
-        if (PauseTimer >= PAUSE_TIMER)
-        {
-            GD.Print("Pause Ended");
-            HandArea.LowerDeck();
-            CardManager.UnstuckCard();
-            CardManager._playerHand.ActivateCardsInHand();
-            TurnPause = false;
-            PauseTimer = 0;
-            TurnRound += 1;
-            var ElixirBar = (Elixir)FindChild("Elixir");
-            ElixirBar.UpdateRound(TurnRound);
-            return;
-        }
 
-        if (GameTimer >= ROUND_TIMER * TurnRound && !TurnPause)
-        {
-            GD.Print("Round updated");
-            // TODO: Trigger secondary draw card event
-            TurnPause = true;
-            HandArea.RaiseDeck();
-            CardManager.UnstuckCard();
-            CardManager._playerHand.PauseCardsInHand();
-        }
+								break;
+							}
+						default:
+							{
+								break;
+							}
+					}
+					PlayerState = JsonSerializer.Deserialize<PlayerState>(Data.Parameters);
+				}
 
-        if (RegenInterval >= SECONDS_PER_ELIXIR)
-        {
-            if (Elixir >= TurnRound + BASE_ELIXIR || Elixir >= MAX_ELIXER)
-            {
-                return;
-            }
-            Elixir++;
-            RegenInterval = 0.0;
-            var ElixirBar = (Elixir)FindChild("Elixir");
-            ElixirBar.UpdateElixir(Elixir);
-        }
-    }
+			}
+			catch (Exception e)
+			{
+				GD.PrintErr("Unable to serialize ", e);
+			}
 
-    public bool PlaceCardCheck(int Cost)
-    {
-        if (Elixir < Cost)
-        {
-            return false;
-        }
+			// Here, we somehow parse said information about card and then mess around with it. But to continue, I need to settle card Dictionary
+		}
+	}
 
-        Elixir -= Cost;
+	// This is to handle the
+	private void HandleGameTimer(double delta)
+	{
+		var bar = GetNode<ProgressBar>("TurnBarContainer/TurnBar");
 
-        return true;
-    }
+		if (TurnPause)
+		{
+			PauseTimer += delta;
+			bar.Value = PauseTimer / PAUSE_TIMER;
+		}
+		else
+		{
+			RegenInterval += delta;
+			GameTimer += delta;
+			bar.Value = (GameTimer - (ROUND_TIMER * (TurnRound - 1))) / ROUND_TIMER;
+		}
+		if (PauseTimer >= PAUSE_TIMER)
+		{
+			GD.Print("Pause Ended");
+			HandArea.LowerDeck();
+			CardManager.UnstuckCard();
+			CardManager._playerHand.ActivateCardsInHand();
+			TurnPause = false;
+			PauseTimer = 0;
+			TurnRound += 1;
+			var ElixirBar = (Elixir)FindChild("Elixir");
+			ElixirBar.UpdateRound(TurnRound);
+			return;
+		}
 
-    /*
+		if (GameTimer >= ROUND_TIMER * TurnRound && !TurnPause)
+		{
+			GD.Print("Round updated");
+			// TODO: Trigger secondary draw card event
+			TurnPause = true;
+			HandArea.RaiseDeck();
+			CardManager.UnstuckCard();
+			CardManager._playerHand.PauseCardsInHand();
+		}
+
+		if (RegenInterval >= SECONDS_PER_ELIXIR)
+		{
+			if (Elixir >= TurnRound + BASE_ELIXIR || Elixir >= MAX_ELIXER)
+			{
+				return;
+			}
+			Elixir++;
+			RegenInterval = 0.0;
+			var ElixirBar = (Elixir)FindChild("Elixir");
+			ElixirBar.UpdateElixir(Elixir);
+		}
+	}
+
+	public bool PlaceCardCheck(int Cost)
+	{
+		if (Elixir < Cost)
+		{
+			return false;
+		}
+
+		Elixir -= Cost;
+
+		return true;
+	}
+
+	/*
 	* I am going on a whim here but this should be called within the main game loop
 	*/
-    public void WriteToServer(RequestAction req, string parameters = "")
-    {
-        RequestConstructor reqAck = new();
-        var message = reqAck.GenerateRequest(req, parameters, PlayerState);
-        Socket.SendText(message);
-        // writeQueue.Enqueue(message);
-    }
+	public void WriteToServer(RequestAction req, string parameters = "")
+	{
+		RequestConstructor reqAck = new();
+		var message = reqAck.GenerateRequest(req, parameters, PlayerState);
+		Socket.SendText(message);
+		// writeQueue.Enqueue(message);
+	}
 
-    private void ReturnToHomeScreen()
-    {
-        GameStateManager.Instance.ChangeGameState(GameState.HOMESCREEN);
-    }
+	private void ReturnToHomeScreen()
+	{
+		GameStateManager.Instance.ChangeGameState(GameState.HOMESCREEN);
+	}
 }
 
 /*

@@ -17,8 +17,6 @@ public class CardBuilder
         .CardStatsTable;
     private static readonly PackedScene packedScene = ResourceLoader.Load<PackedScene>("res://scenes/gameComponents/Card.tscn");
 
-
-
     public static Card GenerateCard(int cardID)
     {
         var stats = Reference.cardInfo[cardID];
@@ -35,4 +33,12 @@ public class CardBuilder
         var textures = Builder.BuildCard(stats);
         card.LoadDataTexture(textures);
     }
+
+    // Get card values (specifically for cardmanagement page)
+    public static CardStats GetCardValues(int cardID)
+    {
+        CardStats stats = Reference.cardInfo[cardID];
+        return stats;
+    }
+
 }

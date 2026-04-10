@@ -14,7 +14,7 @@ using FSDClient.resource;
 // This class is to be depricated
 public class Builder
 {
-	private static readonly int TIME_TO_ATTACK = 10;
+    private static readonly int TIME_TO_ATTACK = 10;
 	// This constructs the card from the CardData class 
 	// public static CardViewTextures BuildCard(CardData CardData)
 	// {
