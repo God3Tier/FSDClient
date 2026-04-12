@@ -82,6 +82,13 @@ public class ActiveDeckResponse
 	public bool IsActive { get; set; } = false;
 }
 
+public class GetCrystalResponse
+{
+	[JsonPropertyName("crystals")]
+	public int Crystals { get; set; }
+
+}
+
 public class GetPacksResponse
 {
 	[JsonPropertyName("packs")]
@@ -113,8 +120,11 @@ public class OpenPackResponse
 	[JsonPropertyName("pack_type")]
 	public string PackType { get; set; }
 
-	[JsonPropertyName("crystal")]
-	public int Crystal { get; set; } = 100;
+	[JsonPropertyName("crystals_awarded")]
+	public int CrystalsAwarded { get; set; }
+	
+	[JsonPropertyName("crystals_total")]
+	public int CrystalsTotal { get; set; }
 
 	[JsonPropertyName("cards")]
 	public List<PackCardData> Cards { get; set; }
@@ -174,6 +184,7 @@ public partial class Home : Control
 
 		try
 		{
+			// update player information
 			InitialisePlayerInformation();
 
 			// Update packs on pressed function
@@ -195,14 +206,8 @@ public partial class Home : Control
 		var Row1 = (BoxContainer)Header.FindChild("Row 1");
 		var Row2 = (BoxContainer)Header.FindChild("Row 2");
 
-		// GD.Print(Row1, Row2);
-
-		// Set Header -> Row1 -> XP -> Banner -> Level
-		var Lv = (Label)((TextureRect)((ColorRect)Row1.FindChild("XP")).FindChild("Banner")).FindChild("Level");
-		Lv.Text = CurrentPlayer.Level.ToString();
-		// Set Header -> Row1 -> Crystal ->  Label
-		var Cry = (Label)((ColorRect)Row1.FindChild("Crystal", true)).FindChild("Label");
-		Cry.Text = CurrentPlayer.Crystal.ToString();
+		// update crystals
+		Network.SendRequestWithToken(NetworkManager.BASE_URL + NetworkManager.DECK + "/players/me/crystals", Godot.HttpClient.Method.Get, "", GetCrystalResponse);		
 
 		// Set Header -> Row1 -> Gold ->  Label
 		var Gld = (Label)((ColorRect)Row1.FindChild("Gold", true)).FindChild("Label");
@@ -212,6 +217,34 @@ public partial class Home : Control
 		var Username = (Label)((ColorRect)Row1.FindChild("Name", true)).FindChild("Label");
 		Username.Text = CurrentPlayer.PlayerData.Username;
 
+	}
+	
+	private void GetCrystalResponse(long result, long responseCode, string[] headers, byte[] body)
+	{
+		GD.Print(responseCode);
+		string json = System.Text.Encoding.UTF8.GetString(body);
+		if (result != (long)HttpRequest.Result.Success || responseCode != 200)
+		{
+			GD.PrintErr("Failed in fetching crystals");
+			return;
+		}
+
+		// Do other things with the data
+		var data = JsonSerializer.Deserialize<GetCrystalResponse>(json);
+		UpdateCrystals(data.Crystals);
+	}
+
+	// Function to update crystal count in header and in player data
+	private void UpdateCrystals(int CrystalsTotal)
+	{
+		var Header = (BoxContainer)FindChild("Header");
+		var Row1 = (BoxContainer)Header.FindChild("Row 1");
+		
+		CurrentPlayer.Crystal = CrystalsTotal;
+
+		// Set Header -> Row1 -> Crystal ->  Label
+		var Cry = (Label)((ColorRect)Row1.FindChild("Crystal", true)).FindChild("Label");
+		Cry.Text = CurrentPlayer.Crystal.ToString();
 
 	}
 
@@ -557,9 +590,9 @@ public partial class Home : Control
 		FinalCardsResult.Visible = false;
 
 		// create crystal card (need duplicate since 1st and 2nd need to be using diff pointers if not it will affect each other)
-		VBoxContainer CrystalContainer = CreateCrystalCard(data.Crystal);
+		VBoxContainer CrystalContainer = CreateCrystalCard(data.CrystalsAwarded);
 		IndivCardContainer.AddChild(CrystalContainer);
-		VBoxContainer CrystalContainer2 = CreateCrystalCard(data.Crystal);
+		VBoxContainer CrystalContainer2 = CreateCrystalCard(data.CrystalsAwarded);
 		FinalCardsResult.AddChild(CrystalContainer2);
 
 		List<PackCardData> Cards = data.Cards;
@@ -579,6 +612,9 @@ public partial class Home : Control
 
 		// Turn it ON (make visible)
 		PacksPopupContainer.Visible = true;
+
+		// Update total crystal counter
+		UpdateCrystals(data.CrystalsTotal);
 
 		// Update packs visually
 		FetchPacks();

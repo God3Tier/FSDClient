@@ -20,6 +20,7 @@
 [ext_resource type="Texture2D" uid="uid://bqe7flm7kyijb" path="res://assets/symbols/attack_symbol.png" id="16_knx5m"]
 [ext_resource type="Texture2D" uid="uid://u0l0s1ftn71l" path="res://assets/symbols/defence_symbol.png" id="17_mg07r"]
 [ext_resource type="StyleBox" uid="uid://byt6vlxbekhk0" path="res://styles/button_success_pressed.tres" id="18_mg07r"]
+[ext_resource type="StyleBox" uid="uid://mnxdedl085kl" path="res://styles/button_danger.tres" id="21_x8dtt"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yc314"]
 bg_color = Color(1, 1, 1, 1)
@@ -393,7 +394,7 @@ layout_mode = 0
 offset_left = 192.0
 offset_top = 108.0
 offset_right = 1728.0
-offset_bottom = 972.0
+offset_bottom = 1009.0
 theme_override_styles/panel = ExtResource("12_v80jo")
 
 [node name="Header" type="Label" parent="CardPopupContainer/CardPopupBox" unique_id=1151240236]
@@ -497,6 +498,12 @@ layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 0
 theme_override_constants/separation = 50
+
+[node name="LevelLabel" type="Label" parent="CardPopupContainer/CardPopupBox/CardDetails/RightCardDetails" unique_id=271450642]
+layout_mode = 2
+theme_override_font_sizes/font_size = 60
+text = "Level 1"
+horizontal_alignment = 1
 
 [node name="CardStats" type="HBoxContainer" parent="CardPopupContainer/CardPopupBox/CardDetails/RightCardDetails" unique_id=2033511817]
 layout_mode = 2
@@ -663,21 +670,32 @@ text = "5 / 10"
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="Label" type="Label" parent="CardPopupContainer/CardPopupBox/CardDetails/RightCardDetails/LevelContainer/LevelProgressBar" unique_id=269341190]
+layout_mode = 0
+offset_left = -123.0
+offset_top = 184.0
+offset_right = 444.0
+offset_bottom = 212.0
+theme_override_font_sizes/font_size = 20
+text = "Ensure that you have some cards available after upgrading"
+
 [node name="LevelButton" type="Button" parent="CardPopupContainer/CardPopupBox/CardDetails/RightCardDetails/LevelContainer" unique_id=1283903765]
 custom_minimum_size = Vector2(300, 90)
 layout_mode = 2
 mouse_default_cursor_shape = 2
+theme_override_colors/font_disabled_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = SubResource("FontVariation_cjdl4")
 theme_override_font_sizes/font_size = 30
 theme_override_styles/normal = ExtResource("8_fh2y4")
 theme_override_styles/pressed = ExtResource("18_mg07r")
 theme_override_styles/hover = ExtResource("9_knx5m")
+theme_override_styles/disabled = ExtResource("21_x8dtt")
 text = "Level up
 10"
 
 [node name="TextPopupContainer" type="Control" parent="." unique_id=704309261]
 visible = false
-z_index = 4
+z_index = 5
 anchors_preset = 0
 offset_right = 1920.0
 offset_bottom = 1080.0
@@ -729,4 +747,5 @@ theme_override_styles/focus = SubResource("StyleBoxFlat_x8dtt")
 [connection signal="pressed" from="MainCardContainer/DeckContainer/DeckColorContainer/SaveButton" to="." method="_OnSaveButtonPressed"]
 [connection signal="pressed" from="CardPopupContainer/CardPopupBackground" to="." method="_OnCardPopupBackgroundPressed"]
 [connection signal="pressed" from="CardPopupContainer/CardPopupBox/CloseCardButton" to="." method="_OnCloseCardButtonPressed"]
+[connection signal="pressed" from="CardPopupContainer/CardPopupBox/CardDetails/RightCardDetails/LevelContainer/LevelButton" to="." method="_OnLevelButtonPressed"]
 [connection signal="pressed" from="TextPopupContainer/TextPopupBackground" to="." method="_OnTextPopupBackgroundPressed"]
