@@ -21,7 +21,8 @@ public class CardBuilder
 
 	public static Card GenerateCard(int cardID)
 	{
-		var stats = Reference.cardInfo[cardID];
+		// get a fresh copy (diff pointer)
+		var stats = Reference.cardInfo[cardID].Duplicate() as CardStats;
 		var textures = Builder.BuildCard(stats);
 		var CardScene = GD.Load<PackedScene>("res://scenes/gameComponents/Card.tscn");
 		var CardTemp = CardScene.Instantiate<Card>();
@@ -29,9 +30,24 @@ public class CardBuilder
 		return CardTemp;
 	}
 
+	public static Card GenerateCardWithLevel(int cardID, int Level)
+	{
+		// get a fresh copy (diff pointer)
+		var stats = Reference.cardInfo[cardID].Duplicate() as CardStats;
+		stats.Attack = LevelStatsCalculator(stats.Attack, Level);
+		stats.Health = LevelStatsCalculator(stats.Health, Level);
+		var textures = Builder.BuildCard(stats);
+		var CardScene = GD.Load<PackedScene>("res://scenes/gameComponents/Card.tscn");
+		var CardTemp = CardScene.Instantiate<Card>();
+		CardTemp.LoadDataTexture(textures);
+		return CardTemp;
+	}
+
+
 	public static void LoadTextureFromId(int cardID, Card card)
 	{
-		var stats = Reference.cardInfo[cardID];
+		// get a fresh copy (diff pointer)
+		var stats = Reference.cardInfo[cardID].Duplicate() as CardStats;
 		var textures = Builder.BuildCard(stats);
 		card.LoadDataTexture(textures);
 	}
@@ -39,7 +55,8 @@ public class CardBuilder
 	// Get card values (specifically for cardmanagement page)
 	public static CardStats GetCardValues(int cardID)
 	{
-		CardStats stats = Reference.cardInfo[cardID];
+		// get a fresh copy (diff pointer)
+		var stats = Reference.cardInfo[cardID].Duplicate() as CardStats;
 		return stats;
 	}
 

@@ -249,7 +249,7 @@ public partial class CardManagement : Control
 				// to pass the values over to any functions (passing i will always pass max)
 				int CardIndex = i;
 				
-				var CardContainer =  CreateCardWithLabel("Collection", Collections[CollectionIndex].CardsNotInDeck[CardIndex].CardId, Collections[j].CardsNotInDeck[i].Quantity);
+				var CardContainer =  CreateCardWithLabel("Collection", Collections[CollectionIndex].CardsNotInDeck[CardIndex].CardId, Collections[j].CardsNotInDeck[i].Quantity, Collections[j].CardsNotInDeck[i].Level);
 				
 				// Add the card into the main container
 				CollectionContainer.AddChild(CardContainer);
@@ -469,7 +469,7 @@ public partial class CardManagement : Control
 				int CardIndex = i;
 				
 				// Create control that gives the card its size
-				var CardContainer = CreateCard("Deck", Decks.Decks[DeckIndex].Cards[CardIndex].CardId);
+				var CardContainer = CreateCard("Deck", Decks.Decks[DeckIndex].Cards[CardIndex].CardId, Decks.Decks[DeckIndex].Cards[CardIndex].Level);
 				
 				// Add the card into the main container
 				DeckContainer.AddChild(CardContainer);
@@ -497,9 +497,9 @@ public partial class CardManagement : Control
 	}
 	
 	// Create Card with count (For collection)
-	private VBoxContainer CreateCardWithLabel(string Location, int CardId, int Quantity)
+	private VBoxContainer CreateCardWithLabel(string Location, int CardId, int Quantity, int Level)
 	{
-		var CardContainer = CreateCard(Location, CardId);
+		var CardContainer = CreateCard(Location, CardId, Level);
 		
 		var CardCount = new Label();
 		CardCount.Name = "CardCount";
@@ -515,7 +515,7 @@ public partial class CardManagement : Control
 	}
 	
 	// Create just Card
-	private VBoxContainer CreateCard(string Location, int CardId)
+	private VBoxContainer CreateCard(string Location, int CardId, int Level)
 	{
 		// Create control that gives the card its size
 		var CardContainer = new VBoxContainer();
@@ -528,7 +528,7 @@ public partial class CardManagement : Control
 		CardControl.Name = "CardControl";
 				
 		// Create the card itself
-		var Card = CardBuilder.GenerateCard(CardId);
+		var Card = CardBuilder.GenerateCardWithLevel(CardId, Level);
 			
 		Card.Position = new Vector2(95, 100);
 		CardControl.AddChild(Card);
@@ -564,6 +564,7 @@ public partial class CardManagement : Control
 	// function to add a card into deck (called by button)
 	private void AddIntoDeck(int CardId)
 	{
+		int Level = 1;
 		// Remove collection		
 		ScrollContainer CollectionScrollContainer = GetNode<ScrollContainer>("MainCardContainer/CollectionContainer/CollectionColorContainer/ScrollContainer");
 		HFlowContainer CollectionContainer = CollectionScrollContainer.GetChild(SelectedDeck) as HFlowContainer;
@@ -572,6 +573,8 @@ public partial class CardManagement : Control
 			CardContainer = CollectionContainer.GetChild(i) as VBoxContainer;
 			
 			if(CardContainer.Name == "" + CardId){
+				Level = Collections[SelectedDeck].CardsNotInDeck[i].Level;
+
 				Collections[SelectedDeck].CardsNotInDeck[i].Quantity -= 1;
 				// No more in collection
 				if(Collections[SelectedDeck].CardsNotInDeck[i].Quantity <= 0){
@@ -582,17 +585,18 @@ public partial class CardManagement : Control
 					Label CardCount = CardContainer.GetNode<Label>("CardCount");
 					CardCount.Text = "X" + Collections[SelectedDeck].CardsNotInDeck[i].Quantity;
 				}
+
 			}
 		}
 		
 		// Add into deck data
 		Decks.Decks[SelectedDeck].CardIds.Add(CardId);
-		Decks.Decks[SelectedDeck].Cards.Add(new CardInfo {CardId = CardId, Position = Decks.Decks[SelectedDeck].Cards.Count});
+		Decks.Decks[SelectedDeck].Cards.Add(new CardInfo {CardId = CardId, Position = Decks.Decks[SelectedDeck].Cards.Count, Level = Level});
 		
 		// Add visually
 		ScrollContainer DeckScrollContainer = GetNode<ScrollContainer>("MainCardContainer/DeckContainer/DeckColorContainer/ScrollContainer");
 		HFlowContainer DeckContainer = DeckScrollContainer.GetChild(SelectedDeck) as HFlowContainer;
-		CardContainer = CreateCard("Deck", CardId);
+		CardContainer = CreateCard("Deck", CardId, Level);
 		DeckContainer.AddChild(CardContainer);
 		
 		// Make save button visible
@@ -603,6 +607,8 @@ public partial class CardManagement : Control
 	}
 	
 	private void RemoveFromDeck(int CardId, float X, float Y){
+		int Level = 1;
+
 		// Remove card from deck
 		ScrollContainer DeckScrollContainer = GetNode<ScrollContainer>("MainCardContainer/DeckContainer/DeckColorContainer/ScrollContainer");
 		HFlowContainer DeckContainer = DeckScrollContainer.GetChild(SelectedDeck) as HFlowContainer;
@@ -611,6 +617,8 @@ public partial class CardManagement : Control
 			CardContainer = DeckContainer.GetChild(i) as VBoxContainer;
 			Vector2 pos = CardContainer.Position;
 			if(pos.X == X && pos.Y == Y){
+				// get the level of the card
+				Level = Decks.Decks[SelectedDeck].Cards[i].Level;
 				// remove from cardID
 				Decks.Decks[SelectedDeck].CardIds.Remove(Decks.Decks[SelectedDeck].CardIds[i]);
 				// remove from Cards
@@ -640,17 +648,16 @@ public partial class CardManagement : Control
 				CardCount.Text = "X" + Collections[SelectedDeck].CardsNotInDeck[i].Quantity;
 				
 				CardExist = true;
-				
 			}
 		}
 		
 		// if card did not exist in collection
 		if(!CardExist){
 			// insert into collection data
-			Collections[SelectedDeck].CardsNotInDeck.Add(new CardQuantity {CardId = CardId, Quantity = 1});
+			Collections[SelectedDeck].CardsNotInDeck.Add(new CardQuantity {CardId = CardId, Quantity = 1, Level = Level});
 			
 			// Insert visually
-			CardContainer = CreateCardWithLabel("Collection", CardId, 1);
+			CardContainer = CreateCardWithLabel("Collection", CardId, 1, Level);
 			CollectionContainer.AddChild(CardContainer);
 		}
 		
@@ -1087,10 +1094,21 @@ public partial class CardManagement : Control
 						CardContainer.QueueFree();
 						Collections[x].CardsNotInDeck.Remove(Collections[x].CardsNotInDeck[i]);
 					}else{
-						// just update count
+						// update count
 						Label CardCount = CardContainer.GetNode<Label>("CardCount");
 						CardCount.Text = "X" + Collections[x].CardsNotInDeck[i].Quantity;
+
+						// remove level and regenerate card
+						Control CardControl = CardContainer.GetNode<Control>("CardControl");
+						CardControl.GetChild(0).QueueFree();
+
+						// Create the card itself
+						var Card = CardBuilder.GenerateCardWithLevel(Collections[x].CardsNotInDeck[i].CardId, Collections[x].CardsNotInDeck[i].Level);
+							
+						Card.Position = new Vector2(95, 100);
+						CardControl.AddChild(Card);
 					}
+
 				}
 			}
 		}
@@ -1139,6 +1157,20 @@ public partial class CardManagement : Control
 			for(int y = 0; y < Decks.Decks[x].Cards.Count; y++){
 				if(Decks.Decks[x].Cards[y].CardId == CardId){
 					Decks.Decks[x].Cards[y].Level = data.NewLevel;
+
+					// update card visually
+					HFlowContainer DeckContainer = DeckScrollContainer.GetChild(x) as HFlowContainer;
+					CardContainer = DeckContainer.GetChild(y) as VBoxContainer;
+
+					// remove level and regenerate card
+					Control CardControl = CardContainer.GetNode<Control>("CardControl");
+					CardControl.GetChild(0).QueueFree();
+
+					// Create the card itself
+					var Card = CardBuilder.GenerateCardWithLevel(CardId, Decks.Decks[x].Cards[y].Level);
+							
+					Card.Position = new Vector2(95, 100);
+					CardControl.AddChild(Card);
 				}
 			}
 		}
