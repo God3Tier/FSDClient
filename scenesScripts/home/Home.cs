@@ -226,6 +226,7 @@ public partial class Home : Control
 		if (result != (long)HttpRequest.Result.Success || responseCode != 200)
 		{
 			GD.PrintErr("Failed in fetching crystals");
+			SetTextPopup("Failed in fetching crystals");
 			return;
 		}
 
@@ -256,41 +257,8 @@ public partial class Home : Control
 	//	Press Battle button
 	public async void _OnBattleButtonPressed()
 	{
-		ColorRect loadingNode = GetNode<ColorRect>("Loading");
-		// 1. Add player to queue
-		Network.SendRequestWithToken(NetworkManager.BASE_URL + NetworkManager.MATCHMAKING + "/matchmaking/queue", Godot.HttpClient.Method.Post, "", JoinResponse);
-
-		// start animation
-		AnimatedSprite2D LoadingSprite = GetNode<AnimatedSprite2D>("Loading/LoadingAnimation");
-		LoadingSprite.Play("loading");  // Replace "default" with your animation name
-
-		// Turn it ON (make visible)
-		loadingNode.Visible = true;
-		_searching = true;
-
-		// find game stuff
-		while (_searching)
-		{
-			// 1 SECOND TIMEOUT - Godot way
-			await ToSignal(GetTree().CreateTimer(1.5f), "timeout");
-
-			// 2. Check if the player has been matched
-			Network.SendRequestWithToken(NetworkManager.BASE_URL + NetworkManager.MATCHMAKING + "/matchmaking/match", Godot.HttpClient.Method.Get, "", MatchCheckResponse);
-		}
-
-
-		if (_cancelled)
-		{
-			return;
-		}
-		// 3. Accept the match and proceed
-		var obj = new
-		{
-			session_id = SessionID
-		};
-
-		var jsonString = JsonSerializer.Serialize(obj);
-		Network.SendRequestWithToken(NetworkManager.BASE_URL + NetworkManager.MATCHMAKING + "/matchmaking/match/accept", Godot.HttpClient.Method.Post, jsonString, AcceptMatchResponse);
+		// to check if theres 12 cards in active deck
+		Network.SendRequestWithToken(NetworkManager.BASE_URL + NetworkManager.DECK + "/decks/active", Godot.HttpClient.Method.Get, "", ActiveDeckIdResponse);
 
 	}
 
@@ -361,7 +329,7 @@ public partial class Home : Control
 		if (result != 200 && responseCode != 200)
 		{
 			GD.PrintErr("Failed to get a successful response about state of matchmaking");
-			GD.PrintErr(json);
+			SetTextPopup("Failed to get a successful response about state of matchmaking");
 			return;
 		}
 
@@ -377,7 +345,7 @@ public partial class Home : Control
 		if (result != 200 && responseCode != 200)
 		{
 			GD.PrintErr("Failed to get a successful response about state of matchmaking");
-			GD.PrintErr(json);
+			SetTextPopup("Failed to get a successful response about state of matchmaking");
 			return;
 		}
 
@@ -403,6 +371,7 @@ public partial class Home : Control
 		if (result != 200 && responseCode != 200)
 		{
 			GD.PrintErr("Failed to leave current queue");
+			SetTextPopup("Failed to leave current queue");
 			return;
 		}
 	}
@@ -416,14 +385,15 @@ public partial class Home : Control
 
 		if (result != 200 && responseCode != 200)
 		{
-			GD.PrintErr("Unable to accept value");
+			GD.PrintErr("Unable to accept match");
+			SetTextPopup("Unable to accept match");
+			
 			return;
 		}
 		try
 		{
 			var Response = JsonSerializer.Deserialize<AcceptMatchResponse>(json);
 			PlayerStateManager.Instance.SessionId = Response.SessionId;
-			Network.SendRequestWithToken(NetworkManager.BASE_URL + NetworkManager.DECK + "/decks/active", Godot.HttpClient.Method.Get, "", ActiveDeckIdResponse);
 
 		}
 		catch (Exception e)
@@ -432,6 +402,10 @@ public partial class Home : Control
 		}
 
 		GD.Print("Successfully able to end thus properly");
+		_searching = false;
+		_accepted = true;
+		var GameStateManager = GetNode<GameStateManager>("/root/GameStateManager");
+		GameStateManager.ChangeGameState(GameState.INGAMEMODE);
 	}
 
 	private void ActiveDeckIdResponse(long result, long responseCode, string[] headers, byte[] body)
@@ -441,7 +415,8 @@ public partial class Home : Control
 
 		if (result != 200 && responseCode != 200)
 		{
-			GD.PrintErr("Unable to accept value");
+			GD.PrintErr("Unable to get active deck id");
+			SetTextPopup("Unable to get active deck id");
 			return;
 		}
 
@@ -450,24 +425,62 @@ public partial class Home : Control
 		Network.SendRequestWithToken(NetworkManager.BASE_URL + NetworkManager.DECK + "/decks/" + ActiveDeckId, Godot.HttpClient.Method.Get, "", ActiveDeckResponse);
 	}
 
-	private void ActiveDeckResponse(long result, long responseCode, string[] headers, byte[] body)
+	private async void ActiveDeckResponse(long result, long responseCode, string[] headers, byte[] body)
 	{
 		string json = System.Text.Encoding.UTF8.GetString(body);
 		GD.Print(responseCode);
 
 		if (result != 200 && responseCode != 200)
 		{
-			GD.PrintErr("Unable to accept value");
+			GD.PrintErr("Unable to get active deck");
+			SetTextPopup("Unable to get active deck");
 			return;
 		}
 
 		ActiveDeckResponse ActiveDeck = JsonSerializer.Deserialize<ActiveDeckResponse>(json);
 		PlayerStateManager.Instance.ActiveDeck = ActiveDeck;
-		GD.Print(ActiveDeck);
-		_searching = false;
-		_accepted = true;
-		var GameStateManager = GetNode<GameStateManager>("/root/GameStateManager");
-		GameStateManager.ChangeGameState(GameState.INGAMEMODE);
+		
+		// check that there is 12 cards (aka deck is valid)
+		if (ActiveDeck.CardIds.Count != 12){
+			SetTextPopup("Cannot queue: active deck must have exactly 12 cards, currently has " + ActiveDeck.CardIds.Count);
+			return;
+		}
+
+		ColorRect loadingNode = GetNode<ColorRect>("Loading");
+		// 1. Add player to queue
+		Network.SendRequestWithToken(NetworkManager.BASE_URL + NetworkManager.MATCHMAKING + "/matchmaking/queue", Godot.HttpClient.Method.Post, "", JoinResponse);
+
+		// start animation
+		AnimatedSprite2D LoadingSprite = GetNode<AnimatedSprite2D>("Loading/LoadingAnimation");
+		LoadingSprite.Play("loading");  // Replace "default" with your animation name
+
+		// Turn it ON (make visible)
+		loadingNode.Visible = true;
+		_searching = true;
+
+		// find game stuff
+		while (_searching)
+		{
+			// 1 SECOND TIMEOUT - Godot way
+			await ToSignal(GetTree().CreateTimer(1.5f), "timeout");
+
+			// 2. Check if the player has been matched
+			Network.SendRequestWithToken(NetworkManager.BASE_URL + NetworkManager.MATCHMAKING + "/matchmaking/match", Godot.HttpClient.Method.Get, "", MatchCheckResponse);
+		}
+
+
+		if (_cancelled)
+		{
+			return;
+		}
+		// 3. Accept the match and proceed
+		var obj = new
+		{
+			session_id = SessionID
+		};
+
+		var jsonString = JsonSerializer.Serialize(obj);
+		Network.SendRequestWithToken(NetworkManager.BASE_URL + NetworkManager.MATCHMAKING + "/matchmaking/match/accept", Godot.HttpClient.Method.Post, jsonString, AcceptMatchResponse);
 	}
 
 
@@ -500,7 +513,8 @@ public partial class Home : Control
 		string json = System.Text.Encoding.UTF8.GetString(body);
 		if (result != (long)HttpRequest.Result.Success || responseCode != 200)
 		{
-			GD.PrintErr("Failed in fetching packs");
+			GD.PrintErr("Failed when fetching packs");
+			SetTextPopup("Failed when fetching packs");
 			return;
 		}
 
@@ -568,7 +582,8 @@ public partial class Home : Control
 		string json = System.Text.Encoding.UTF8.GetString(body);
 		if (result != (long)HttpRequest.Result.Success || responseCode != 200)
 		{
-			GD.PrintErr("Failed in opening packs");
+			GD.PrintErr("Failed when opening packs");
+			SetTextPopup("Failed when opening packs");
 			return;
 		}
 
@@ -738,5 +753,21 @@ public partial class Home : Control
 		tween.TweenProperty(node, "position:x", 200f, 0.3f)
 			 .SetEase(Tween.EaseType.Out);
 		tween.TweenCallback(Callable.From(() => node.QueueFree()));
+	}
+	
+	// function to make text popup visible and set the text
+	private void SetTextPopup(string Text)
+	{
+		Control TextPopupContainer = GetNode<Control>("TextPopupContainer");
+		Label TextLabel = TextPopupContainer.GetNode<Label>("TextBackgroundContainer/MarginTextContainer/TextLabel");
+		TextPopupContainer.Visible = true;
+		TextLabel.Text = Text;
+	}
+	
+	// Close text popup container
+	private void _OnTextPopupBackgroundPressed()
+	{
+		Control TextPopupContainer = GetNode<Control>("TextPopupContainer");
+		TextPopupContainer.Visible = false;
 	}
 }

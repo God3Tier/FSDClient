@@ -1099,7 +1099,6 @@ public partial class CardManagement : Control
 		// Remove card from deck
 		ScrollContainer DeckScrollContainer = GetNode<ScrollContainer>("MainCardContainer/DeckContainer/DeckColorContainer/ScrollContainer");
 
-		string PopupText = "";
 		if(data.PrunedDecks != null){
 			for(int i = 0; i < data.PrunedDecks.Count; i++){
 				for(int x = 0; x < Decks.Decks.Count; x++){
@@ -1133,13 +1132,6 @@ public partial class CardManagement : Control
 					}
 
 				}
-				
-				// popup text alert
-				if(i==0){
-					PopupText = "Deck " + data.PrunedDecks[i].DeckId;
-				}else{
-					PopupText += " and Deck " + data.PrunedDecks[i].DeckId;
-				}
 			}
 		}
 		// update deck card level
@@ -1153,7 +1145,7 @@ public partial class CardManagement : Control
 
 		// text popup for pruned deck
 		if(data.PrunedDecks != null && data.PrunedDecks.Count > 0){
-			SetTextPopup("Please update " + PopupText + " as the contents have changed.");
+			SetTextPopup("Deck has been changed, please ensure all decks have 12 cards.");
 		}
 		
 		// update current popup

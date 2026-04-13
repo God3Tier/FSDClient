@@ -304,6 +304,26 @@ bg_color = Color(0, 0, 0, 0)
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gqply"]
 bg_color = Color(0, 0, 0, 0)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1vqfq"]
+bg_color = Color(0.47058824, 0.54901963, 0.54901963, 1)
+
+[sub_resource type="FontVariation" id="FontVariation_8gfmp"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4wtn0"]
+bg_color = Color(0, 0, 0, 0.75686276)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7vkn4"]
+bg_color = Color(0, 0, 0, 0.75686276)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xsks4"]
+bg_color = Color(0, 0, 0, 0.75686276)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rsx4o"]
+bg_color = Color(0, 0, 0, 0.75686276)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_l1soi"]
+bg_color = Color(0, 0, 0, 0.75686276)
+
 [node name="Home" type="Control" unique_id=413107585]
 layout_mode = 3
 anchors_preset = 15
@@ -781,6 +801,55 @@ mouse_default_cursor_shape = 2
 custom_minimum_size = Vector2(1152, 700)
 layout_mode = 2
 
+[node name="TextPopupContainer" type="Control" parent="." unique_id=928035537]
+visible = false
+z_index = 5
+anchors_preset = 0
+offset_right = 1920.0
+offset_bottom = 1080.0
+
+[node name="TextBackgroundContainer" type="PanelContainer" parent="TextPopupContainer" unique_id=1709105281]
+z_index = 2
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -561.5
+offset_top = -41.5
+offset_right = 561.5
+offset_bottom = 41.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_1vqfq")
+
+[node name="MarginTextContainer" type="MarginContainer" parent="TextPopupContainer/TextBackgroundContainer" unique_id=152252444]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 5
+theme_override_constants/margin_left = 10
+
+[node name="TextLabel" type="Label" parent="TextPopupContainer/TextBackgroundContainer/MarginTextContainer" unique_id=435715581]
+custom_minimum_size = Vector2(1100, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = SubResource("FontVariation_8gfmp")
+theme_override_font_sizes/font_size = 60
+autowrap_mode = 3
+
+[node name="TextPopupBackground" type="Button" parent="TextPopupContainer" unique_id=1477433848]
+z_index = 1
+layout_mode = 0
+offset_right = 1920.0
+offset_bottom = 1080.0
+mouse_default_cursor_shape = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_4wtn0")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_7vkn4")
+theme_override_styles/hover = SubResource("StyleBoxFlat_xsks4")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_rsx4o")
+theme_override_styles/focus = SubResource("StyleBoxFlat_l1soi")
+
 [connection signal="pressed" from="FriendButton" to="." method="_OnFriendButtonPressed"]
 [connection signal="pressed" from="VBoxContainer/BattleButton" to="." method="_OnBattleButtonPressed"]
 [connection signal="pressed" from="VBoxContainer/CardButton" to="." method="_OnCardButtonPressed"]
@@ -788,3 +857,4 @@ layout_mode = 2
 [connection signal="pressed" from="FriendPopupContainer/FriendPopupBackground" to="." method="_OnFriendPopupBackgroundPressed"]
 [connection signal="pressed" from="FriendPopupContainer/FriendPopupBox/CloseFriendButton" to="." method="_OnCloseFriendButtonPressed"]
 [connection signal="pressed" from="PacksPopupContainer/PacksPopupBackground" to="." method="_OnPacksPopupBackgroundPressed"]
+[connection signal="pressed" from="TextPopupContainer/TextPopupBackground" to="." method="_OnTextPopupBackgroundPressed"]
