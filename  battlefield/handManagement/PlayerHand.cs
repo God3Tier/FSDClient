@@ -7,22 +7,48 @@ using FSDClient.card.display;
 
 
 public partial class PlayerHand : HandControl
-{
+{	
+	[Signal]
+	public delegate void AddCardMessageEventHandler(int cardID);
+
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
 		this._cardLimit = 4;
 		this._cardList = new Card[_cardLimit];
 		this._slotList = new HandSlot[_cardLimit];
-		
-		foreach (Node child in GetChildren()) {
+
+		foreach (Node child in GetChildren())
+		{
 			string childName = child.Name.ToString();
-			HandSlot slot = (HandSlot) child;
+			HandSlot slot = (HandSlot)child;
 			int lastInt = (int)(childName[^1] - '1');
 			_slotList[lastInt] = slot;
 		}
-		
+
 		base._Ready();
+	}
+	
+	public override bool AddCard(Card card, Slot slot)
+	{
+		GD.Print("Adding card from current deck");
+		if (base.AddCard(card, slot))
+		{
+			EmitSignal(SignalName.AddCardMessage, card.CardID);
+			return true;
+
+		}
+		return false;
+	}
+	public override bool AddCard(Card card)
+	{
+		GD.Print("Adding card from current deck");
+		if (base.AddCard(card))
+		{
+			EmitSignal(SignalName.AddCardMessage, card.CardID);
+			return true;
+		}
+		return false;
 	}
 	
 	// This will allow all cards to be placed into the battlefield

@@ -27,191 +27,185 @@ public partial class Gameloop : Node2D
 
 	public NetworkManager NetworkManager { get; set; }
 	// Unsure to keep this as the state manager or make it it's own individual player data. TBD on a later date
-    public PlayerStateManager MainPlayer { get; set; }
-    public PlayerData IncomingPlayer { get; set; }
+	public PlayerStateManager MainPlayer { get; set; }
+	public PlayerData IncomingPlayer { get; set; }
 
-    // Deal with card placement and card movement
-    private Slot[] Board { get; set; } = new BattleSlot[6];
-    private Slot[] OpponentBoard { get; set; } = new BattleSlot[6];
-    private CardManager CardManager;
-    private HandArea HandArea;
-    private DeckSpace DeckSpace;
+	// Deal with card placement and card movement
+	private Slot[] Board { get; set; } = new BattleSlot[6];
+	private Slot[] OpponentBoard { get; set; } = new BattleSlot[6];
+	private CardManager CardManager;
+	private HandArea HandArea;
+	private DeckSpace DeckSpace;
 
-    // Deal with active gameplay
-    public int Player1Health;
-    public int Player2Health;
-    public PlayerState PlayerState { get; set; }
+	// Deal with active gameplay
+	public int Player1Health;
+	public int Player2Health;
+	public PlayerState PlayerState { get; set; }
 
-    // Parameters for game state to be managed
-    private int Elixir { get; set; }
-    private int RoundNumber { get; set; }
-    private double GameTimer { get; set; } = 0;
-    private double RegenInterval { get; set; } = 1;
-    private bool TurnPause { get; set; } = true;
-    private double PauseTimer { get; set; } = 0;
-    private int TurnRound = 1;
-    private bool GameEnd { get; set; } = false;
+	// Parameters for game state to be managed
+	private int Elixir { get; set; }
+	private int RoundNumber { get; set; }
+	private double GameTimer { get; set; } = 0;
+	private double RegenInterval { get; set; } = 1;
+	private bool TurnPause { get; set; } = true;
+	private double PauseTimer { get; set; } = 0;
+	private int TurnRound = 1;
+	private bool GameEnd { get; set; } = false;
 
-    // Websocket Connection and managing concurrency
-    private WebSocketPeer Socket = new WebSocketPeer();
-    private readonly ConcurrentQueue<string> readQueue = new();
-    private readonly ConcurrentQueue<string> writeQueue = new();
-    private double _reconnectTimer { get; set; }
-    private readonly double _reconnectDelay = 3.0;
-    private readonly ConcurrentQueue<AttackEvent> EventQueue = new();
+	// Websocket Connection and managing concurrency
+	private WebSocketPeer Socket = new WebSocketPeer();
+	private readonly ConcurrentQueue<string> readQueue = new();
+	private readonly ConcurrentQueue<string> writeQueue = new();
+	private double _reconnectTimer { get; set; }
+	private readonly double _reconnectDelay = 3.0;
+	private readonly ConcurrentQueue<AttackEvent> EventQueue = new();
+	private bool _initialDeckLoaded = false;
+	private string _currentPhase = string.Empty;
+	private bool _phaseDrivenByServer = false;
 
-    // I am of the assumption that this is what is being called by the
-    // We put this in gameloop later
-    public override void _Ready()
-    {
-        MainPlayer = PlayerStateManager.Instance;
-        try
-        {
-            var token = MainPlayer.Token;
-            GD.Print("Token ", token);
-            Socket.HandshakeHeaders = new string[]
-            {
-                "Authorization: Bearer " + token
-            };
-            Socket.ConnectToUrl(ConstructWebsocketUrl());
+	// I am of the assumption that this is what is being called by the
+	// We put this in gameloop later
+	public override void _Ready()
+	{
+		MainPlayer = PlayerStateManager.Instance;
+		try
+		{
+			var token = MainPlayer.Token;
+			GD.Print("Token ", token);
+			Socket.HandshakeHeaders = new string[]
+			{
+				"Authorization: Bearer " + token
+			};
+			Socket.ConnectToUrl(ConstructWebsocketUrl());
 
-        }
-        catch (Exception e)
-        {
-            GD.Print("Unable to connect to websocket becayse of ", e);
-        }
-        HandArea = GetNode<HandArea>("HandArea");
+		}
+		catch (Exception e)
+		{
+			GD.Print("Unable to connect to websocket becayse of ", e);
+		}
+		HandArea = GetNode<HandArea>("HandArea");
 
-        // Load the battle slots for the player
-        var BoardNode = (Control)FindChild("Board");
-        foreach (Node child in BoardNode.GetChildren())
-        {
-            string childName = child.Name.ToString();
-            if (childName.Contains("BattleSlot"))
-            {
-                var BattleSlot = (BattleSlot)child;
+		// Load the battle slots for the player
+		var BoardNode = (Control)FindChild("Board");
+		foreach (Node child in BoardNode.GetChildren())
+		{
+			string childName = child.Name.ToString();
+			if (childName.Contains("BattleSlot"))
+			{
+				var BattleSlot = (BattleSlot)child;
 				int lastInt = (int)(childName[^1] - '1');
-                Board[lastInt] = BattleSlot;
-            }
-        }
+				Board[lastInt] = BattleSlot;
+			}
+		}
 
-        // Load the battle slots for the opponent
-        var OpponentBoardNode = (Control)FindChild("OpponentBoard");
-        foreach (Node child in OpponentBoardNode.GetChildren())
-        {
-            string childName = child.Name.ToString();
-            if (childName.Contains("BattleSlot"))
-            {
-                var BattleSlot = (BattleSlot)child;
+		// Load the battle slots for the opponent
+		var OpponentBoardNode = (Control)FindChild("OpponentBoard");
+		foreach (Node child in OpponentBoardNode.GetChildren())
+		{
+			string childName = child.Name.ToString();
+			if (childName.Contains("BattleSlot"))
+			{
+				var BattleSlot = (BattleSlot)child;
 				int lastInt = (int)(childName[^1] - '1');
-                OpponentBoard[lastInt] = BattleSlot;
-            }
-        }
+				OpponentBoard[lastInt] = BattleSlot;
+			}
+		}
 
-        //TODO: Add the logic to load the nonsence so I can start using the stuff for damage numbers
-        // and whatnot
-        // IncomingPlayer = new PlayerData("Placeholder", "Placeholder", [], false);
-        CardManager = (CardManager)FindChild("CardManager", true);
-        CardManager._playerHand = GetNode<PlayerHand>("HandArea/PlayerHand");
-        CardManager._deckSpace = GetNode<DeckSpace>("HandArea/DeckSpace");
-        CardManager.CardDropped += OnCardDropped;
-        // Testing the HandArea
-        HandArea = GetNode<HandArea>("HandArea");
-        HandArea._playerHand = CardManager._playerHand;
-        HandArea._deckSpace = CardManager._deckSpace;
+		//TODO: Add the logic to load the nonsence so I can start using the stuff for damage numbers
+		// and whatnot
+		// IncomingPlayer = new PlayerData("Placeholder", "Placeholder", [], false);
+		CardManager = (CardManager)FindChild("CardManager", true);
+		CardManager._playerHand = GetNode<PlayerHand>("HandArea/PlayerHand");
+		CardManager._deckSpace = GetNode<DeckSpace>("HandArea/DeckSpace");
+		CardManager.CardDropped += OnCardDropped;
+		// Testing the HandArea
+		HandArea = GetNode<HandArea>("HandArea");
+		HandArea._playerHand = CardManager._playerHand;
+		HandArea._deckSpace = CardManager._deckSpace;
 
 		HandArea._playerHand.AddCardMessage += OnCardAdd;
-		HandArea._playerHand.RemoveCardMessage += OnCardReturn; 
-		
+		HandArea._deckSpace.RemoveCardMessage += OnCardReturn;
+
 		// GD.Print(HandArea);
 		// GD.Print(CardManager._playerHand.Name);
 		// HandArea.RaiseDeck();
-		
+
 		// Card TempCard = (Card)CardBuilder.GenerateCard(10);
 		// TempCard.CurrentSlotStatus = Card.SlotStatus.Deck;
 		// TempCard.ZIndex = 5;
 		// CardManager.AddChild(TempCard);
 		// GD.Print(TempCard.CurrentSlotStatus);
 		// HandArea._deckSpace.AddCard(TempCard);
-  //       GD.Print("Completed everything without a problem");
-		
-        GD.Print(HandArea);
-        GD.Print(CardManager._playerHand.Name);
-        HandArea.RaiseDeck();
-
-        Card TempCard = (Card)CardBuilder.GenerateCard(10);
-        TempCard.CurrentSlotStatus = Card.SlotStatus.Deck;
-        CardManager.AddChild(TempCard);
-        HandArea._deckSpace.AddCard(TempCard);
-        GD.Print("Completed everything without a problem");
+		//  GD.Print("Completed everything without a problem");
+		GD.Print(HandArea);
+		GD.Print(CardManager._playerHand.Name);
+		HandArea.RaiseDeck();
 	}
 
-        
-    
 
-    private void OnCardAdd(int cardID)
-    {
-        var obj = new
-        {
-            card_id = cardID
-        };
-        WriteToServer(RequestAction.SELECT_CARD, JsonSerializer.Serialize(obj));
-    }
+	private void OnCardAdd(int cardID)
+	{
+		var obj = new
+		{
+			card_id = cardID
+		};
+		WriteToServer(RequestAction.SELECT_CARD, JsonSerializer.Serialize(obj));
+	}
 
-    private void OnCardReturn(int cardID)
-    {
-        var obj = new
-        {
-            card_id = cardID
-        };
-        WriteToServer(RequestAction.DESELECT_CARD, JsonSerializer.Serialize(obj));
-    }
+	private void OnCardReturn(int cardID)
+	{
+		var obj = new
+		{
+			card_id = cardID
+		};
+		WriteToServer(RequestAction.DESELECT_CARD, JsonSerializer.Serialize(obj));
+	}
 
-    // private void TestCard(string Name)
-    // {
-    // 	var TestCard = new CardData(10, "farmer", Colour.RED, 100, 10, 5);
-    // 	var CardTexture = Builder.BuildCard(TestCard);
-    // 	var CardScene = GD.Load<PackedScene>("res://scenes/gameComponents/Card.tscn");
-    // 	var CardTemp = CardScene.Instantiate<Card>();
-    // 	CardTemp.Name = Name;
-    // 	CardTemp.CurrentSlotStatus = Card.SlotStatus.Deck;
-    // 	CardTemp.ZIndex = 4;
-    // 	CardTemp.LoadDataTexture(CardTexture);
-    // 	CardManager.AddChild(CardTemp);
-    // 	CardManager._deckSpace.AddCard(CardTemp);
-    // }
+	// private void TestCard(string Name)
+	// {
+	// 	var TestCard = new CardData(10, "farmer", Colour.RED, 100, 10, 5);
+	// 	var CardTexture = Builder.BuildCard(TestCard);
+	// 	var CardScene = GD.Load<PackedScene>("res://scenes/gameComponents/Card.tscn");
+	// 	var CardTemp = CardScene.Instantiate<Card>();
+	// 	CardTemp.Name = Name;
+	// 	CardTemp.CurrentSlotStatus = Card.SlotStatus.Deck;
+	// 	CardTemp.ZIndex = 4;
+	// 	CardTemp.LoadDataTexture(CardTexture);
+	// 	CardManager.AddChild(CardTemp);
+	// 	CardManager._deckSpace.AddCard(CardTemp);
+	// }
 
-    private string ConstructWebsocketUrl()
-    {
-        var session = PlayerStateManager.Instance.SessionId;
-        string BaseUrl = BASE_WEBSOCKET_URL.Replace("SESSIONID", session);
-        GD.Print(BaseUrl);
-        return BaseUrl;
-    }
+	private string ConstructWebsocketUrl()
+	{
+		var session = PlayerStateManager.Instance.SessionId;
+		string BaseUrl = BASE_WEBSOCKET_URL.Replace("SESSIONID", session);
+		GD.Print(BaseUrl);
+		return BaseUrl;
+	}
 
-    // This function is a proof of concept
-    private void OnCardDropped(BattleSlot battleslot)
-    {
-        // TODO: Write to Server should be implemented once backend decides how to transfer information
-        var playerStateManager = PlayerStateManager.Instance;
-        var obj = new
-        {
-            card_id = battleslot.Card.CardID,
+	// This function is a proof of concept
+	private void OnCardDropped(BattleSlot battleslot)
+	{
+		// TODO: Write to Server should be implemented once backend decides how to transfer information
+		var playerStateManager = PlayerStateManager.Instance;
+		var obj = new
+		{
+			card_id = battleslot.Card.CardID,
 			row = battleslot.y,
 			col = battleslot.x,
-        };
+		};
 
-        WriteToServer(RequestAction.CARD_PLACED, JsonSerializer.Serialize(obj));
-        // Simulate delay of card
-        // Thread.Sleep(1);
-        battleslot.Card.ActiveY = battleslot.y;
-        battleslot.Card.ActiveX = battleslot.x;
+		WriteToServer(RequestAction.CARD_PLACED, JsonSerializer.Serialize(obj));
+		// Simulate delay of card
+		// Thread.Sleep(1);
+		battleslot.Card.ActiveY = battleslot.y;
+		battleslot.Card.ActiveX = battleslot.x;
 
-        int player1Copy = Player1Health;
-        int player2Copy = Player2Health;
-        Player1Health = player1Copy;
-        Player2Health = player2Copy;
-    }
+		int player1Copy = Player1Health;
+		int player2Copy = Player2Health;
+		Player1Health = player1Copy;
+		Player2Health = player2Copy;
+	}
 
 	// This is how to generate Elixir. Since client only ever knows about 1 player's resource
 	// i can do it within the gameplay loop itself
@@ -272,7 +266,7 @@ public partial class Gameloop : Node2D
 	{
 		while (readQueue.TryDequeue(out string msg))
 		{
-			GD.Print(msg);
+			// GD.Print(msg);
 			try
 			{
 				var data = JsonSerializer.Deserialize<ResponseManager>(msg);
@@ -300,6 +294,10 @@ public partial class Gameloop : Node2D
 					try
 					{
 						PlayerState = JsonSerializer.Deserialize<PlayerState>(data.StateView);
+						if (PlayerState != null)
+						{
+							ApplyPhaseIfChanged(PlayerState.Phase);
+						}
 					}
 					catch (Exception e)
 					{
@@ -315,7 +313,7 @@ public partial class Gameloop : Node2D
 					{
 						continue;
 					}
-					GD.Print("Received tick update");
+					// GD.Print("Received tick update");
 					var tickUpdate = JsonSerializer.Deserialize<TickUpdater>(data.Parameters);
 
 					if (tickUpdate == null)
@@ -323,31 +321,11 @@ public partial class Gameloop : Node2D
 						continue;
 					}
 
-					if (TurnPause && CardManager._deckSpace._cardCount == 0)
-					{
-						foreach (var card in CardManager._deckSpace._cardList)
-						{
-							if (card != null)
-							{
-								CardManager._deckSpace.RemoveCard(card);
-							}
-						}
-						foreach (var card in tickUpdate.DrawPile)
-						{
-							try
-							{
-								var cardTemp = CardBuilder.GenerateCard(card.CardID);
-								cardTemp.CurrentSlotStatus = Card.SlotStatus.Deck;
-								CardManager.AddChild(cardTemp);
-								cardTemp.ZIndex = 4;
-								CardManager._deckSpace.AddCard(cardTemp);
-							}
-							catch (Exception e)
-							{
-								GD.PrintErr(e);
-							}
-						}
+					ApplyTickUpdate(tickUpdate);
 
+					if (!_initialDeckLoaded && tickUpdate?.DrawPile != null)
+					{
+						LoadInitialDeck(tickUpdate.DrawPile);
 						continue;
 					}
 
@@ -362,6 +340,89 @@ public partial class Gameloop : Node2D
 
 			// Here, we somehow parse said information about card and then mess around with it. But to continue, I need to settle card Dictionary
 		}
+	}
+
+	private void ApplyTickUpdate(TickUpdater tickUpdate)
+	{
+		if (!string.IsNullOrEmpty(tickUpdate.Phase))
+		{
+			ApplyPhaseIfChanged(tickUpdate.Phase);
+		}
+
+		Elixir = tickUpdate.Elixir;
+		var ElixirBar = (Elixir)FindChild("Elixir");
+		ElixirBar.UpdateElixir(Elixir);
+
+		if (tickUpdate.RoundNumber > 0 && tickUpdate.RoundNumber != TurnRound)
+		{
+			TurnRound = tickUpdate.RoundNumber;
+			ElixirBar.UpdateRound(TurnRound);
+		}
+	}
+
+	private void ApplyPhaseIfChanged(string phase)
+	{
+		if (string.IsNullOrEmpty(phase))
+		{
+			return;
+		}
+
+		if (string.Equals(_currentPhase, phase, StringComparison.OrdinalIgnoreCase))
+		{
+			return;
+		}
+
+		_currentPhase = phase;
+		_phaseDrivenByServer = true;
+
+		if (phase.Equals("PRE_TURN", StringComparison.OrdinalIgnoreCase))
+		{
+			TurnPause = true;
+			PauseTimer = 0;
+			HandArea.RaiseDeck();
+			CardManager.UnstuckCard();
+			CardManager._playerHand.PauseCardsInHand();
+			return;
+		}
+
+		if (phase.Equals("ACTIVE", StringComparison.OrdinalIgnoreCase))
+		{
+			TurnPause = false;
+			PauseTimer = 0;
+			HandArea.LowerDeck();
+			CardManager._playerHand.ActivateCardsInHand();
+			return;
+		}
+	}
+
+	private void LoadInitialDeck(HandCardView[] drawPile)
+	{
+		// Clear any stale cards before the first server draw pile arrives.
+		foreach (var card in CardManager._deckSpace._cardList)
+		{
+			if (card != null)
+			{
+				CardManager._deckSpace.RemoveCard(card);
+			}
+		}
+
+		foreach (var card in drawPile)
+		{
+			try
+			{
+				var cardTemp = CardBuilder.GenerateCard(card.CardID);
+				cardTemp.CurrentSlotStatus = Card.SlotStatus.Deck;
+				CardManager.AddChild(cardTemp);
+				cardTemp.ZIndex = 4;
+				CardManager._deckSpace.AddCard(cardTemp);
+			}
+			catch (Exception e)
+			{
+				GD.PrintErr(e);
+			}
+		}
+
+		_initialDeckLoaded = true;
 	}
 
 	// This is to handle the
@@ -380,7 +441,7 @@ public partial class Gameloop : Node2D
 			GameTimer += delta;
 			bar.Value = (GameTimer - (ROUND_TIMER * (TurnRound - 1))) / ROUND_TIMER;
 		}
-		if (PauseTimer >= PAUSE_TIMER)
+		if (!_phaseDrivenByServer && PauseTimer >= PAUSE_TIMER)
 		{
 			GD.Print("Pause Ended");
 			HandArea.LowerDeck();
@@ -393,7 +454,7 @@ public partial class Gameloop : Node2D
 			return;
 		}
 
-		if (GameTimer >= ROUND_TIMER * TurnRound && !TurnPause)
+		if (!_phaseDrivenByServer && GameTimer >= ROUND_TIMER * TurnRound && !TurnPause)
 		{
 			GD.Print("Round updated");
 			// TODO: Trigger secondary draw card event
@@ -403,7 +464,7 @@ public partial class Gameloop : Node2D
 			CardManager._playerHand.PauseCardsInHand();
 		}
 
-		if (RegenInterval >= SECONDS_PER_ELIXIR)
+		if (!_phaseDrivenByServer && RegenInterval >= SECONDS_PER_ELIXIR)
 		{
 			if (Elixir >= TurnRound + BASE_ELIXIR || Elixir >= MAX_ELIXER)
 			{
