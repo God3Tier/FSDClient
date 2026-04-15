@@ -197,8 +197,8 @@ public partial class Gameloop : Node2D
         var obj = new
         {
             card_id = battleslot.Card.CardID,
-            pos_x = battleslot.x,
-            pos_y = battleslot.y,
+			row = battleslot.y,
+			col = battleslot.x,
         };
 
         WriteToServer(RequestAction.CARD_PLACED, JsonSerializer.Serialize(obj));
@@ -275,101 +275,83 @@ public partial class Gameloop : Node2D
 			GD.Print(msg);
 			try
 			{
-				var Data = JsonSerializer.Deserialize<ResponseManager>(msg);
-				if (Data.Result != null && Data.Result.Equals("failure"))
+				var data = JsonSerializer.Deserialize<ResponseManager>(msg);
+				if (data == null)
+				{
+					continue;
+				}
+
+				if (!string.IsNullOrEmpty(data.Result) && data.Result.Equals("failure"))
 				{
 					// Some error handling
 					return;
 				}
 
-
-				if (Enum.TryParse<ActionType>(Data.ActionType, out var actionType))
+				if (!string.IsNullOrEmpty(data.MessageType) &&
+					data.MessageType.Equals("error", StringComparison.OrdinalIgnoreCase))
 				{
-					switch (actionType)
+					GD.PrintErr("Server error: ", data.ErrorMessage);
+					continue;
+				}
+
+				if (data.StateView.ValueKind != JsonValueKind.Undefined &&
+					data.StateView.ValueKind != JsonValueKind.Null)
+				{
+					try
 					{
-						case ActionType.CARD_PLACED:
-							{
-								PlayerState = JsonSerializer.Deserialize<PlayerState>(Data.Parameters);
-								break;
-							}
-						case ActionType.TICK_UPDATE:
-							{
-								if (Data.Parameters.ValueKind == JsonValueKind.Undefined ||
-									   Data.Parameters.ValueKind == JsonValueKind.Null)
-									break;
-								GD.Print("Received tick update");
-								var tickUpdate = JsonSerializer.Deserialize<TickUpdater>(Data.Parameters);
-
-								if (TurnPause && CardManager._deckSpace._cardCount == 0)
-								{
-									foreach (var card in CardManager._deckSpace._cardList)
-									{
-										if (card != null)
-										{
-											CardManager._deckSpace.RemoveCard(card);
-										}
-									}
-									foreach (var card in tickUpdate.DrawPile)
-									{
-										try
-										{
-											var cardTemp = CardBuilder.GenerateCard(card.CardID);
-											cardTemp.CurrentSlotStatus = Card.SlotStatus.Deck;
-											CardManager.AddChild(cardTemp);
-											cardTemp.ZIndex = 4;
-											CardManager._deckSpace.AddCard(cardTemp);
-										}
-										catch (Exception e)
-										{
-											GD.PrintErr(e);
-										}
-
-
-									}
-
-									return;
-
-								}
-								if (tickUpdate == null)
-								{
-									return;
-								}
-								
-								// for (var card ) {
-								//     if (OpponentBoard[i]
-								// }
-								
-								// if (tickUpdate.AttackEvent != null)
-								// {
-								//     if (!OpponentBoard[board.Row * 3 + board.Col].CardInSlot)
-								//     {
-								//         Card card = CardBuilder.GenerateCard(board.CardID);
-								//         OpponentBoard[board.Row * 3 + board.Col].AddCard(card);
-								//     }
-								// }
-
-								// if (tickUpdate.EnemyBoard != null)
-								// {
-								//     foreach (var board in tickUpdate.EnemyBoard)
-								//     {
-								//         if (OpponentBoard[board.Col][board.Row].IsEmpty)
-								//         {
-								//             CardBuilder.LoadTextureFromId(board.CardID, OpponentBoard[board.Col][board.Row]);
-								//             OpponentBoard[board.Col][board.Row].IsEmpty = false;
-								//         }
-								//     }
-								// }
-
-
-
-								break;
-							}
-						default:
-							{
-								break;
-							}
+						PlayerState = JsonSerializer.Deserialize<PlayerState>(data.StateView);
 					}
-					PlayerState = JsonSerializer.Deserialize<PlayerState>(Data.Parameters);
+					catch (Exception e)
+					{
+						GD.PrintErr("Unable to parse state view ", e);
+					}
+				}
+
+				if (!string.IsNullOrEmpty(data.ActionType) &&
+					data.ActionType.Equals("TICK_UPDATE", StringComparison.OrdinalIgnoreCase))
+				{
+					if (data.Parameters.ValueKind == JsonValueKind.Undefined ||
+						data.Parameters.ValueKind == JsonValueKind.Null)
+					{
+						continue;
+					}
+					GD.Print("Received tick update");
+					var tickUpdate = JsonSerializer.Deserialize<TickUpdater>(data.Parameters);
+
+					if (tickUpdate == null)
+					{
+						continue;
+					}
+
+					if (TurnPause && CardManager._deckSpace._cardCount == 0)
+					{
+						foreach (var card in CardManager._deckSpace._cardList)
+						{
+							if (card != null)
+							{
+								CardManager._deckSpace.RemoveCard(card);
+							}
+						}
+						foreach (var card in tickUpdate.DrawPile)
+						{
+							try
+							{
+								var cardTemp = CardBuilder.GenerateCard(card.CardID);
+								cardTemp.CurrentSlotStatus = Card.SlotStatus.Deck;
+								CardManager.AddChild(cardTemp);
+								cardTemp.ZIndex = 4;
+								CardManager._deckSpace.AddCard(cardTemp);
+							}
+							catch (Exception e)
+							{
+								GD.PrintErr(e);
+							}
+						}
+
+						continue;
+					}
+
+					// Additional board/hand updates should be handled here.
 				}
 
 			}

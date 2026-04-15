@@ -32,8 +32,16 @@ public class RequestConstructor
 		else
 			Params = JsonSerializer.Deserialize<JsonElement>(parameters);
 		Action = req.ToString();
-		StateHashAfter = playerstate.HashPlayerView();
-		SequenceNumber = playerstate.SequenceNumber;
+		if (playerstate == null)
+		{
+			StateHashAfter = 0;
+			SequenceNumber = 0;
+		}
+		else
+		{
+			StateHashAfter = playerstate.HashPlayerView();
+			SequenceNumber = playerstate.SequenceNumber;
+		}
 		return JsonSerializer.Serialize(this);
 	}
 
