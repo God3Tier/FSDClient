@@ -125,10 +125,12 @@ public partial class CardManager : Node2D
 		else if (_playerHand._cardList.Contains(cardBeingDragged))
 		{
 			_playerHand.AddCard((Card)cardBeingDragged);
+			GD.Print("Return to hand");
 		}
 		else
 		{
 			_deckSpace.AddCard((Card)cardBeingDragged);
+			GD.Print("Return to deck");
 		}
 		cardBeingDragged = null;
 
@@ -151,9 +153,10 @@ public partial class CardManager : Node2D
 	}
 	
 	private void BounceBattleSlot(BattleSlot slot) {
+		Card bouncedCard = slot.Card;
 		slot.RemoveCard();
-		// TODO: Once card generation is a thing
-		//_playerHand.AddCard(<INSERT_CARD_HERE>)
+		// TODO: Might want to rebuild a card instead and add it into hand if possible
+		_playerHand.AddCard(bouncedCard);
 	}
 	
 	// For putting a card into the hand

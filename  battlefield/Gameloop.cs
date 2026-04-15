@@ -129,7 +129,9 @@ public partial class Gameloop : Node2D
 		
 		Card TempCard = (Card)CardBuilder.GenerateCard(10);
 		TempCard.CurrentSlotStatus = Card.SlotStatus.Deck;
+		TempCard.ZIndex = 5;
 		CardManager.AddChild(TempCard);
+		GD.Print(TempCard.CurrentSlotStatus);
 		HandArea._deckSpace.AddCard(TempCard);
 		GD.Print("Completed everything without a problem");
 	}
@@ -353,7 +355,6 @@ public partial class Gameloop : Node2D
 		{
 			GD.Print("Pause Ended");
 			HandArea.LowerDeck();
-			CardManager.UnstuckCard();
 			CardManager._playerHand.ActivateCardsInHand();
 			TurnPause = false;
 			PauseTimer = 0;

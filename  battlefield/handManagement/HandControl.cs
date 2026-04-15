@@ -24,6 +24,11 @@ public partial class HandControl : Control
 	// Add card to this hand control provided there is enough space
 	public void AddCard(Card card)
 	{
+		if (card == null)
+		{
+			GD.Print("Card is null");
+			return;
+		}
 		// Check if the cardlist doesn't already has this specific card, and we still have space
 		if (!_cardList.Contains(card) && _cardCount < _cardLimit) {
 			for (int i = 0; i < _cardLimit; i ++) {
@@ -37,6 +42,7 @@ public partial class HandControl : Control
 			}
             // update all the card positions
             UpdateCardPositions();
+            GD.Print("Updating the card positions");
 			/// Signal Emission 
 		}
 		// If the card is already part of this collection, animate it back to its original slot
