@@ -230,7 +230,7 @@ public partial class Home : Control
 		Gld.Text = CurrentPlayer.Gold.ToString();
 
 		// Set Header -> Row2 -> Name ->  Label
-		var Username = (Label)((ColorRect)Row2.FindChild("Name", true)).FindChild("Label");
+		var Username = (Label)((ColorRect)Row1.FindChild("Name", true)).FindChild("Label");
 		Username.Text = CurrentPlayer.PlayerData.Username;
 
 

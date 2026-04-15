@@ -36,9 +36,8 @@ public class CardBuilder
 
     // Get card values (specifically for cardmanagement page)
     public static CardStats GetCardValues(int cardID)
-    {
-        CardStats stats = Reference.cardInfo[cardID];
-        return stats;
-    }
-
+	{
+		CardStats stats = Reference.cardInfo[cardID];
+		return stats;
+	}
 }

@@ -120,9 +120,21 @@ public partial class Gameloop : Node2D
         HandArea._playerHand = CardManager._playerHand;
         HandArea._deckSpace = CardManager._deckSpace;
 
-        HandArea._playerHand.AddCardMessage += OnCardAdd;
-        HandArea._playerHand.RemoveCardMessage += OnCardReturn;
-
+		HandArea._playerHand.AddCardMessage += OnCardAdd;
+		HandArea._playerHand.RemoveCardMessage += OnCardReturn; 
+		
+		// GD.Print(HandArea);
+		// GD.Print(CardManager._playerHand.Name);
+		// HandArea.RaiseDeck();
+		
+		// Card TempCard = (Card)CardBuilder.GenerateCard(10);
+		// TempCard.CurrentSlotStatus = Card.SlotStatus.Deck;
+		// TempCard.ZIndex = 5;
+		// CardManager.AddChild(TempCard);
+		// GD.Print(TempCard.CurrentSlotStatus);
+		// HandArea._deckSpace.AddCard(TempCard);
+  //       GD.Print("Completed everything without a problem");
+		
         GD.Print(HandArea);
         GD.Print(CardManager._playerHand.Name);
         HandArea.RaiseDeck();
@@ -132,7 +144,10 @@ public partial class Gameloop : Node2D
         CardManager.AddChild(TempCard);
         HandArea._deckSpace.AddCard(TempCard);
         GD.Print("Completed everything without a problem");
-    }
+	}
+
+        
+    
 
     private void OnCardAdd(int cardID)
     {
@@ -387,7 +402,6 @@ public partial class Gameloop : Node2D
 		{
 			GD.Print("Pause Ended");
 			HandArea.LowerDeck();
-			CardManager.UnstuckCard();
 			CardManager._playerHand.ActivateCardsInHand();
 			TurnPause = false;
 			PauseTimer = 0;
