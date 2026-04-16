@@ -9,6 +9,7 @@ public partial class DeckSpace : HandControl
 {
 	[Signal]
 	public delegate void RemoveCardMessageEventHandler(int cardID);
+	public bool SuppressSignals { get; set; } = false;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -31,9 +32,10 @@ public partial class DeckSpace : HandControl
 	public override bool AddCard(Card card, Slot slot)
 	{
 		GD.Print("Removing card from current deck");
-		if (base.AddCard(card, slot))
+		if (base.AddCard(card, slot) && !SuppressSignals)
 		{
 			EmitSignal(SignalName.RemoveCardMessage, card.CardID);
+
 			return true;
 		}
 
@@ -42,7 +44,7 @@ public partial class DeckSpace : HandControl
 	public override bool AddCard(Card card)
 	{
 		GD.Print("Removing card from current deck");
-		if (base.AddCard(card))
+		if (base.AddCard(card) && !SuppressSignals)
 		{
 			EmitSignal(SignalName.RemoveCardMessage, card.CardID);
 			return true;

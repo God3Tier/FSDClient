@@ -10,6 +10,7 @@ public partial class PlayerHand : HandControl
 {	
 	[Signal]
 	public delegate void AddCardMessageEventHandler(int cardID);
+	public bool SuppressSignals { get; set; } = false;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -34,7 +35,10 @@ public partial class PlayerHand : HandControl
 		GD.Print("Adding card from current deck");
 		if (base.AddCard(card, slot))
 		{
-			EmitSignal(SignalName.AddCardMessage, card.CardID);
+			if (!SuppressSignals)
+			{
+				EmitSignal(SignalName.AddCardMessage, card.CardID);
+			}
 			return true;
 
 		}
@@ -45,7 +49,10 @@ public partial class PlayerHand : HandControl
 		GD.Print("Adding card from current deck");
 		if (base.AddCard(card))
 		{
-			EmitSignal(SignalName.AddCardMessage, card.CardID);
+			if (!SuppressSignals)
+			{
+				EmitSignal(SignalName.AddCardMessage, card.CardID);
+			}
 			return true;
 		}
 		return false;

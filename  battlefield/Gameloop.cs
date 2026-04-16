@@ -9,7 +9,7 @@ using FSDClient.battlefield.handManagement;
 using FSDClient.autoLoad;
 using FSDClient.battlefield.responseType;
 using System.Collections.Concurrent;
-using System.Text.Json.Serialization;
+using System.Collections.Generic;
 using System;
 using System.Text.Json;
 using FSDClient.battlefield.response;
@@ -59,7 +59,6 @@ public partial class Gameloop : Node2D
 	private double _reconnectTimer { get; set; }
 	private readonly double _reconnectDelay = 3.0;
 	private readonly ConcurrentQueue<AttackEvent> EventQueue = new();
-	private bool _initialDeckLoaded = false;
 	private string _currentPhase = string.Empty;
 	private bool _phaseDrivenByServer = false;
 
@@ -117,7 +116,10 @@ public partial class Gameloop : Node2D
 		CardManager = (CardManager)FindChild("CardManager", true);
 		CardManager._playerHand = GetNode<PlayerHand>("HandArea/PlayerHand");
 		CardManager._deckSpace = GetNode<DeckSpace>("HandArea/DeckSpace");
-		CardManager.CardDropped += OnCardDropped;
+		CardManager.CardDropped += OnCardDropped; 
+		CardManager._playerHand.AddCardMessage += OnCardAdd;
+		CardManager._deckSpace.RemoveCardMessage += OnCardReturn;
+		
 		// Testing the HandArea
 		HandArea = GetNode<HandArea>("HandArea");
 		HandArea._playerHand = CardManager._playerHand;
@@ -139,7 +141,6 @@ public partial class Gameloop : Node2D
 		//  GD.Print("Completed everything without a problem");
 		GD.Print(HandArea);
 		GD.Print(CardManager._playerHand.Name);
-		HandArea.RaiseDeck();
 	}
 
 
@@ -160,20 +161,6 @@ public partial class Gameloop : Node2D
 		};
 		WriteToServer(RequestAction.DESELECT_CARD, JsonSerializer.Serialize(obj));
 	}
-
-	// private void TestCard(string Name)
-	// {
-	// 	var TestCard = new CardData(10, "farmer", Colour.RED, 100, 10, 5);
-	// 	var CardTexture = Builder.BuildCard(TestCard);
-	// 	var CardScene = GD.Load<PackedScene>("res://scenes/gameComponents/Card.tscn");
-	// 	var CardTemp = CardScene.Instantiate<Card>();
-	// 	CardTemp.Name = Name;
-	// 	CardTemp.CurrentSlotStatus = Card.SlotStatus.Deck;
-	// 	CardTemp.ZIndex = 4;
-	// 	CardTemp.LoadDataTexture(CardTexture);
-	// 	CardManager.AddChild(CardTemp);
-	// 	CardManager._deckSpace.AddCard(CardTemp);
-	// }
 
 	private string ConstructWebsocketUrl()
 	{
@@ -266,7 +253,7 @@ public partial class Gameloop : Node2D
 	{
 		while (readQueue.TryDequeue(out string msg))
 		{
-			// GD.Print(msg);
+			GD.Print(msg);
 			try
 			{
 				var data = JsonSerializer.Deserialize<ResponseManager>(msg);
@@ -322,14 +309,9 @@ public partial class Gameloop : Node2D
 					}
 
 					ApplyTickUpdate(tickUpdate);
-
-					if (!_initialDeckLoaded && tickUpdate?.DrawPile != null)
-					{
-						LoadInitialDeck(tickUpdate.DrawPile);
-						continue;
-					}
-
-					// Additional board/hand updates should be handled here.
+					SyncBoardState(tickUpdate);
+					SyncDeckSpaceIfNeeded(tickUpdate);
+					SyncHandIfNeeded(tickUpdate);
 				}
 
 			}
@@ -340,6 +322,94 @@ public partial class Gameloop : Node2D
 
 			// Here, we somehow parse said information about card and then mess around with it. But to continue, I need to settle card Dictionary
 		}
+	}
+
+	private void SyncHandIfNeeded(TickUpdater tickUpdate)
+	{
+		if (tickUpdate.Hand == null)
+		{
+			return;
+		}
+
+		if (HandMatchesServer(tickUpdate.Hand))
+		{
+			return;
+		}
+
+		CardManager._playerHand.SuppressSignals = true;
+		try
+		{
+			ClearHandControl(CardManager._playerHand);
+			foreach (var card in tickUpdate.Hand)
+			{
+				var cardTemp = CardBuilder.GenerateCard(card.CardID);
+				ApplyHandCardStats(cardTemp, card.Attack, card.Hp, card.ManaCost);
+				cardTemp.CurrentSlotStatus = Card.SlotStatus.Hand;
+				cardTemp.ZIndex = 4;
+				CardManager.AddChild(cardTemp);
+				CardManager._playerHand.AddCard(cardTemp);
+			}
+		}
+		finally
+		{
+			CardManager._playerHand.SuppressSignals = false;
+		}
+	}
+
+	private bool HandMatchesServer(HandCardView[] hand)
+	{
+		return MatchesCardIds(CardManager._playerHand._cardList, hand);
+	}
+
+	private bool MatchesCardIds(Card[] localCards, HandCardView[] serverCards)
+	{
+		if (localCards == null || serverCards == null)
+		{
+			return false;
+		}
+
+		var counts = new Dictionary<int, int>();
+		int localCount = 0;
+		foreach (var card in localCards)
+		{
+			if (card == null)
+			{
+				continue;
+			}
+			localCount++;
+			if (!counts.TryGetValue(card.CardID, out var count))
+			{
+				counts[card.CardID] = 1;
+			}
+			else
+			{
+				counts[card.CardID] = count + 1;
+			}
+		}
+
+		if (localCount != serverCards.Length)
+		{
+			return false;
+		}
+
+		foreach (var card in serverCards)
+		{
+			if (!counts.TryGetValue(card.CardID, out var count))
+			{
+				return false;
+			}
+			count--;
+			if (count == 0)
+			{
+				counts.Remove(card.CardID);
+			}
+			else
+			{
+				counts[card.CardID] = count;
+			}
+		}
+
+		return counts.Count == 0;
 	}
 
 	private void ApplyTickUpdate(TickUpdater tickUpdate)
@@ -395,34 +465,210 @@ public partial class Gameloop : Node2D
 		}
 	}
 
-	private void LoadInitialDeck(HandCardView[] drawPile)
+	private void SyncBoardState(TickUpdater tickUpdate)
 	{
-		// Clear any stale cards before the first server draw pile arrives.
-		foreach (var card in CardManager._deckSpace._cardList)
+		if (tickUpdate.YourBoard == null && tickUpdate.EnemyBoard == null)
 		{
-			if (card != null)
+			return;
+		}
+
+		if (tickUpdate.YourBoard != null)
+		{
+			if (!TryUpdateBoardInPlace(tickUpdate.YourBoard, Board))
 			{
-				CardManager._deckSpace.RemoveCard(card);
+				ClearBoardSlots(Board);
+				foreach (var cardView in tickUpdate.YourBoard)
+				{
+					PlaceBoardCard(cardView, Board);
+				}
 			}
 		}
 
-		foreach (var card in drawPile)
+		if (tickUpdate.EnemyBoard != null)
 		{
-			try
+			if (!TryUpdateBoardInPlace(tickUpdate.EnemyBoard, OpponentBoard))
+			{
+				ClearBoardSlots(OpponentBoard);
+				foreach (var cardView in tickUpdate.EnemyBoard)
+				{
+					PlaceBoardCard(cardView, OpponentBoard);
+				}
+			}
+		}
+	}
+
+	private void SyncDeckSpaceIfNeeded(TickUpdater tickUpdate)
+	{
+		if (tickUpdate.DrawPile == null)
+		{
+			return;
+		}
+
+		if (!IsPreTurnPhase(tickUpdate))
+		{
+			return;
+		}
+
+		if (DeckSpaceMatchesDrawPile(tickUpdate.DrawPile))
+		{
+			return;
+		}
+
+		CardManager._deckSpace.SuppressSignals = true;
+		try
+		{
+			ClearHandControl(CardManager._deckSpace);
+			foreach (var card in tickUpdate.DrawPile)
 			{
 				var cardTemp = CardBuilder.GenerateCard(card.CardID);
+				ApplyHandCardStats(cardTemp, card.Attack, card.Hp, card.ManaCost);
 				cardTemp.CurrentSlotStatus = Card.SlotStatus.Deck;
-				CardManager.AddChild(cardTemp);
 				cardTemp.ZIndex = 4;
+				CardManager.AddChild(cardTemp);
 				CardManager._deckSpace.AddCard(cardTemp);
 			}
-			catch (Exception e)
+		}
+		finally
+		{
+			CardManager._deckSpace.SuppressSignals = false;
+		}
+	}
+
+	private bool IsPreTurnPhase(TickUpdater tickUpdate)
+	{
+		var phase = tickUpdate?.Phase;
+		if (string.IsNullOrEmpty(phase))
+		{
+			phase = _currentPhase;
+		}
+		if (string.IsNullOrEmpty(phase) && PlayerState != null)
+		{
+			phase = PlayerState.Phase;
+		}
+		return string.Equals(phase, "PRE_TURN", StringComparison.OrdinalIgnoreCase);
+	}
+
+	private void ClearBoardSlots(Slot[] slots)
+	{
+		foreach (var slot in slots)
+		{
+			if (slot == null || !slot.CardInSlot)
 			{
-				GD.PrintErr(e);
+				continue;
+			}
+
+			var card = slot.Card;
+			slot.RemoveCard();
+			card?.QueueFree();
+		}
+	}
+
+	private void ClearHandControl(HandControl control)
+	{
+		if (control == null)
+		{
+			return;
+		}
+
+		for (int i = 0; i < control._cardList.Length; i++)
+		{
+			var card = control._cardList[i];
+			if (card == null)
+			{
+				continue;
+			}
+			control.RemoveCard(card);
+			card.QueueFree();
+		}
+	}
+
+	private bool DeckSpaceMatchesDrawPile(HandCardView[] drawPile)
+	{
+		return MatchesCardIds(CardManager._deckSpace._cardList, drawPile);
+	}
+
+	private bool TryUpdateBoardInPlace(BoardCardView[] cardViews, Slot[] slots)
+	{
+		var hasCardInTick = new bool[slots.Length];
+		foreach (var cardView in cardViews)
+		{
+			var index = (cardView.Row * 3) + cardView.Col;
+			if (index < 0 || index >= slots.Length)
+			{
+				return false;
+			}
+			hasCardInTick[index] = true;
+			if (slots[index] is not BattleSlot battleSlot || !battleSlot.CardInSlot)
+			{
+				return false;
+			}
+			if (battleSlot.Card.CardID != cardView.CardID)
+			{
+				return false;
+			}
+
+			ApplyBoardCardStats(battleSlot.Card, cardView.CardAttack, cardView.CurrentHealth);
+			battleSlot.Card.ActiveX = cardView.Col;
+			battleSlot.Card.ActiveY = cardView.Row;
+		}
+
+		for (int i = 0; i < slots.Length; i++)
+		{
+			if (slots[i] != null && slots[i].CardInSlot && !hasCardInTick[i])
+			{
+				return false;
 			}
 		}
 
-		_initialDeckLoaded = true;
+		return true;
+	}
+
+	private void PlaceBoardCard(BoardCardView cardView, Slot[] slots)
+	{
+		var index = (cardView.Row * 3) + cardView.Col;
+		if (index < 0 || index >= slots.Length)
+		{
+			return;
+		}
+
+		if (slots[index] is not BattleSlot battleSlot)
+		{
+			return;
+		}
+
+		var cardTemp = CardBuilder.GenerateCard(cardView.CardID);
+		ApplyBoardCardStats(cardTemp, cardView.CardAttack, cardView.CurrentHealth);
+		cardTemp.CurrentSlotStatus = Card.SlotStatus.Battle;
+		cardTemp.ActiveX = cardView.Col;
+		cardTemp.ActiveY = cardView.Row;
+		cardTemp.Position = battleSlot.Position;
+		cardTemp.ZIndex = 2;
+		CardManager.AddChild(cardTemp);
+		battleSlot.AddCard(cardTemp);
+
+		var collisionShape = cardTemp.GetNodeOrNull<CollisionShape2D>("Area2D/CollisionShape2D");
+		if (collisionShape != null)
+		{
+			collisionShape.Disabled = true;
+		}
+	}
+
+	private void ApplyBoardCardStats(Card card, int attack, int health)
+	{
+		var attackLabel = (RichTextLabel)card.FindChild("Attack", true);
+		attackLabel.Text = attack.ToString();
+		card.Attack = attack;
+
+		var healthLabel = (RichTextLabel)card.FindChild("Health", true);
+		healthLabel.Text = health.ToString();
+		card.Health = health;
+	}
+
+	private void ApplyHandCardStats(Card card, int attack, int health, int manaCost)
+	{
+		ApplyBoardCardStats(card, attack, health);
+		var costLabel = (RichTextLabel)card.FindChild("ElixirCost", true);
+		costLabel.Text = manaCost.ToString();
 	}
 
 	// This is to handle the
@@ -430,7 +676,25 @@ public partial class Gameloop : Node2D
 	{
 		var bar = GetNode<ProgressBar>("TurnBarContainer/TurnBar");
 
-		if (TurnPause)
+		if (_phaseDrivenByServer)
+		{
+			if (_currentPhase.Equals("PRE_TURN", StringComparison.OrdinalIgnoreCase))
+			{
+				PauseTimer += delta;
+				bar.Value = PauseTimer / PAUSE_TIMER;
+			}
+			else if (_currentPhase.Equals("ACTIVE", StringComparison.OrdinalIgnoreCase))
+			{
+				RegenInterval += delta;
+				GameTimer += delta;
+				bar.Value = (GameTimer - (ROUND_TIMER * (TurnRound - 1))) / ROUND_TIMER;
+			}
+			else
+			{
+				return;
+			}
+		}
+		else if (TurnPause)
 		{
 			PauseTimer += delta;
 			bar.Value = PauseTimer / PAUSE_TIMER;

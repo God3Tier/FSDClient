@@ -31,6 +31,12 @@ class MatchStatusResponse
 	}
 }
 
+class MatchmakingErrorResponse
+{
+	[JsonPropertyName("error")]
+	public string Error { get; set; } = "";
+}
+
 class AcceptMatchResponse
 {
 	[JsonPropertyName("message")]
@@ -346,7 +352,22 @@ public partial class Home : Control
 		GD.Print("MATCH CHECK JOIN LOGGING");
 		string json = System.Text.Encoding.UTF8.GetString(body);
 		GD.Print(responseCode);
-		if (result != 200 && responseCode != 200)
+		if (result != (long)HttpRequest.Result.Success)
+		{
+			GD.PrintErr("Failed to get a successful response about state of matchmaking");
+			GD.PrintErr(json);
+			return;
+		}
+
+		if (responseCode == 409)
+		{
+			GD.PrintErr("Failed to get a successful response about state of matchmaking");
+			GD.PrintErr(json);
+			TryReconnectFromMatchmakingError(json);
+			return;
+		}
+
+		if (responseCode != 200)
 		{
 			GD.PrintErr("Failed to get a successful response about state of matchmaking");
 			GD.PrintErr(json);
@@ -355,6 +376,66 @@ public partial class Home : Control
 
 		_searching = true;
 
+	}
+
+	private void TryReconnectFromMatchmakingError(string json)
+	{
+		MatchmakingErrorResponse errorResponse;
+		try
+		{
+			errorResponse = JsonSerializer.Deserialize<MatchmakingErrorResponse>(json);
+		}
+		catch (Exception e)
+		{
+			GD.PrintErr("Unable to parse matchmaking error: ", e);
+			return;
+		}
+
+		if (errorResponse == null || string.IsNullOrEmpty(errorResponse.Error))
+		{
+			return;
+		}
+
+		if (!errorResponse.Error.Contains("already in game session", StringComparison.OrdinalIgnoreCase))
+		{
+			return;
+		}
+
+		var sessionId = ExtractSessionIdFromError(errorResponse.Error);
+		if (string.IsNullOrEmpty(sessionId))
+		{
+			return;
+		}
+
+		AttemptReconnectToGame(sessionId);
+	}
+
+	private string ExtractSessionIdFromError(string error)
+	{
+		var parts = error.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+		if (parts.Length == 0)
+		{
+			return "";
+		}
+
+		return parts[^1].Trim();
+	}
+
+	private void AttemptReconnectToGame(string sessionId)
+	{
+		GD.Print("Reconnecting to existing game session ", sessionId);
+		PlayerStateManager.Instance.SessionId = sessionId;
+		SessionID = sessionId;
+		_searching = false;
+		_cancelled = false;
+
+		var loadingNode = GetNode<ColorRect>("Loading");
+		var loadingSprite = GetNode<AnimatedSprite2D>("Loading/LoadingAnimation");
+		loadingSprite.Stop();
+		loadingNode.Visible = false;
+
+		var GameStateManager = GetNode<GameStateManager>("/root/GameStateManager");
+		GameStateManager.ChangeGameState(GameState.INGAMEMODE);
 	}
 
 	private void MatchCheckResponse(long result, long responseCode, string[] headers, byte[] body)
