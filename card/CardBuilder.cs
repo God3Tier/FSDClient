@@ -79,8 +79,8 @@ public class CardBuilder
 	// Calculate the crystal cost to get to the next level
 	public static int CrystalCostCalculator(int Level)
 	{
-		// for it to be 100 ^ level
-		return (int)Math.Pow(100, Level);
+		// for it to be 100 -> 1000 -> 10000 ...
+		return (int)Math.Pow(10, Level + 1);
 	}
 
 }
