@@ -61,6 +61,7 @@ public class GetDecksResponse
 {
 	[JsonPropertyName("count")]
 	public int Count { get; set; }
+	
 	[JsonPropertyName("decks")]
 	public List<Deck> Decks { get; set; }
 }
@@ -93,7 +94,7 @@ public class CardInfo
 	public int Position { get; set; }
 	
 	[JsonPropertyName("level")]
-	public int Level { get; set; } = 1;
+	public int Level { get; set; }
 
 }
 

@@ -58,28 +58,41 @@ class AcceptMatchResponse
 	}
 }
 
-public class GetActiveResponse
+public class ActiveDeckResponse
 {
 	[JsonPropertyName("active_deck_id")]
 	public int ActiveDeckId { get; set; }
+
+	[JsonPropertyName("deck")]
+	public Deck Deck { get; set; }
 }
 
-public class ActiveDeckResponse
+public class Deck
 {
 	[JsonPropertyName("deck_id")]
 	public int DeckId { get; set; }
-
+	
 	[JsonPropertyName("name")]
 	public string Name { get; set; } = "";
-
+	
 	[JsonPropertyName("card_ids")]
 	public List<int> CardIds { get; set; } = new();
-
+	
 	[JsonPropertyName("cards")]
 	public List<CardInfo> Cards { get; set; } = new();
+}
 
-	[JsonPropertyName("is_active")]
-	public bool IsActive { get; set; } = false;
+public class CardInfo
+{
+	[JsonPropertyName("card_id")]
+	public int CardId { get; set; }
+	
+	[JsonPropertyName("position")]
+	public int Position { get; set; }
+	
+	[JsonPropertyName("level")]
+	public int Level { get; set; }
+
 }
 
 public class GetCrystalResponse
@@ -140,6 +153,9 @@ public class PackCardData
 
 	[JsonPropertyName("rarity")]
 	public string Rarity { get; set; }
+
+	[JsonPropertyName("quantity")]
+	public int Quantity { get; set; }
 
 }
 
@@ -258,7 +274,7 @@ public partial class Home : Control
 	public async void _OnBattleButtonPressed()
 	{
 		// to check if theres 12 cards in active deck
-		Network.SendRequestWithToken(NetworkManager.BASE_URL + NetworkManager.DECK + "/decks/active", Godot.HttpClient.Method.Get, "", ActiveDeckIdResponse);
+		Network.SendRequestWithToken(NetworkManager.BASE_URL + NetworkManager.DECK + "/decks/active", Godot.HttpClient.Method.Get, "", ActiveDeckResponse);
 
 	}
 
@@ -408,23 +424,6 @@ public partial class Home : Control
 		GameStateManager.ChangeGameState(GameState.INGAMEMODE);
 	}
 
-	private void ActiveDeckIdResponse(long result, long responseCode, string[] headers, byte[] body)
-	{
-		string json = System.Text.Encoding.UTF8.GetString(body);
-		GD.Print(responseCode);
-
-		if (result != 200 && responseCode != 200)
-		{
-			GD.PrintErr("Unable to get active deck id");
-			SetTextPopup("Unable to get active deck id");
-			return;
-		}
-
-		int ActiveDeckId = JsonSerializer.Deserialize<GetActiveResponse>(json).ActiveDeckId;
-
-		Network.SendRequestWithToken(NetworkManager.BASE_URL + NetworkManager.DECK + "/decks/" + ActiveDeckId, Godot.HttpClient.Method.Get, "", ActiveDeckResponse);
-	}
-
 	private async void ActiveDeckResponse(long result, long responseCode, string[] headers, byte[] body)
 	{
 		string json = System.Text.Encoding.UTF8.GetString(body);
@@ -437,12 +436,14 @@ public partial class Home : Control
 			return;
 		}
 
-		ActiveDeckResponse ActiveDeck = JsonSerializer.Deserialize<ActiveDeckResponse>(json);
+		ActiveDeckResponse data = JsonSerializer.Deserialize<ActiveDeckResponse>(json);
+		ActiveDeckResponse ActiveDeck = data;
+		
 		PlayerStateManager.Instance.ActiveDeck = ActiveDeck;
 		
 		// check that there is 12 cards (aka deck is valid)
-		if (ActiveDeck.CardIds.Count != 12){
-			SetTextPopup("Cannot queue: active deck must have exactly 12 cards, currently has " + ActiveDeck.CardIds.Count);
+		if (ActiveDeck.Deck.CardIds.Count != 12){
+			SetTextPopup("Cannot queue: active deck must have exactly 12 cards, currently has " + ActiveDeck.Deck.CardIds.Count);
 			return;
 		}
 
@@ -614,14 +615,14 @@ public partial class Home : Control
 		for (int i = 0; i < Cards.Count; i++)
 		{
 			// set generate cards one on top of another
-			VBoxContainer CardContainer = CreateCard(Cards[i].Rarity, Cards[i].CardId, 1);
+			VBoxContainer CardContainer = CreateCard(Cards[i].Rarity, Cards[i].CardId, Cards[i].Quantity);
 
 			// Set visibility to false (for all but 1st)
 			CardContainer.Visible = false;
 
 			IndivCardContainer.AddChild(CardContainer);
 
-			VBoxContainer FinalCardContainer = CreateCard(Cards[i].Rarity, Cards[i].CardId, 1);
+			VBoxContainer FinalCardContainer = CreateCard(Cards[i].Rarity, Cards[i].CardId, Cards[i].Quantity);
 			FinalCardsResult.AddChild(FinalCardContainer);
 		}
 
