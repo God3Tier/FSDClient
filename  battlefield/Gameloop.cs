@@ -143,6 +143,7 @@ public partial class Gameloop : Node2D
 
 			_playerIcon = PlayerIcon;
 			_enemyIcon = (PlayerView)FindChild("PlayerIcon2", true);
+			_enemyIcon.Scale = new Vector2(0.35f, 0.35f);	
 			_enemyIcon.LoadDataTexture(PlayerTextureView);
 		}
 		catch (Exception e)
