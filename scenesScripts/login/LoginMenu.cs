@@ -184,8 +184,8 @@ public partial class LoginMenu : Control
 			SetTextPopup(errorMessage);
 			return;
 		}
-		// If successful, swithc back to login mode
-		CreatingAccount = false;
+		// If successful, switch back to login mode
+		_onStateChangerPressed();
 		SetTextPopup("Account Created!!");
 	}
 
