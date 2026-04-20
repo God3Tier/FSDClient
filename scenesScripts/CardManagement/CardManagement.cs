@@ -874,13 +874,13 @@ public partial class CardManagement : Control
 		for (int i = 0; i < Decks.Count; i++){
 			// Validate if theres 12 cards
 			if(Decks.Decks[i].CardIds.Count != 12){
-				SetTextPopup($"Deck {Decks.Decks[i].Name} does not have 12 cards");
+				SetTextPopup($"Deck {i + 1} does not have 12 cards");
 				return;
 			}
 			
 			// Validate max 2 unique cards
 			if(!HasNoMoreThanTwoDuplicates(Decks.Decks[i].CardIds)){
-				SetTextPopup($"Deck {Decks.Decks[i].Name} have more than 2 duplicate cards");
+				SetTextPopup($"Deck {i + 1} have more than 2 duplicate cards");
 				return;
 			}
 		}
