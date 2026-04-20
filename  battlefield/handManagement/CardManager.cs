@@ -104,13 +104,12 @@ public partial class CardManager : Node2D
 		// First check if the slot is a BattleSlot,
 		// then check if there is a card in the slot already,
 		// then check if the card is currently allowed to be added
-		if (slotFound is BattleSlot battleSlotFound &&
-			!battleSlotFound.CardInSlot &&
-			cardBeingDragged.CurrentSlotStatus == Card.SlotStatus.Hand &&
-			(bool)battleSlotFound.GetMeta("MySlot"))
-		{
-			IntoBattleSlot(battleSlotFound);
-		}
+		   if (slotFound is BattleSlot battleSlotFound &&
+			   !battleSlotFound.CardInSlot &&
+			   cardBeingDragged.CurrentSlotStatus == Card.SlotStatus.Hand)
+		   {
+			   IntoBattleSlot(battleSlotFound);
+		   }
 		else if (slotFound is HandSlot handSlotFound && 
 				!handSlotFound.CardInSlot && 
 				cardBeingDragged.CurrentSlotStatus == Card.SlotStatus.Deck)
@@ -152,7 +151,7 @@ public partial class CardManager : Node2D
 		EmitSignal(SignalName.CardDropped, battleSlotFound);
 	}
 	
-	private void BounceBattleSlot(BattleSlot slot) {
+	public void BounceBattleSlot(BattleSlot slot) {
 		Card bouncedCard = slot.Card;
 		slot.RemoveCard();
 		// TODO: Might want to rebuild a card instead and add it into hand if possible

@@ -139,7 +139,7 @@ public partial class Card : Node2D
 			var CurrentHealth = (RichTextLabel)FindChild("Health", true);
 			Health += damage;
 			CurrentHealth.Text = Health.ToString();
-			
+
 			if (Health <= 0)
 			{
 				return true;
@@ -147,6 +147,7 @@ public partial class Card : Node2D
 		}
 		return false;
 	}
+	
 	
 	// Render card into battleslot
 	public void EnterBattleSlot()

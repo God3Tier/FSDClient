@@ -2,7 +2,7 @@ namespace FSDClient.battlefield;
 
 using FSDClient.builder;
 using Godot;
-using FSDClient.player;
+using FSDClient.player.display;
 using FSDClient.card.display;
 using FSDClient.card;
 using FSDClient.battlefield.handManagement;
@@ -17,6 +17,10 @@ using FSDClient.battlefield.response;
 
 public partial class Gameloop : Node2D
 {
+	// Store latest player and enemy health
+	private int LatestPlayerHealth = -1;
+	private int LatestEnemyHealth = -1;
+
 	public static readonly string BASE_WEBSOCKET_URL = "ws://localhost:8002/ws?session_id=SESSIONID";
 
 	public static readonly double MAX_ELIXER = 8;
@@ -25,26 +29,23 @@ public partial class Gameloop : Node2D
 	public static readonly double SECONDS_PER_ELIXIR = 3f;
 	public static readonly int BASE_ELIXIR = 4;
 
-	public NetworkManager NetworkManager { get; set; }
 	// Unsure to keep this as the state manager or make it it's own individual player data. TBD on a later date
 	public PlayerStateManager MainPlayer { get; set; }
-	public PlayerData IncomingPlayer { get; set; }
+	// References to player and enemy icons for health updates
+	private PlayerView _playerIcon;
+	private PlayerView _enemyIcon;
 
 	// Deal with card placement and card movement
 	private Slot[] Board { get; set; } = new BattleSlot[6];
 	private Slot[] OpponentBoard { get; set; } = new BattleSlot[6];
 	private CardManager CardManager;
 	private HandArea HandArea;
-	private DeckSpace DeckSpace;
 
 	// Deal with active gameplay
-	public int Player1Health;
-	public int Player2Health;
 	public PlayerState PlayerState { get; set; }
 
 	// Parameters for game state to be managed
 	private int Elixir { get; set; }
-	private int RoundNumber { get; set; }
 	private double GameTimer { get; set; } = 0;
 	private double RegenInterval { get; set; } = 1;
 	private bool TurnPause { get; set; } = true;
@@ -55,10 +56,8 @@ public partial class Gameloop : Node2D
 	// Websocket Connection and managing concurrency
 	private WebSocketPeer Socket = new WebSocketPeer();
 	private readonly ConcurrentQueue<string> readQueue = new();
-	private readonly ConcurrentQueue<string> writeQueue = new();
 	private double _reconnectTimer { get; set; }
 	private readonly double _reconnectDelay = 3.0;
-	private readonly ConcurrentQueue<AttackEvent> EventQueue = new();
 	private string _currentPhase = string.Empty;
 	private bool _phaseDrivenByServer = false;
 
@@ -94,6 +93,14 @@ public partial class Gameloop : Node2D
 				var BattleSlot = (BattleSlot)child;
 				int lastInt = (int)(childName[^1] - '1');
 				Board[lastInt] = BattleSlot;
+				// Map slot index to (row, col):
+				// 0: (0,0), 1: (0,1), 2: (0,2), 3: (1,0), 4: (1,1), 5: (1,2)
+				int[,] slotCoords = new int[,] { { 0, 0 }, { 0, 1 }, { 0, 2 }, { 1, 0 }, { 1, 1 }, { 1, 2 } };
+				if (lastInt >= 0 && lastInt < 6)
+				{
+					BattleSlot.y = slotCoords[lastInt, 0]; // row
+					BattleSlot.x = slotCoords[lastInt, 1]; // col
+				}
 			}
 		}
 
@@ -110,39 +117,39 @@ public partial class Gameloop : Node2D
 			}
 		}
 
-		//TODO: Add the logic to load the nonsence so I can start using the stuff for damage numbers
-		// and whatnot
-		// IncomingPlayer = new PlayerData("Placeholder", "Placeholder", [], false);
 		CardManager = (CardManager)FindChild("CardManager", true);
 		CardManager._playerHand = GetNode<PlayerHand>("HandArea/PlayerHand");
 		CardManager._deckSpace = GetNode<DeckSpace>("HandArea/DeckSpace");
-		CardManager.CardDropped += OnCardDropped; 
+		CardManager.CardDropped += OnCardDropped;
 		CardManager._playerHand.AddCardMessage += OnCardAdd;
 		CardManager._deckSpace.RemoveCardMessage += OnCardReturn;
-		
+
 		// Testing the HandArea
 		HandArea = GetNode<HandArea>("HandArea");
 		HandArea._playerHand = CardManager._playerHand;
 		HandArea._deckSpace = CardManager._deckSpace;
-
-		HandArea._playerHand.AddCardMessage += OnCardAdd;
-		HandArea._deckSpace.RemoveCardMessage += OnCardReturn;
-
-		// GD.Print(HandArea);
-		// GD.Print(CardManager._playerHand.Name);
-		// HandArea.RaiseDeck();
-
-		// Card TempCard = (Card)CardBuilder.GenerateCard(10);
-		// TempCard.CurrentSlotStatus = Card.SlotStatus.Deck;
-		// TempCard.ZIndex = 5;
-		// CardManager.AddChild(TempCard);
-		// GD.Print(TempCard.CurrentSlotStatus);
-		// HandArea._deckSpace.AddCard(TempCard);
-		//  GD.Print("Completed everything without a problem");
 		GD.Print(HandArea);
 		GD.Print(CardManager._playerHand.Name);
-	}
 
+		// Add player icon
+		try
+		{
+			var PlayerTextureView = Builder.BuildPlayer(MainPlayer.PlayerData);
+			// var PlayerIcon = (PlayerView)FindChild("PlayerIcon");
+			var PlayerIcon = (PlayerView)FindChild("PlayerIcon", true);
+			PlayerIcon.LoadDataTexture(PlayerTextureView);
+			PlayerIcon.Scale = new Vector2(0.35f, 0.35f);
+
+
+			_playerIcon = PlayerIcon;
+			_enemyIcon = (PlayerView)FindChild("PlayerIcon2", true);
+			_enemyIcon.LoadDataTexture(PlayerTextureView);
+		}
+		catch (Exception e)
+		{
+			GD.PrintErr("Exception: ", e);
+		}
+	}
 
 	private void OnCardAdd(int cardID)
 	{
@@ -174,7 +181,6 @@ public partial class Gameloop : Node2D
 	private void OnCardDropped(BattleSlot battleslot)
 	{
 		// TODO: Write to Server should be implemented once backend decides how to transfer information
-		var playerStateManager = PlayerStateManager.Instance;
 		var obj = new
 		{
 			card_id = battleslot.Card.CardID,
@@ -188,10 +194,6 @@ public partial class Gameloop : Node2D
 		battleslot.Card.ActiveY = battleslot.y;
 		battleslot.Card.ActiveX = battleslot.x;
 
-		int player1Copy = Player1Health;
-		int player2Copy = Player2Health;
-		Player1Health = player1Copy;
-		Player2Health = player2Copy;
 	}
 
 	// This is how to generate Elixir. Since client only ever knows about 1 player's resource
@@ -201,15 +203,7 @@ public partial class Gameloop : Node2D
 		HandleWebSocket();
 		HandleGameTimer(delta);
 		HandleInputFromServer();
-		ProcessEvent();
-	}
 
-	public void ProcessEvent()
-	{
-		// GD.Print("Calling Process Event");
-		if (EventQueue.TryDequeue(out AttackEvent attackEvent))
-		{
-		}
 	}
 
 	private void HandleWebSocket()
@@ -262,9 +256,42 @@ public partial class Gameloop : Node2D
 					continue;
 				}
 
+
 				if (!string.IsNullOrEmpty(data.Result) && data.Result.Equals("failure"))
 				{
-					// Some error handling
+					// If the action was CARD_PLACED, restore the card to the player's hand
+					if (!string.IsNullOrEmpty(data.ActionType) &&
+						data.ActionType.Equals("CARD_PLACED", StringComparison.OrdinalIgnoreCase))
+					{
+						// Try to extract card_id from parameters if available
+						int cardId = -1;
+						if (data.Parameters.ValueKind == System.Text.Json.JsonValueKind.Object &&
+							data.Parameters.TryGetProperty("card_id", out var cardIdProp) &&
+							cardIdProp.TryGetInt32(out int extractedId))
+						{
+							cardId = extractedId;
+						}
+						if (cardId != -1 && CardManager != null)
+						{
+							bool restored = false;
+							// Try to restore from any slot
+							foreach (var slot in Board)
+							{
+								if (slot is BattleSlot battleSlot && battleSlot.Card != null && battleSlot.Card.CardID == cardId)
+								{
+									CardManager.BounceBattleSlot(battleSlot);
+									restored = true;
+									break;
+								}
+							}
+							// If not found in any slot, recreate and return to hand
+							if (!restored)
+							{
+								var cardTemp = CardBuilder.GenerateCard(cardId);
+								CardManager._playerHand.AddCard(cardTemp);
+							}
+						}
+					}
 					return;
 				}
 
@@ -437,6 +464,17 @@ public partial class Gameloop : Node2D
 			return;
 		}
 
+		if (phase.Equals("GAME_OVER", StringComparison.OrdinalIgnoreCase))
+		{
+			if (GameEnd)
+			{
+				return;
+			}
+			GameEnd = true;
+			ReturnToHomeFromGameOver();
+			return;
+		}
+
 		if (string.Equals(_currentPhase, phase, StringComparison.OrdinalIgnoreCase))
 		{
 			return;
@@ -465,6 +503,12 @@ public partial class Gameloop : Node2D
 		}
 	}
 
+	private void ReturnToHomeFromGameOver()
+	{
+		var gameStateManager = GetNode<GameStateManager>("/root/GameStateManager");
+		gameStateManager.ChangeGameState(GameState.HOMESCREEN);
+	}
+
 	private void SyncBoardState(TickUpdater tickUpdate)
 	{
 		if (tickUpdate.YourBoard == null && tickUpdate.EnemyBoard == null)
@@ -472,9 +516,24 @@ public partial class Gameloop : Node2D
 			return;
 		}
 
+		// Update health UI for player and enemy
+		if (_playerIcon != null)
+		{
+			var healthLabel = (RichTextLabel)_playerIcon.FindChild("DefenceValue", true);
+			healthLabel.Text = tickUpdate.YourHp.ToString();
+		}
+		if (_enemyIcon != null)
+		{
+			var healthLabel = (RichTextLabel)_enemyIcon.FindChild("DefenceValue", true);
+			healthLabel.Text = tickUpdate.EnemyHp.ToString();
+		}
+
 		if (tickUpdate.YourBoard != null)
 		{
-			if (!TryUpdateBoardInPlace(tickUpdate.YourBoard, Board))
+			var skipYourBoard = IsPreTurnPhase(tickUpdate)
+				&& tickUpdate.YourBoard.Length == 0
+				&& HasAnyCard(Board);
+			if (!skipYourBoard && !TryUpdateBoardInPlace(tickUpdate.YourBoard, Board))
 			{
 				ClearBoardSlots(Board);
 				foreach (var cardView in tickUpdate.YourBoard)
@@ -486,7 +545,10 @@ public partial class Gameloop : Node2D
 
 		if (tickUpdate.EnemyBoard != null)
 		{
-			if (!TryUpdateBoardInPlace(tickUpdate.EnemyBoard, OpponentBoard))
+			var skipEnemyBoard = IsPreTurnPhase(tickUpdate)
+				&& tickUpdate.EnemyBoard.Length == 0
+				&& HasAnyCard(OpponentBoard);
+			if (!skipEnemyBoard && !TryUpdateBoardInPlace(tickUpdate.EnemyBoard, OpponentBoard))
 			{
 				ClearBoardSlots(OpponentBoard);
 				foreach (var cardView in tickUpdate.EnemyBoard)
@@ -495,6 +557,22 @@ public partial class Gameloop : Node2D
 				}
 			}
 		}
+	}
+
+	private bool HasAnyCard(Slot[] slots)
+	{
+		if (slots == null)
+		{
+			return false;
+		}
+		foreach (var slot in slots)
+		{
+			if (slot != null && slot.CardInSlot)
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private void SyncDeckSpaceIfNeeded(TickUpdater tickUpdate)
@@ -643,6 +721,7 @@ public partial class Gameloop : Node2D
 		cardTemp.ActiveY = cardView.Row;
 		cardTemp.Position = battleSlot.Position;
 		cardTemp.ZIndex = 2;
+		cardTemp.EnterBattleSlot();
 		CardManager.AddChild(cardTemp);
 		battleSlot.AddCard(cardTemp);
 
@@ -764,10 +843,6 @@ public partial class Gameloop : Node2D
 		// writeQueue.Enqueue(message);
 	}
 
-	private void ReturnToHomeScreen()
-	{
-		GameStateManager.Instance.ChangeGameState(GameState.HOMESCREEN);
-	}
 }
 
 /*
