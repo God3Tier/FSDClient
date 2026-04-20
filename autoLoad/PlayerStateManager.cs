@@ -20,7 +20,7 @@ public partial class PlayerStateManager : Node
 	public ActiveDeckResponse ActiveDeck { get; set; }
 	public long UserId { get; private set; }
 	public int Level { get; private set; }
-	public int Crystal { get; private set; }
+	public int Crystal { get; set; }
 	public int Gold { get;  private set; }
 	public string SessionId { get;  set;}
 	public string Token { get; private set; } = "";
