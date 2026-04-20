@@ -16,21 +16,32 @@ public enum RequestAction
 public class RequestConstructor
 {
 	[JsonPropertyName("action")]
-	private string Action { get; set; }
+	public string Action { get; set; }
 	[JsonPropertyName("params")]
-	private string Params { get; set; }
+	public JsonElement Params { get; set; }
 	[JsonPropertyName("state_hash_after")]
-	private ulong StateHashAfter { get; set; }
+	public ulong StateHashAfter { get; set; }
 	[JsonPropertyName("sequence_number")]
-	private long SequenceNumber { get; set; }
+	public long SequenceNumber { get; set; }
 
 
 	public string GenerateRequest(RequestAction req, string parameters, PlayerState playerstate)
 	{
-		Params = parameters;
-		Action = req.ToString().ToLower();
-		StateHashAfter = playerstate.HashPlayerView();
-		SequenceNumber = playerstate.SequenceNumber;
+		if (string.IsNullOrEmpty(parameters))
+			Params = JsonSerializer.Deserialize<JsonElement>("{}");
+		else
+			Params = JsonSerializer.Deserialize<JsonElement>(parameters);
+		Action = req.ToString();
+		if (playerstate == null)
+		{
+			StateHashAfter = 0;
+			SequenceNumber = 0;
+		}
+		else
+		{
+			StateHashAfter = playerstate.HashPlayerView();
+			SequenceNumber = (long)playerstate.TickNumber;
+		}
 		return JsonSerializer.Serialize(this);
 	}
 

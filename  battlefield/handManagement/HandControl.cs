@@ -7,10 +7,7 @@ using FSDClient.card.display;
 
 public partial class HandControl : Control
 {
-    [Signal]
-    public delegate void AddCardMessageEventHandler(int cardID);
-    [Signal]
-    public delegate void RemoveCardMessageEventHandler(int cardID);
+	
 	public Card[] _cardList { get; protected set; }
 	public Slot[] _slotList { get; protected set; }
 	protected Vector2[] _slotBasePositions;
@@ -22,12 +19,12 @@ public partial class HandControl : Control
 	protected bool _isRaised = true;
 	
 	// Add card to this hand control provided there is enough space
-	public void AddCard(Card card)
+	public virtual bool AddCard(Card card)
 	{
 		if (card == null)
 		{
 			GD.Print("Card is null");
-			return;
+			return false;
 		}
 		// Check if the cardlist doesn't already has this specific card, and we still have space
 		if (!_cardList.Contains(card) && _cardCount < _cardLimit) {
@@ -42,31 +39,33 @@ public partial class HandControl : Control
 			}
             // update all the card positions
             UpdateCardPositions();
-            GD.Print("Updating the card positions");
-			/// Signal Emission 
+			GD.Print("Updating the card positions");
+			return true; 
+			// Signal Emission 
 		}
 		// If the card is already part of this collection, animate it back to its original slot
 		else
 		{
 			int index = Array.IndexOf(_cardList, card);
 			AnimateCardToPosition(card, _slotList[index].GlobalPosition, _normalSpeed);
+			return false;
 		}
 	}
 	
 	// Add card to a specific slot
-	public void AddCard(Card card, Slot slot)
+	public virtual bool AddCard(Card card, Slot slot)
 	{
 		// If the slot is not part of this group, don't do anything
 		if (!_slotList.Contains(slot))
 		{
 			GD.Print($"{this.Name} doesn't have {slot.Name}");
-			return;
+			return false;
 		}
 		
 		// If the slot has a card already, don't do anything
 		if (slot.CardInSlot)
 		{
-			return;
+			return false;
 		}
 		
 		// If the card doesn't already exist in the space, add it
@@ -77,11 +76,13 @@ public partial class HandControl : Control
 			_cardList[index] = card;
 			_cardCount++;
 			UpdateCardPositions();
+			return true;
 		}
 		else
 		{
-			int index = Array.IndexOf(_cardList, card);
+			int index = Array.IndexOf(_cardList, card); 
 			AnimateCardToPosition(card, _slotList[index].GlobalPosition, _normalSpeed);
+			return false; 
 		}
 	}
 	
@@ -92,9 +93,9 @@ public partial class HandControl : Control
 		_cardList[index] = null;
 		_slotList[index].RemoveCard();
 		_cardCount--;
-        UpdateCardPositions();
-		
-        // Emit Signal 
+		UpdateCardPositions();
+
+		// Emit Signal 
 	}
 	
 	

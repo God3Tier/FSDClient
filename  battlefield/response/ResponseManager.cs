@@ -7,22 +7,27 @@ using System;
 public enum MessageType
 {
     StateUpdate,
-    ActionResult
+    ActionResult,
+    Error
 }
 
 public enum ActionType
 {
-    JoinGame,
-    SelectCards,
-    CardPlaced,
-    TickUpdate
+    JOIN_GAME,
+    SELECT_CARD,
+    DESELECT_CARD,
+    CARD_PLACED,
+    RECONNECT,
+    SURRENDER,
+    TICK_UPDATE
 }
 
 public class ResponseManager
 {
     [JsonPropertyName("message_type")]
     public string MessageType { get; set; }
-    [JsonPropertyName("action_type")]
+    
+    [JsonPropertyName("action")]
     public string ActionType { get; set; }
     [JsonPropertyName("params")]
     public JsonElement Parameters { get; set; }
@@ -37,10 +42,10 @@ public class ResponseManager
     public JsonElement StateView { get; set; }
     
     [JsonPropertyName("sequence_number")]
-    public int SequenceNumber { get; set; }
+    public long SequenceNumber { get; set; }
     
     [JsonPropertyName("tick_number")]
-    public int TickNumber { get; set; }
+    public ulong TickNumber { get; set; }
     
     [JsonPropertyName("timestamp")]
     public DateTime TimeStamp { get; set; }

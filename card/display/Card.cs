@@ -15,6 +15,7 @@ public partial class Card : Node2D
 	public int CardID { get; set; }
 	public int Health { get; set; }
 	public int Attack { get; set; }
+	public int Elixir { get; set; }
 	public string Colour { get; set; }
 	private bool BattleMode { get; set; } = false;
 	public double TimeToAttack { get; set; }
@@ -111,7 +112,7 @@ public partial class Card : Node2D
 		}
 
 		var ElixirCost = (RichTextLabel)FindChild("ElixirCost", true);
-		ElixirCost.Text = cardViewTextures.ElixirCost;
+		ElixirCost.Text = cardViewTextures.ElixirCost.ToString();
 
 		var ProgressBar = (ProgressBar)FindChild("ProgressBar", true);
 		ProgressBar.MaxValue = cardViewTextures.TimeToAttack;
@@ -138,7 +139,7 @@ public partial class Card : Node2D
 			var CurrentHealth = (RichTextLabel)FindChild("Health", true);
 			Health += damage;
 			CurrentHealth.Text = Health.ToString();
-			
+
 			if (Health <= 0)
 			{
 				return true;
@@ -146,6 +147,7 @@ public partial class Card : Node2D
 		}
 		return false;
 	}
+	
 	
 	// Render card into battleslot
 	public void EnterBattleSlot()
