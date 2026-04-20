@@ -64,48 +64,28 @@ class AcceptMatchResponse
 	}
 }
 
-public class ActiveDeckResponse
+public class GetActiveResponse
 {
 	[JsonPropertyName("active_deck_id")]
 	public int ActiveDeckId { get; set; }
-
-	[JsonPropertyName("deck")]
-	public Deck Deck { get; set; }
 }
 
-public class Deck
+public class ActiveDeckResponse
 {
 	[JsonPropertyName("deck_id")]
 	public int DeckId { get; set; }
-	
+
 	[JsonPropertyName("name")]
 	public string Name { get; set; } = "";
-	
+
 	[JsonPropertyName("card_ids")]
 	public List<int> CardIds { get; set; } = new();
-	
+
 	[JsonPropertyName("cards")]
 	public List<CardInfo> Cards { get; set; } = new();
-}
 
-public class CardInfo
-{
-	[JsonPropertyName("card_id")]
-	public int CardId { get; set; }
-	
-	[JsonPropertyName("position")]
-	public int Position { get; set; }
-	
-	[JsonPropertyName("level")]
-	public int Level { get; set; }
-
-}
-
-public class GetCrystalResponse
-{
-	[JsonPropertyName("crystals")]
-	public int Crystals { get; set; }
-
+	[JsonPropertyName("is_active")]
+	public bool IsActive { get; set; } = false;
 }
 
 public class GetPacksResponse
@@ -113,6 +93,10 @@ public class GetPacksResponse
 	[JsonPropertyName("packs")]
 	public List<PackData> Packs { get; set; }
 
+	public GetPacksResponse(List<PackData> packs)
+	{
+		Packs = packs;
+	}
 }
 
 public class PackData
@@ -129,6 +113,13 @@ public class PackData
 	[JsonPropertyName("created_at")]
 	public string CreatedAt { get; set; }
 
+	public PackData(int packId, string packType, bool isOpened, string createdAt)
+	{
+		PackId = packId;
+		PackType = packType;
+		IsOpened = isOpened;
+		CreatedAt = createdAt;
+	}
 }
 
 public class OpenPackResponse
@@ -139,14 +130,15 @@ public class OpenPackResponse
 	[JsonPropertyName("pack_type")]
 	public string PackType { get; set; }
 
-	[JsonPropertyName("crystals_awarded")]
-	public int CrystalsAwarded { get; set; }
-	
-	[JsonPropertyName("crystals_total")]
-	public int CrystalsTotal { get; set; }
-
 	[JsonPropertyName("cards")]
 	public List<PackCardData> Cards { get; set; }
+
+	public OpenPackResponse(int packId, string packType, List<PackCardData> cards)
+	{
+		PackId = packId;
+		PackType = packType;
+		Cards = cards;
+	}
 }
 
 public class PackCardData
@@ -160,9 +152,12 @@ public class PackCardData
 	[JsonPropertyName("rarity")]
 	public string Rarity { get; set; }
 
-	[JsonPropertyName("quantity")]
-	public int Quantity { get; set; }
-
+	public PackCardData(int cardId, string cardName, string rarity)
+	{
+		CardId = cardId;
+		CardName = cardName;
+		Rarity = rarity;
+	}
 }
 
 public partial class Home : Control
@@ -206,7 +201,6 @@ public partial class Home : Control
 
 		try
 		{
-			// update player information
 			InitialisePlayerInformation();
 
 			// Update packs on pressed function
@@ -228,8 +222,14 @@ public partial class Home : Control
 		var Row1 = (BoxContainer)Header.FindChild("Row 1");
 		var Row2 = (BoxContainer)Header.FindChild("Row 2");
 
-		// update crystals
-		Network.SendRequestWithToken(NetworkManager.BASE_URL + NetworkManager.DECK + "/players/me/crystals", Godot.HttpClient.Method.Get, "", GetCrystalResponse);		
+		// GD.Print(Row1, Row2);
+
+		// Set Header -> Row1 -> XP -> Banner -> Level
+		var Lv = (Label)((TextureRect)((ColorRect)Row1.FindChild("XP")).FindChild("Banner")).FindChild("Level");
+		Lv.Text = CurrentPlayer.Level.ToString();
+		// Set Header -> Row1 -> Crystal ->  Label
+		var Cry = (Label)((ColorRect)Row1.FindChild("Crystal", true)).FindChild("Label");
+		Cry.Text = CurrentPlayer.Crystal.ToString();
 
 		// Set Header -> Row1 -> Gold ->  Label
 		var Gld = (Label)((ColorRect)Row1.FindChild("Gold", true)).FindChild("Label");
@@ -239,35 +239,6 @@ public partial class Home : Control
 		var Username = (Label)((ColorRect)Row1.FindChild("Name", true)).FindChild("Label");
 		Username.Text = CurrentPlayer.PlayerData.Username;
 
-	}
-	
-	private void GetCrystalResponse(long result, long responseCode, string[] headers, byte[] body)
-	{
-		GD.Print(responseCode);
-		string json = System.Text.Encoding.UTF8.GetString(body);
-		if (result != (long)HttpRequest.Result.Success || responseCode != 200)
-		{
-			GD.PrintErr("Failed in fetching crystals");
-			SetTextPopup("Failed in fetching crystals");
-			return;
-		}
-
-		// Do other things with the data
-		var data = JsonSerializer.Deserialize<GetCrystalResponse>(json);
-		UpdateCrystals(data.Crystals);
-	}
-
-	// Function to update crystal count in header and in player data
-	private void UpdateCrystals(int CrystalsTotal)
-	{
-		var Header = (BoxContainer)FindChild("Header");
-		var Row1 = (BoxContainer)Header.FindChild("Row 1");
-		
-		CurrentPlayer.Crystal = CrystalsTotal;
-
-		// Set Header -> Row1 -> Crystal ->  Label
-		var Cry = (Label)((ColorRect)Row1.FindChild("Crystal", true)).FindChild("Label");
-		Cry.Text = CurrentPlayer.Crystal.ToString();
 
 	}
 
@@ -279,8 +250,41 @@ public partial class Home : Control
 	//	Press Battle button
 	public async void _OnBattleButtonPressed()
 	{
-		// to check if theres 12 cards in active deck
-		Network.SendRequestWithToken(NetworkManager.BASE_URL + NetworkManager.DECK + "/decks/active", Godot.HttpClient.Method.Get, "", ActiveDeckResponse);
+		ColorRect loadingNode = GetNode<ColorRect>("Loading");
+		// 1. Add player to queue
+		Network.SendRequestWithToken(NetworkManager.BASE_URL + NetworkManager.MATCHMAKING + "/matchmaking/queue", Godot.HttpClient.Method.Post, "", JoinResponse);
+
+		// start animation
+		AnimatedSprite2D LoadingSprite = GetNode<AnimatedSprite2D>("Loading/LoadingAnimation");
+		LoadingSprite.Play("loading");  // Replace "default" with your animation name
+
+		// Turn it ON (make visible)
+		loadingNode.Visible = true;
+		_searching = true;
+
+		// find game stuff
+		while (_searching)
+		{
+			// 1 SECOND TIMEOUT - Godot way
+			await ToSignal(GetTree().CreateTimer(1.5f), "timeout");
+
+			// 2. Check if the player has been matched
+			Network.SendRequestWithToken(NetworkManager.BASE_URL + NetworkManager.MATCHMAKING + "/matchmaking/match", Godot.HttpClient.Method.Get, "", MatchCheckResponse);
+		}
+
+
+		if (_cancelled)
+		{
+			return;
+		}
+		// 3. Accept the match and proceed
+		var obj = new
+		{
+			session_id = SessionID
+		};
+
+		var jsonString = JsonSerializer.Serialize(obj);
+		Network.SendRequestWithToken(NetworkManager.BASE_URL + NetworkManager.MATCHMAKING + "/matchmaking/match/accept", Godot.HttpClient.Method.Post, jsonString, AcceptMatchResponse);
 
 	}
 
@@ -366,7 +370,7 @@ public partial class Home : Control
 		if (responseCode != 200)
 		{
 			GD.PrintErr("Failed to get a successful response about state of matchmaking");
-			SetTextPopup("Failed to get a successful response about state of matchmaking");
+			GD.PrintErr(json);
 			return;
 		}
 
@@ -442,7 +446,7 @@ public partial class Home : Control
 		if (result != 200 && responseCode != 200)
 		{
 			GD.PrintErr("Failed to get a successful response about state of matchmaking");
-			SetTextPopup("Failed to get a successful response about state of matchmaking");
+			GD.PrintErr(json);
 			return;
 		}
 
@@ -468,7 +472,6 @@ public partial class Home : Control
 		if (result != 200 && responseCode != 200)
 		{
 			GD.PrintErr("Failed to leave current queue");
-			SetTextPopup("Failed to leave current queue");
 			return;
 		}
 	}
@@ -482,15 +485,14 @@ public partial class Home : Control
 
 		if (result != 200 && responseCode != 200)
 		{
-			GD.PrintErr("Unable to accept match");
-			SetTextPopup("Unable to accept match");
-			
+			GD.PrintErr("Unable to accept value");
 			return;
 		}
 		try
 		{
 			var Response = JsonSerializer.Deserialize<AcceptMatchResponse>(json);
 			PlayerStateManager.Instance.SessionId = Response.SessionId;
+			Network.SendRequestWithToken(NetworkManager.BASE_URL + NetworkManager.DECK + "/decks/active", Godot.HttpClient.Method.Get, "", ActiveDeckIdResponse);
 
 		}
 		catch (Exception e)
@@ -499,70 +501,42 @@ public partial class Home : Control
 		}
 
 		GD.Print("Successfully able to end thus properly");
-		_searching = false;
-		_accepted = true;
-		var GameStateManager = GetNode<GameStateManager>("/root/GameStateManager");
-		GameStateManager.ChangeGameState(GameState.INGAMEMODE);
 	}
 
-	private async void ActiveDeckResponse(long result, long responseCode, string[] headers, byte[] body)
+	private void ActiveDeckIdResponse(long result, long responseCode, string[] headers, byte[] body)
 	{
 		string json = System.Text.Encoding.UTF8.GetString(body);
 		GD.Print(responseCode);
 
 		if (result != 200 && responseCode != 200)
 		{
-			GD.PrintErr("Unable to get active deck");
-			SetTextPopup("Unable to get active deck");
+			GD.PrintErr("Unable to accept value");
 			return;
 		}
 
-		ActiveDeckResponse data = JsonSerializer.Deserialize<ActiveDeckResponse>(json);
-		ActiveDeckResponse ActiveDeck = data;
-		
+		int ActiveDeckId = JsonSerializer.Deserialize<GetActiveResponse>(json).ActiveDeckId;
+
+		Network.SendRequestWithToken(NetworkManager.BASE_URL + NetworkManager.DECK + "/decks/" + ActiveDeckId, Godot.HttpClient.Method.Get, "", ActiveDeckResponse);
+	}
+
+	private void ActiveDeckResponse(long result, long responseCode, string[] headers, byte[] body)
+	{
+		string json = System.Text.Encoding.UTF8.GetString(body);
+		GD.Print(responseCode);
+
+		if (result != 200 && responseCode != 200)
+		{
+			GD.PrintErr("Unable to accept value");
+			return;
+		}
+
+		ActiveDeckResponse ActiveDeck = JsonSerializer.Deserialize<ActiveDeckResponse>(json);
 		PlayerStateManager.Instance.ActiveDeck = ActiveDeck;
-		
-		// check that there is 12 cards (aka deck is valid)
-		if (ActiveDeck.Deck.CardIds.Count != 12){
-			SetTextPopup("Cannot queue: active deck must have exactly 12 cards, currently has " + ActiveDeck.Deck.CardIds.Count);
-			return;
-		}
-
-		ColorRect loadingNode = GetNode<ColorRect>("Loading");
-		// 1. Add player to queue
-		Network.SendRequestWithToken(NetworkManager.BASE_URL + NetworkManager.MATCHMAKING + "/matchmaking/queue", Godot.HttpClient.Method.Post, "", JoinResponse);
-
-		// start animation
-		AnimatedSprite2D LoadingSprite = GetNode<AnimatedSprite2D>("Loading/LoadingAnimation");
-		LoadingSprite.Play("loading");  // Replace "default" with your animation name
-
-		// Turn it ON (make visible)
-		loadingNode.Visible = true;
-		_searching = true;
-
-		// find game stuff
-		while (_searching)
-		{
-			// 1 SECOND TIMEOUT - Godot way
-			await ToSignal(GetTree().CreateTimer(1.5f), "timeout");
-
-			// 2. Check if the player has been matched
-			Network.SendRequestWithToken(NetworkManager.BASE_URL + NetworkManager.MATCHMAKING + "/matchmaking/match", Godot.HttpClient.Method.Get, "", MatchCheckResponse);
-		}
-
-
-		if (_cancelled)
-		{
-			return;
-		}
-		// 3. Accept the match and proceed
-		var obj = new
-		{
-			session_id = SessionID
-		};
-
-		var jsonString = JsonSerializer.Serialize(obj);
-		Network.SendRequestWithToken(NetworkManager.BASE_URL + NetworkManager.MATCHMAKING + "/matchmaking/match/accept", Godot.HttpClient.Method.Post, jsonString, AcceptMatchResponse);
+		GD.Print(ActiveDeck);
+		_searching = false;
+		_accepted = true;
+		var GameStateManager = GetNode<GameStateManager>("/root/GameStateManager");
+		GameStateManager.ChangeGameState(GameState.INGAMEMODE);
 	}
 
 
@@ -595,8 +569,7 @@ public partial class Home : Control
 		string json = System.Text.Encoding.UTF8.GetString(body);
 		if (result != (long)HttpRequest.Result.Success || responseCode != 200)
 		{
-			GD.PrintErr("Failed when fetching packs");
-			SetTextPopup("Failed when fetching packs");
+			GD.PrintErr("Failed in fetching packs");
 			return;
 		}
 
@@ -664,8 +637,7 @@ public partial class Home : Control
 		string json = System.Text.Encoding.UTF8.GetString(body);
 		if (result != (long)HttpRequest.Result.Success || responseCode != 200)
 		{
-			GD.PrintErr("Failed when opening packs");
-			SetTextPopup("Failed when opening packs");
+			GD.PrintErr("Failed in opening packs");
 			return;
 		}
 
@@ -686,32 +658,27 @@ public partial class Home : Control
 		// create a screen showing all cards (Visibility off)
 		FinalCardsResult.Visible = false;
 
-		// create crystal card (need duplicate since 1st and 2nd need to be using diff pointers if not it will affect each other)
-		VBoxContainer CrystalContainer = CreateCrystalCard(data.CrystalsAwarded);
-		IndivCardContainer.AddChild(CrystalContainer);
-		VBoxContainer CrystalContainer2 = CreateCrystalCard(data.CrystalsAwarded);
-		FinalCardsResult.AddChild(CrystalContainer2);
-
 		List<PackCardData> Cards = data.Cards;
+
+		// set generate cards one on top of another
 		for (int i = 0; i < Cards.Count; i++)
 		{
-			// set generate cards one on top of another
-			VBoxContainer CardContainer = CreateCard(Cards[i].Rarity, Cards[i].CardId, Cards[i].Quantity);
+			VBoxContainer CardContainer = CreateCard(Cards[i].Rarity, Cards[i].CardId, 1);
 
 			// Set visibility to false (for all but 1st)
-			CardContainer.Visible = false;
+			if (i != 0)
+			{
+				CardContainer.Visible = false;
+			}
 
 			IndivCardContainer.AddChild(CardContainer);
 
-			VBoxContainer FinalCardContainer = CreateCard(Cards[i].Rarity, Cards[i].CardId, Cards[i].Quantity);
+			VBoxContainer FinalCardContainer = CreateCard(Cards[i].Rarity, Cards[i].CardId, 1);
 			FinalCardsResult.AddChild(FinalCardContainer);
 		}
 
 		// Turn it ON (make visible)
 		PacksPopupContainer.Visible = true;
-
-		// Update total crystal counter
-		UpdateCrystals(data.CrystalsTotal);
 
 		// Update packs visually
 		FetchPacks();
@@ -754,35 +721,6 @@ public partial class Home : Control
 
 		return CardContainer;
 	}
-
-	// Function to create Crystal value card for display
-	private static VBoxContainer CreateCrystalCard(int quantity)
-	{
-		var CardContainer = new VBoxContainer();
-		CardContainer.CustomMinimumSize = new Vector2(226, 346);
-		CardContainer.Position = new Vector2(0, 58);
-
-		// Create Crystal
-		var CrystalTextureRect = new TextureRect();
-		CrystalTextureRect.Texture = GD.Load<Texture2D>("res://assets/header/crystal_colored.png");
-		CrystalTextureRect.CustomMinimumSize = new Vector2(200, 230);
-		CrystalTextureRect.Position = new Vector2(13, 58);
-		CrystalTextureRect.ExpandMode = TextureRect.ExpandModeEnum.FitWidthProportional;
-		CrystalTextureRect.StretchMode = TextureRect.StretchModeEnum.KeepAspectCentered;
-
-		CardContainer.AddChild(CrystalTextureRect);
-
-		// Add CardCountLabel and add into CardContainer
-		var CardCountLabel = new Label();
-		CardCountLabel.Text = "X" + quantity;
-		CardCountLabel.AddThemeFontSizeOverride("font_size", 39);
-		CardCountLabel.AddThemeColorOverride("font_color", new Color(255, 255, 255));
-		CardCountLabel.HorizontalAlignment = HorizontalAlignment.Center;
-		CardContainer.AddChild(CardCountLabel);
-
-		return CardContainer;
-	}
-
 	// When clicking the background
 	public void _OnPacksPopupBackgroundPressed()
 	{
@@ -835,21 +773,5 @@ public partial class Home : Control
 		tween.TweenProperty(node, "position:x", 200f, 0.3f)
 			 .SetEase(Tween.EaseType.Out);
 		tween.TweenCallback(Callable.From(() => node.QueueFree()));
-	}
-	
-	// function to make text popup visible and set the text
-	private void SetTextPopup(string Text)
-	{
-		Control TextPopupContainer = GetNode<Control>("TextPopupContainer");
-		Label TextLabel = TextPopupContainer.GetNode<Label>("TextBackgroundContainer/MarginTextContainer/TextLabel");
-		TextPopupContainer.Visible = true;
-		TextLabel.Text = Text;
-	}
-	
-	// Close text popup container
-	private void _OnTextPopupBackgroundPressed()
-	{
-		Control TextPopupContainer = GetNode<Control>("TextPopupContainer");
-		TextPopupContainer.Visible = false;
 	}
 }
