@@ -31,6 +31,9 @@ public class CardQuantity
 {
 	[JsonPropertyName("card_id")]
 	public int CardId { get; set; }
+	
+	[JsonPropertyName("level")]
+	public int Level { get; set; }
 
 	[JsonPropertyName("quantity")]
 	public int Quantity { get; set; }
@@ -58,6 +61,7 @@ public class GetDecksResponse
 {
 	[JsonPropertyName("count")]
 	public int Count { get; set; }
+	
 	[JsonPropertyName("decks")]
 	public List<Deck> Decks { get; set; }
 }
@@ -88,6 +92,46 @@ public class CardInfo
 	
 	[JsonPropertyName("position")]
 	public int Position { get; set; }
+	
+	[JsonPropertyName("level")]
+	public int Level { get; set; }
+
+}
+
+public class LevelUpCardResponse
+{
+	[JsonPropertyName("card_id")]
+	public int CardId { get; set; }
+
+	[JsonPropertyName("new_level")]
+	public int NewLevel { get; set; }
+
+	[JsonPropertyName("cards_consumed")]
+	public int CardsConsumed { get; set; }
+
+	[JsonPropertyName("crystals_spent")]
+	public int CrystalsSpent { get; set; }
+
+	[JsonPropertyName("crystals_left")]
+	public int CrystalsLeft { get; set; }
+
+	[JsonPropertyName("quantity_left")]
+	public int QuantityLeft { get; set; }
+
+	[JsonPropertyName("pruned_decks")]
+	public List<PrunedDeck> PrunedDecks { get; set; } = new();
+}
+
+public class PrunedDeck
+{
+	[JsonPropertyName("deck_id")]
+	public int DeckId { get; set; }
+
+	[JsonPropertyName("deck_name")]
+	public string DeckName { get; set; } = "";
+
+	[JsonPropertyName("removed")]
+	public int Removed { get; set; }
 }
 	
 public partial class CardManagement : Control
@@ -138,25 +182,30 @@ public partial class CardManagement : Control
 
 		var Header = (BoxContainer)FindChild("Header");
 		var Row1 = (BoxContainer)Header.FindChild("Row 1");
-		//var Row2 = (BoxContainer)Header.FindChild("Row 2");
 
-		// GD.Print(Row1, Row2);
+		// Set Header -> Row1 -> Crystal ->  Label
+		var Cry = (Label)((ColorRect)Row1.FindChild("Crystal", true)).FindChild("Label");
+		Cry.Text = CurrentPlayer.Crystal.ToString();
 
-		// Set Header -> Row1 -> XP -> Banner -> Level
-		var Lv = (Label)((TextureRect)((ColorRect)Row1.FindChild("XP")).FindChild("Banner")).FindChild("Level");
-		Lv.Text = CurrentPlayer.Level.ToString();
-		//// Set Header -> Row1 -> Crystal ->  Label
-		//var Cry = (Label)((ColorRect)Row1.FindChild("Crystal", true)).FindChild("Label");
-		//Cry.Text = CurrentPlayer.Crystal.ToString();
-//
-		//// Set Header -> Row1 -> Gold ->  Label
-		//var Gld = (Label)((ColorRect)Row1.FindChild("Gold", true)).FindChild("Label");
-		//Gld.Text = CurrentPlayer.Gold.ToString();
 
 		// Set Header -> Row2 -> Name ->  Label
 		var Username = (Label)((ColorRect)Row1.FindChild("Name", true)).FindChild("Label");
 		Username.Text = CurrentPlayer.PlayerData.Username;
 
+
+	}
+
+	// Function to update crystal count in header and in player data
+	private void UpdateCrystals(int CrystalsTotal)
+	{
+		var Header = (BoxContainer)FindChild("Header");
+		var Row1 = (BoxContainer)Header.FindChild("Row 1");
+		
+		CurrentPlayer.Crystal = CrystalsTotal;
+
+		// Set Header -> Row1 -> Crystal ->  Label
+		var Cry = (Label)((ColorRect)Row1.FindChild("Crystal", true)).FindChild("Label");
+		Cry.Text = CurrentPlayer.Crystal.ToString();
 
 	}
 	
@@ -169,6 +218,8 @@ public partial class CardManagement : Control
 	{
 		string json = System.Text.Encoding.UTF8.GetString(body);
 		GD.Print(responseCode);
+		GD.Print("Collection");
+		GD.Print(json);
 		if (result != 200 && responseCode != 200)
 		{
 			GD.PrintErr("Failed to get a successful response when fetching collections");
@@ -192,7 +243,6 @@ public partial class CardManagement : Control
 			var CollectionContainer = new HFlowContainer();
 			CollectionContainer.CustomMinimumSize = new Vector2(1000, 650);
 			CollectionContainer.Name = "CollectionContainer";
-			CollectionContainer.SetMeta("CollectionId", Collections[CollectionIndex].DeckId);
 			
 			// Generate collection cards
 			for (int i = 0; i < Collections[j].CardsNotInDeck.Count; i++)
@@ -200,7 +250,7 @@ public partial class CardManagement : Control
 				// to pass the values over to any functions (passing i will always pass max)
 				int CardIndex = i;
 				
-				var CardContainer =  CreateCardWithLabel("Collection", Collections[CollectionIndex].CardsNotInDeck[CardIndex].CardId, Collections[j].CardsNotInDeck[i].Quantity);
+				var CardContainer =  CreateCardWithLabel("Collection", Collections[CollectionIndex].CardsNotInDeck[CardIndex].CardId, Collections[j].CardsNotInDeck[i].Quantity, Collections[j].CardsNotInDeck[i].Level);
 				
 				// Add the card into the main container
 				CollectionContainer.AddChild(CardContainer);
@@ -365,6 +415,8 @@ public partial class CardManagement : Control
 	{
 		string json = System.Text.Encoding.UTF8.GetString(body);
 		GD.Print(responseCode);
+		GD.Print("deck");
+		GD.Print(json);
 		if (result != 200 && responseCode != 200)
 		{
 			GD.PrintErr("Failed to get a successful response when fetching decks");
@@ -418,7 +470,7 @@ public partial class CardManagement : Control
 				int CardIndex = i;
 				
 				// Create control that gives the card its size
-				var CardContainer = CreateCard("Deck", Decks.Decks[DeckIndex].Cards[CardIndex].CardId);
+				var CardContainer = CreateCard("Deck", Decks.Decks[DeckIndex].Cards[CardIndex].CardId, Decks.Decks[DeckIndex].Cards[CardIndex].Level);
 				
 				// Add the card into the main container
 				DeckContainer.AddChild(CardContainer);
@@ -446,9 +498,9 @@ public partial class CardManagement : Control
 	}
 	
 	// Create Card with count (For collection)
-	private VBoxContainer CreateCardWithLabel(string Location, int CardId, int Quantity)
+	private VBoxContainer CreateCardWithLabel(string Location, int CardId, int Quantity, int Level)
 	{
-		var CardContainer = CreateCard(Location, CardId);
+		var CardContainer = CreateCard(Location, CardId, Level);
 		
 		var CardCount = new Label();
 		CardCount.Name = "CardCount";
@@ -464,7 +516,7 @@ public partial class CardManagement : Control
 	}
 	
 	// Create just Card
-	private VBoxContainer CreateCard(string Location, int CardId)
+	private VBoxContainer CreateCard(string Location, int CardId, int Level)
 	{
 		// Create control that gives the card its size
 		var CardContainer = new VBoxContainer();
@@ -477,7 +529,7 @@ public partial class CardManagement : Control
 		CardControl.Name = "CardControl";
 				
 		// Create the card itself
-		var Card = CardBuilder.GenerateCard(CardId);
+		var Card = CardBuilder.GenerateCardWithLevel(CardId, Level);
 			
 		Card.Position = new Vector2(95, 100);
 		CardControl.AddChild(Card);
@@ -513,6 +565,7 @@ public partial class CardManagement : Control
 	// function to add a card into deck (called by button)
 	private void AddIntoDeck(int CardId)
 	{
+		int Level = 1;
 		// Remove collection		
 		ScrollContainer CollectionScrollContainer = GetNode<ScrollContainer>("MainCardContainer/CollectionContainer/CollectionColorContainer/ScrollContainer");
 		HFlowContainer CollectionContainer = CollectionScrollContainer.GetChild(SelectedDeck) as HFlowContainer;
@@ -521,6 +574,8 @@ public partial class CardManagement : Control
 			CardContainer = CollectionContainer.GetChild(i) as VBoxContainer;
 			
 			if(CardContainer.Name == "" + CardId){
+				Level = Collections[SelectedDeck].CardsNotInDeck[i].Level;
+
 				Collections[SelectedDeck].CardsNotInDeck[i].Quantity -= 1;
 				// No more in collection
 				if(Collections[SelectedDeck].CardsNotInDeck[i].Quantity <= 0){
@@ -531,17 +586,18 @@ public partial class CardManagement : Control
 					Label CardCount = CardContainer.GetNode<Label>("CardCount");
 					CardCount.Text = "X" + Collections[SelectedDeck].CardsNotInDeck[i].Quantity;
 				}
+
 			}
 		}
 		
 		// Add into deck data
 		Decks.Decks[SelectedDeck].CardIds.Add(CardId);
-		Decks.Decks[SelectedDeck].Cards.Add(new CardInfo {CardId = CardId, Position = Decks.Decks[SelectedDeck].Cards.Count});
+		Decks.Decks[SelectedDeck].Cards.Add(new CardInfo {CardId = CardId, Position = Decks.Decks[SelectedDeck].Cards.Count, Level = Level});
 		
 		// Add visually
 		ScrollContainer DeckScrollContainer = GetNode<ScrollContainer>("MainCardContainer/DeckContainer/DeckColorContainer/ScrollContainer");
 		HFlowContainer DeckContainer = DeckScrollContainer.GetChild(SelectedDeck) as HFlowContainer;
-		CardContainer = CreateCard("Deck", CardId);
+		CardContainer = CreateCard("Deck", CardId, Level);
 		DeckContainer.AddChild(CardContainer);
 		
 		// Make save button visible
@@ -552,6 +608,8 @@ public partial class CardManagement : Control
 	}
 	
 	private void RemoveFromDeck(int CardId, float X, float Y){
+		int Level = 1;
+
 		// Remove card from deck
 		ScrollContainer DeckScrollContainer = GetNode<ScrollContainer>("MainCardContainer/DeckContainer/DeckColorContainer/ScrollContainer");
 		HFlowContainer DeckContainer = DeckScrollContainer.GetChild(SelectedDeck) as HFlowContainer;
@@ -560,6 +618,8 @@ public partial class CardManagement : Control
 			CardContainer = DeckContainer.GetChild(i) as VBoxContainer;
 			Vector2 pos = CardContainer.Position;
 			if(pos.X == X && pos.Y == Y){
+				// get the level of the card
+				Level = Decks.Decks[SelectedDeck].Cards[i].Level;
 				// remove from cardID
 				Decks.Decks[SelectedDeck].CardIds.Remove(Decks.Decks[SelectedDeck].CardIds[i]);
 				// remove from Cards
@@ -589,17 +649,16 @@ public partial class CardManagement : Control
 				CardCount.Text = "X" + Collections[SelectedDeck].CardsNotInDeck[i].Quantity;
 				
 				CardExist = true;
-				
 			}
 		}
 		
 		// if card did not exist in collection
 		if(!CardExist){
 			// insert into collection data
-			Collections[SelectedDeck].CardsNotInDeck.Add(new CardQuantity {CardId = CardId, Quantity = 1});
+			Collections[SelectedDeck].CardsNotInDeck.Add(new CardQuantity {CardId = CardId, Quantity = 1, Level = Level});
 			
 			// Insert visually
-			CardContainer = CreateCardWithLabel("Collection", CardId, 1);
+			CardContainer = CreateCardWithLabel("Collection", CardId, 1, Level);
 			CollectionContainer.AddChild(CardContainer);
 		}
 		
@@ -710,8 +769,23 @@ public partial class CardManagement : Control
 		CloseCardPopup();
 	}	
 	
-	private void OpenCardPopup(int CardId)
+	private void OpenCardPopup(int CardId, int Level = 0, int Quantity = 0)
 	{
+		if(Level == 0){
+			for (int i = 0; i < Collections[SelectedDeck].CardsNotInDeck.Count; i++){
+				if(Collections[SelectedDeck].CardsNotInDeck[i].CardId == CardId){
+					Level = Collections[SelectedDeck].CardsNotInDeck[i].Level;
+					Quantity = Collections[SelectedDeck].CardsNotInDeck[i].Quantity;
+				}
+			}
+			for (int i = 0; i < Decks.Decks[SelectedDeck].Cards.Count; i++){
+				if(Decks.Decks[SelectedDeck].Cards[i].CardId == CardId){
+					Level = Decks.Decks[SelectedDeck].Cards[i].Level;
+					Quantity++;
+				}
+			}
+		}
+		
 		Control CardPopupContainerNode = GetNode<Control>("CardPopupContainer");
 		
 		// Update the values
@@ -732,21 +806,55 @@ public partial class CardManagement : Control
 		RarityTextLabel.Text = CardValues.Rarity;
 		
 		// Cost
+		Label LevelLabel = CardPopupBox.GetNode<Label>("CardDetails/RightCardDetails/LevelLabel");
+		LevelLabel.Text = "Level " + Level;
+
+		// Cost
 		Label CostTextLabel = CardPopupBox.GetNode<Label>("CardDetails/RightCardDetails/CardStats/CostContainer/CostLevelContainer/CostTextLabel");
 		CostTextLabel.Text = CardValues.Cost.ToString();
 		
 		// Power
 		Label PowerTextLabel = CardPopupBox.GetNode<Label>("CardDetails/RightCardDetails/CardStats/PowerContainer/PowerLevelContainer/PowerTextLabel");
-		PowerTextLabel.Text = CardValues.Attack.ToString();
+		PowerTextLabel.Text = CardBuilder.LevelStatsCalculator(CardValues.Attack, Level).ToString();
+		// Power level
+		Label PowerLevelLabel = CardPopupBox.GetNode<Label>("CardDetails/RightCardDetails/CardStats/PowerContainer/PowerLevelContainer/PowerLevelLabel");
+		PowerLevelLabel.Text = "+" + (CardBuilder.LevelStatsCalculator(CardValues.Attack, Level + 1) -  CardBuilder.LevelStatsCalculator(CardValues.Attack, Level)).ToString();
 
 		// HP
 		Label HPTextLabel = CardPopupBox.GetNode<Label>("CardDetails/RightCardDetails/CardStats/HPContainer/HPLevelContainer/HPTextLabel");
-		HPTextLabel.Text = CardValues.Health.ToString();
-		
+		HPTextLabel.Text = CardBuilder.LevelStatsCalculator(CardValues.Health, Level).ToString();
+		// HP level
+		Label HPLevelLabel = CardPopupBox.GetNode<Label>("CardDetails/RightCardDetails/CardStats/HPContainer/HPLevelContainer/HPLevelLabel");
+		HPLevelLabel.Text = "+" + (CardBuilder.LevelStatsCalculator(CardValues.Health, Level + 1) -  CardBuilder.LevelStatsCalculator(CardValues.Health, Level)).ToString();
+
 		// Effect
 		Label AbilityTextLabel = CardPopupBox.GetNode<Label>("CardDetails/RightCardDetails/AbilityContainer/AbilityTextLabel");
 		AbilityTextLabel.Text = CardValues.Effect;
 		
+		// Level
+		ProgressBar LevelProgressBar = CardPopupBox.GetNode<ProgressBar>("CardDetails/RightCardDetails/LevelContainer/LevelProgressBar");
+		int CardCost = CardBuilder.CardCostCalculator(Level);
+		LevelProgressBar.Value = (float)Quantity / CardCost;
+		
+		Label ProgressLabel = CardPopupBox.GetNode<Label>("CardDetails/RightCardDetails/LevelContainer/LevelProgressBar/ProgressLabel");
+		ProgressLabel.Text = Quantity + " / " + CardCost + " Copies";
+		
+		Button LevelButton = CardPopupBox.GetNode<Button>("CardDetails/RightCardDetails/LevelContainer/LevelButton");
+		int CrystalCost = CardBuilder.CrystalCostCalculator(Level);
+		
+		// if not enough cards/crystals
+		if(CurrentPlayer.Crystal < CrystalCost || Quantity < CardCost){
+			// disable button and change text
+			LevelButton.Text = "Can't Level Up...\nCost:" + CrystalCost + " Crystals";
+			LevelButton.Disabled = true;
+		}else{
+			LevelButton.Text = "Level Up!\nCost:" + CrystalCost + " Crystals";
+			LevelButton.Disabled = false;
+			LevelButton.SetMeta("CardId", CardId);
+			LevelButton.SetMeta("Level", Level);
+			LevelButton.SetMeta("Quantity", Quantity);
+		}
+
 		// Turn it On (make visible true)
 		CardPopupContainerNode.Visible = true;
 	}	
@@ -907,8 +1015,177 @@ public partial class CardManagement : Control
 	}
 	
 	// Close text popup container
-	private void _OnTextPopupBackgroundPressed(){
+	private void _OnTextPopupBackgroundPressed()
+	{
 		Control TextPopupContainer = GetNode<Control>("TextPopupContainer");
 		TextPopupContainer.Visible = false;
+	}
+
+	// when clicking level card button
+	private void _OnLevelButtonPressed()
+	{
+		
+		Control CardPopupContainerNode = GetNode<Control>("CardPopupContainer");
+		Panel CardPopupBox = CardPopupContainerNode.GetNode<Panel>("CardPopupBox");
+		Button LevelButton = CardPopupBox.GetNode<Button>("CardDetails/RightCardDetails/LevelContainer/LevelButton");
+		
+		// get card info (id, level and quantity)
+		int CardId = 0;
+		int Level = 1;
+		int Quantity = 0;
+		if (LevelButton.HasMeta("CardId"))
+		{
+			// do the async call here to open pack
+			CardId = (int)LevelButton.GetMeta("CardId");
+			Level = (int)LevelButton.GetMeta("Level");
+			Quantity = (int)LevelButton.GetMeta("Quantity");
+		}else{
+			SetTextPopup("Error on level button pressed");
+
+			return;
+		}
+
+		// validate if enough
+		int CardCost = CardBuilder.CardCostCalculator(Level);
+		int CrystalCost = CardBuilder.CrystalCostCalculator(Level);
+		
+		// if not enough cards/crystals
+		if(CurrentPlayer.Crystal < CrystalCost || Quantity < CardCost){
+			SetTextPopup("Not enough crystals or cards");
+			return;
+		}
+
+		// fetch
+		Network.SendRequestWithToken(NetworkManager.BASE_URL + NetworkManager.DECK + "/players/me/cards/"+CardId+"/level-up", Godot.HttpClient.Method.Post, "", LevelUpCardResponse);
+
+	}
+
+	// response handler for leveling cards
+	private void LevelUpCardResponse(long result, long responseCode, string[] headers, byte[] body)
+	{
+		string json = System.Text.Encoding.UTF8.GetString(body);
+		GD.Print(responseCode);
+		if (result != 200 && responseCode != 200)
+		{
+			GD.PrintErr("Failed to get a successful response when leveling card");
+			GD.PrintErr(json);
+			return;
+		}
+		GD.Print(json);
+
+		var data = JsonSerializer.Deserialize<LevelUpCardResponse>(json);
+		int CardId = data.CardId;
+		// update data
+		
+		// Remove from all collections if its there
+		ScrollContainer CollectionScrollContainer = GetNode<ScrollContainer>("MainCardContainer/CollectionContainer/CollectionColorContainer/ScrollContainer");
+		VBoxContainer CardContainer;
+
+		for (int x = 0; x < CollectionScrollContainer.GetChildCount() - 1; x++){
+			
+			HFlowContainer CollectionContainer = CollectionScrollContainer.GetChild(x) as HFlowContainer;
+			for(int i = 0; i < CollectionContainer.GetChildCount(); i++){
+				CardContainer = CollectionContainer.GetChild(i) as VBoxContainer;
+				
+				if(CardContainer.Name == "" + CardId){
+					Collections[x].CardsNotInDeck[i].Quantity -= data.CardsConsumed;
+					Collections[x].CardsNotInDeck[i].Level = data.NewLevel;
+					// No more in collection
+					if(Collections[x].CardsNotInDeck[i].Quantity <= 0){
+						CardContainer.QueueFree();
+						Collections[x].CardsNotInDeck.Remove(Collections[x].CardsNotInDeck[i]);
+					}else{
+						// update count
+						Label CardCount = CardContainer.GetNode<Label>("CardCount");
+						CardCount.Text = "X" + Collections[x].CardsNotInDeck[i].Quantity;
+
+						// remove level and regenerate card
+						Control CardControl = CardContainer.GetNode<Control>("CardControl");
+						CardControl.GetChild(0).QueueFree();
+
+						// Create the card itself
+						var Card = CardBuilder.GenerateCardWithLevel(Collections[x].CardsNotInDeck[i].CardId, Collections[x].CardsNotInDeck[i].Level);
+							
+						Card.Position = new Vector2(95, 100);
+						CardControl.AddChild(Card);
+					}
+
+				}
+			}
+		}
+		// remove in deck if its pruned
+
+		// Remove card from deck
+		ScrollContainer DeckScrollContainer = GetNode<ScrollContainer>("MainCardContainer/DeckContainer/DeckColorContainer/ScrollContainer");
+
+		if(data.PrunedDecks != null){
+			for(int i = 0; i < data.PrunedDecks.Count; i++){
+				for(int x = 0; x < Decks.Decks.Count; x++){
+
+					if(Decks.Decks[x].DeckId == data.PrunedDecks[i].DeckId){
+
+						// remove the card in data
+						for(int y = Decks.Decks[x].CardIds.Count - 1; y >= 0; y--){
+							
+							if(Decks.Decks[x].CardIds[y] == CardId){
+								Decks.Decks[x].CardIds.Remove(Decks.Decks[x].CardIds[y]);
+								// remove from Cards
+								Decks.Decks[x].Cards.Remove(Decks.Decks[x].Cards[y]);
+
+								// remove the card visually
+								HFlowContainer DeckContainer = DeckScrollContainer.GetChild(x) as HFlowContainer;
+								CardContainer = DeckContainer.GetChild(y) as VBoxContainer;
+								CardContainer.QueueFree();
+
+								// make sure remove correct number of copies
+								data.PrunedDecks[i].Removed -= 1;
+								
+								if(data.PrunedDecks[i].Removed == 0){
+									break;
+								}
+							}
+						}
+
+						// no point loop through the deck list since removed for the deck id alr
+						break;
+					}
+
+				}
+			}
+		}
+		// update deck card level
+		for(int x = 0; x < Decks.Decks.Count; x++){
+			for(int y = 0; y < Decks.Decks[x].Cards.Count; y++){
+				if(Decks.Decks[x].Cards[y].CardId == CardId){
+					Decks.Decks[x].Cards[y].Level = data.NewLevel;
+
+					// update card visually
+					HFlowContainer DeckContainer = DeckScrollContainer.GetChild(x) as HFlowContainer;
+					CardContainer = DeckContainer.GetChild(y) as VBoxContainer;
+
+					// remove level and regenerate card
+					Control CardControl = CardContainer.GetNode<Control>("CardControl");
+					CardControl.GetChild(0).QueueFree();
+
+					// Create the card itself
+					var Card = CardBuilder.GenerateCardWithLevel(CardId, Decks.Decks[x].Cards[y].Level);
+							
+					Card.Position = new Vector2(95, 100);
+					CardControl.AddChild(Card);
+				}
+			}
+		}
+
+		// text popup for pruned deck
+		if(data.PrunedDecks != null && data.PrunedDecks.Count > 0){
+			SetTextPopup("Deck has been changed, please ensure all decks have 12 cards.");
+		}
+		
+		// update current popup
+		OpenCardPopup(CardId, data.NewLevel, data.QuantityLeft);
+
+		// update crystal
+		UpdateCrystals(data.CrystalsLeft);
+
 	}
 }
