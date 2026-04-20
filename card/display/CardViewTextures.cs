@@ -20,7 +20,7 @@ public class CardViewTextures
     public Texture2D AttackTexture { get; set; }
     public Texture2D DefenceTexture { get; set; }
     public string AttackValue { get; set; }
-    public string ElixirCost { get; set; }
+    public int  ElixirCost { get; set; }
     public string CurrentHealth { get; set; }
     public double TimeToAttack { get; set; }
 
@@ -46,7 +46,7 @@ public class CardViewTextures
 
         AttackValue = CardViewData.Attack.ToString();
 
-        ElixirCost = CardViewData.Cost.ToString();
+        ElixirCost = CardViewData.Cost;
 
         CurrentHealth = CardViewData.Health.ToString();
 
