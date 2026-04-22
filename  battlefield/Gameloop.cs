@@ -138,12 +138,12 @@ public partial class Gameloop : Node2D
 			// var PlayerIcon = (PlayerView)FindChild("PlayerIcon");
 			var PlayerIcon = (PlayerView)FindChild("PlayerIcon", true);
 			PlayerIcon.LoadDataTexture(PlayerTextureView);
-			PlayerIcon.Scale = new Vector2(0.35f, 0.35f);
+			// PlayerIcon.Scale = new Vector2(0.35f, 0.35f);
 
 
 			_playerIcon = PlayerIcon;
 			_enemyIcon = (PlayerView)FindChild("PlayerIcon2", true);
-			_enemyIcon.Scale = new Vector2(0.35f, 0.35f);	
+			// _enemyIcon.Scale = new Vector2(0.35f, 0.35f);	
 			_enemyIcon.LoadDataTexture(PlayerTextureView);
 		}
 		catch (Exception e)
