@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://b823yg0wlvck2"]
 
 [ext_resource type="Texture2D" uid="uid://yyettmbx81hl" path="res://assets/battlefield/empty_hand_slot.png" id="1_f6t2c"]
-[ext_resource type="Script" uid="uid://6n207tnwckd0" path="res:// battlefield/handManagement/DeckSlot.cs" id="1_ig03a"]
+[ext_resource type="Script" uid="uid://6n207tnwckd0" path="res://src/battlefield/handManagement/DeckSlot.cs" id="1_ig03a"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_e124b"]
 size = Vector2(160, 199)

@@ -138,7 +138,7 @@ public partial class CardManagement : Control
 {
 	private PlayerStateManager CurrentPlayer { get; set; }
 	private NetworkManager Network { get; set; }
-	private PackedScene CardScene = GD.Load<PackedScene>("res://scenes/gameComponents/Card.tscn");
+	private PackedScene CardScene = GD.Load<PackedScene>("res://src/scenes/gameComponents/Card.tscn");
 	private GetDecksResponse Decks;
 	private List<Collection> Collections;
 	private int SelectedDeck = 0;
