@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://ck8usyw1ifv1r"]
 
-[ext_resource type="Script" uid="uid://dycxchsg3tpk4" path="res://scenesScripts/CardManagement/CardManagement.cs" id="1_ljblh"]
+[ext_resource type="Script" uid="uid://dycxchsg3tpk4" path="res://src/scenesScripts/CardManagement/CardManagement.cs" id="1_ljblh"]
 [ext_resource type="Texture2D" uid="uid://dgjjaj7pbhqff" path="res://assets/battlefield/background/background_test_box.png" id="1_u4l5w"]
 [ext_resource type="Texture2D" uid="uid://tl43u2wwetbq" path="res://assets/header/banner.png" id="3_c7st2"]
 [ext_resource type="Texture2D" uid="uid://pu52dbw7egqc" path="res://assets/header/crystal_colored.png" id="4_yc314"]

@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="CardStats" format=3 uid="uid://c8sv01m7pvgk7"]
 
-[ext_resource type="Script" uid="uid://b2r5pcvph5drw" path="res://resource/CardStats.cs" id="1_70ni5"]
+[ext_resource type="Script" uid="uid://b2r5pcvph5drw" path="res://src/resource/CardStats.cs" id="1_70ni5"]
 [ext_resource type="Texture2D" uid="uid://ib86ygw6pmq7" path="res://assets/characters/Angel.png" id="1_abadt"]
 
 [resource]

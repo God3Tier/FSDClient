@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://b5b8qwcgrial3"]
 
-[ext_resource type="Script" uid="uid://ca2qtlqvtqoio" path="res://scenes/gameComponents/DeckSlot.cs" id="1_xkd38"]
+[ext_resource type="Script" uid="uid://ca2qtlqvtqoio" path="res://src/scenes/gameComponents/DeckSlot.cs" id="1_xkd38"]
 [ext_resource type="Texture2D" uid="uid://yyettmbx81hl" path="res://assets/battlefield/empty_hand_slot.png" id="2_346ml"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_e124b"]
