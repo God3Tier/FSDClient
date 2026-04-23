@@ -82,12 +82,6 @@ On the **Home Screen**, ensure you have an active deck selected and press **Batt
 *   `battlefield/`: The core gameplay engine, WebSocket handlers, and board logic.
 *   `player/` & `card/`: Data models and DTOs for serialization.
 
-## ⚙️ Development Requirements
-
-*   **Godot Engine 4.x** (Standard or .NET version).
-*   **.NET SDK** (matching your Godot version).
-*   A compatible backend server (REST and WebSocket) to handle the data flow.
-
 ## ⚖️ Gameplay Rules
 
 *   **Deck Size**: Exactly 12 cards.
