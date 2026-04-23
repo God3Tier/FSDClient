@@ -1,30 +1,99 @@
-How to run
-- It doesnt...
-So essentially, each entry point is the .tscn file. Currently, I am on a branch working on the main game loop .tscn board.
-To "run the code", you must launch it from the Godot engine with .NET support. The plan was main .tscn has an instance of each state
-that the user is in (i.e. if they are in a deck building phase, waiting for match phase etc.) which is their own seperate .tscn file
+# FSD Digital Collectible Card Game (CCG) Client
 
-Then, if you attach a script from the .tscn, it expects the 2 following format
+A professional-grade Digital Collectible Card Game client built using the **Godot Engine** and **C#**. This project serves as the front-end interface for a multiplayer card game, featuring real-time battles, collection management, and a robust networking layer.
 
-public partial class MyClass : SomeNodeType 
-{
+## 🚀 Project Overview
 
-  public override void _Ready() 
-  {
-    Whatever you want to test when the node enters scene for first time
-  }
-  public override void _Process(double delta)
-  {
-    However you wish to render the board
-  }
-}
+This client manages the end-to-end player experience, from account authentication to high-stakes tactical combat. It is designed to communicate with a backend API for persistence and a dedicated game server via WebSockets for low-latency gameplay synchronization.
 
-My advice is just force the _Ready() to print everything under the sun out in the terminal then thats it. Otherwise, best of luck 
-doing the UI math 
+## ✨ Key Features
 
-Since I have made the interesting decision of doing this in C#, I recommend using whatever text editor u r using with an lsp (Zed one 
-not bad) while explicitely writing your code and the Godot Engine when trying to attach UI to the thing
+*   **User Authentication**: Full login and registration flow integrated with `NetworkManager`.
+*   **Card Management**: 
+    *   **Deck Builder**: Create and edit multiple decks.
+    *   **Card Upgrades**: Level up cards using "Crystals" and duplicate copies to boost Attack and HP stats.
+    *   **Validation**: Automatic enforcement of deck rules (12 cards per deck, max 2 duplicates).
+*   **Economy & Gacha**: 
+    *   **Pack Opening**: Animated opening of different pack rarities (Common to Legendary).
+    *   **Currency Tracking**: Real-time updates for Gold and Crystals.
+*   **Multiplayer Battle System**:
+    *   **Matchmaking**: Queue-based system with reconnection support for active sessions.
+    *   **Grid Combat**: Tactical 3x2 board placement.
+    *   **Real-time Sync**: WebSocket-driven state updates ensures both players see the same board.
+    *   **Resource Management**: Dynamic "Elixir" generation based on turn rounds.
 
-Good luck guys
+## 🏁 Getting Started
 
-Joseph code is corrupted
+### Prerequisites
+*   **Godot Engine 4.x (.NET Edition)**: You must use the .NET version of Godot to support the C# scripts.
+*   **.NET SDK**: Ensure you have a version compatible with your Godot installation (e.g., .NET 6.0 or 8.0).
+*   **Backend Environment**: A running instance of the FSD Backend (REST and WebSocket servers) is required for full functionality.
+
+### Installation & Launch
+1.  **Clone the Repository**:
+    ```bash
+    git clone https://github.com/YourUsername/FSDClient.git
+    ```
+2.  **Open in Godot**: Launch the Godot Engine and import the project using the `project.godot` file.
+3.  **Build Solution**: Click the **Build** icon in the top right of the Godot Editor (or press `Ctrl+B`) to compile the C# code.
+4.  **Configuration**:
+    *   Update the `BASE_URL` in `NetworkManager.cs` to match your backend API.
+    *   Ensure the WebSocket URL in `Gameloop.cs` points to your active game server.
+5.  **Run**: Press **F5** or the **Play** button. The game starts at the `login_menu.tscn` scene.
+
+## 🛠 Technical Architecture
+
+### Core Managers (Autoloads)
+*   **`GameStateManager.cs`**: The central hub for scene transitions. It manages the current application state (Login, Home, Cards, Gameplay) and handles safe scene instantiation.
+*   **`PlayerStateManager.cs`**: A global singleton that stores the logged-in player's profile, including their JWT token, user ID, currency balances, and active deck configuration.
+*   **`NetworkManager.cs`**: Handles RESTful communication with the backend API, managing headers and token injection for authorized requests.
+
+### Networking Logic
+*   **REST API**: Used for "heavy" data like fetching collections, saving decks, and opening packs.
+*   **WebSockets (`Gameloop.cs`)**: Utilizes `WebSocketPeer` for the battle phase. It handles complex message types like `TICK_UPDATE`, `CARD_PLACED`, and `PHASE_CHANGE` (e.g., transitioning between `PRE_TURN` and `ACTIVE`).
+
+## 🎮 How to Use
+
+### 1. Authentication
+Launch the client and use the **Login Menu**. If you don't have an account, switch to the **Register** state to create one. Your session token will be saved in the `PlayerStateManager`.
+
+### 2. Managing Your Collection
+Navigate to the **Card Management** screen.
+*   **Building Decks**: Select a deck tab (1, 2, or 3) and move cards from your collection into the deck.
+*   **Leveling Up**: Click on a card and select **Info**. If you have enough duplicate copies and Crystals, you can level the card up to improve its performance in battle.
+*   **Saving**: Ensure your deck has exactly **12 cards** before hitting **Save**.
+
+### 3. Entering Battle
+On the **Home Screen**, ensure you have an active deck selected and press **Battle**. 
+*   The client will enter a matchmaking queue.
+*   Once a match is found, you will automatically transition to the **Battlefield**.
+
+### 4. Gameplay Mechanics
+*   **Placement**: Drag cards from your hand onto the 3x2 grid. Each card costs Elixir.
+*   **Phases**: 
+    *   **PRE_TURN**: Review the board; the deck area is raised.
+    *   **ACTIVE**: Combat occurs; Elixir regenerates, and cards interact.
+*   **Winning**: Reduce the opponent's health (visible on their icon) to zero while defending your own.
+
+## 📁 Folder Structure
+
+*   `autoLoad/`: Global singletons for state and player data.
+*   `scenesScripts/`: Logic for main UI states (Home, Login, Card Management).
+*   `battlefield/`: The core gameplay engine, WebSocket handlers, and board logic.
+*   `player/` & `card/`: Data models and DTOs for serialization.
+
+## ⚙️ Development Requirements
+
+*   **Godot Engine 4.x** (Standard or .NET version).
+*   **.NET SDK** (matching your Godot version).
+*   A compatible backend server (REST and WebSocket) to handle the data flow.
+
+## ⚖️ Gameplay Rules
+
+*   **Deck Size**: Exactly 12 cards.
+*   **Duplicates**: Max 2 of the same Card ID per deck.
+*   **Elixir**: Maximum cap of 8. Generation speed and caps scale with the turn round.
+*   **Board**: Two 3x2 grids (Player vs. Opponent).
+
+---
+*Developed as a Modular CCG Framework.*
