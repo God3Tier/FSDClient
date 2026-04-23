@@ -5,7 +5,7 @@ using Godot;
 [GlobalClass]
 public partial class CardStatsTable : Resource
 {
-	private static readonly string BASE_DIRECTORY = "res://resource/godotResources";
+	private static readonly string BASE_DIRECTORY = "res://godotResources";
 	public Godot.Collections.Dictionary<int, CardStats> cardInfo = new();
 
 	public CardStatsTable()

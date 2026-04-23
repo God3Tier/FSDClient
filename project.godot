@@ -17,7 +17,7 @@ config/features=PackedStringArray("4.6", "C#", "GL Compatibility")
 [autoload]
 
 GameStateManager="*uid://5p8jvukstm3j"
-PlayerStateManager="*res://autoLoad/PlayerStateManager.cs"
+PlayerStateManager="*res://src/autoLoad/PlayerStateManager.cs"
 NetworkManager="*uid://bbwqfw7nmkams"
 ResourceManager="*uid://dn687fc81jpef"
 
