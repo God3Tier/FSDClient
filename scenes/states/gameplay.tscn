@@ -1,13 +1,13 @@
 [gd_scene format=3 uid="uid://5a3jodh803v5"]
 
-[ext_resource type="Texture2D" uid="uid://bc8twhgpbhyxn" path="res://assets/battlefield/background/background_test_box.png" id="1_i81dy"]
-[ext_resource type="Script" uid="uid://juxgwh0vufqt" path="res:// battlefield/Gameloop.cs" id="2_iwad7"]
-[ext_resource type="Texture2D" uid="uid://b3asc25yhdbs7" path="res://assets/battlefield/battlefield_square.png" id="3_uugvl"]
-[ext_resource type="Texture2D" uid="uid://dykma1bmow6ut" path="res://assets/battlefield/battlefield_turn_timer_empty.png" id="4_sggww"]
-[ext_resource type="Texture2D" uid="uid://rswv3dvbgt2r" path="res://assets/battlefield/battlefield_battle.png" id="5_vtlph"]
-[ext_resource type="PackedScene" uid="uid://dtv8fm1py5wlt" path="res://scenes/Card.tscn" id="6_vtlph"]
-[ext_resource type="Script" uid="uid://dn8g5j3fg63ie" path="res:// battlefield/handManagement/CardManager.cs" id="7_4igqj"]
-[ext_resource type="PackedScene" uid="uid://cd2tgmq07dh5a" path="res://scenes/PlayerIcon.tscn" id="8_4igqj"]
+[ext_resource type="Texture2D" uid="uid://ck8ljvmae8tna" path="res://assets/battlefield/background/background_test_box.png" id="1_i81dy"]
+[ext_resource type="Script" uid="uid://juxgwh0vufqt" path="res://battlefield/Gameloop.cs" id="2_iwad7"]
+[ext_resource type="Texture2D" uid="uid://bnpaihueo2hbn" path="res://assets/battlefield/battlefield_square.png" id="3_uugvl"]
+[ext_resource type="Texture2D" uid="uid://cyqs5cqnwk87d" path="res://assets/battlefield/battlefield_turn_timer_empty.png" id="4_sggww"]
+[ext_resource type="Texture2D" uid="uid://duixrgo65lpye" path="res://assets/battlefield/battlefield_battle.png" id="5_vtlph"]
+[ext_resource type="PackedScene" uid="uid://bd1ebv7jmynfw" path="res://scenes/Card.tscn" id="6_vtlph"]
+[ext_resource type="Script" uid="uid://dn8g5j3fg63ie" path="res://battlefield/handManagement/CardManager.cs" id="7_4igqj"]
+[ext_resource type="PackedScene" uid="uid://cd2tgmq07dh5a" path="res://scenes/gameComponents/PlayerIcon.tscn" id="8_4igqj"]
 
 [node name="Gameplay" type="Node2D" unique_id=419605887]
 script = ExtResource("2_iwad7")
@@ -102,5 +102,8 @@ visible = false
 position = Vector2(462, 233)
 
 [node name="PlayerIcon" parent="." unique_id=1797598009 instance=ExtResource("8_4igqj")]
-position = Vector2(505, 559)
+offset_left = 505.0
+offset_top = 559.0
+offset_right = 505.0
+offset_bottom = 559.0
 scale = Vector2(0.25, 0.25)
