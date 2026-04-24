@@ -29,21 +29,19 @@ This client manages the end-to-end player experience, from account authenticatio
 *   **.NET SDK**: Ensure you have a version compatible with your Godot installation (e.g., .NET 10.0.102).
 *   **Backend Environment**: A running instance of the FSD Backend (REST and WebSocket servers) is required for full functionality.
 
-### Installation & Launch
+### Installation & Launch for debugging
 1.  **Clone the Repository**:
     ```bash
     git clone https://github.com/YourUsername/FSDClient.git
     ```
 2.  **Open in Godot**: Launch the Godot Engine and import the project using the `project.godot` file.
 
-#### Debug
 3.  **Build Solution**: Click the **Build** icon in the top right of the Godot Editor (or press `Ctrl+B`) to compile the C# code.
 4.  **Configuration**:
     *   Update the `BASE_URL` in `NetworkManager.cs` to match your backend API.
     *   Ensure the WebSocket URL in `Gameloop.cs` points to your active game server.
 5.  **Run**: Press **F5** or the **Play** button. The game starts at the `login_menu.tscn` scene.
 
-#### Export to game file
 
 ## 🛠 Technical Architecture
 
@@ -94,6 +92,8 @@ On the **Home Screen**, ensure you have an active deck selected and press **Batt
 * - If godot warns you about missing templates, click on manage export templates on the bottom left, then go online mode, and select best mirror to download
 * Once that is done, Export Project
 * Godot will then generate the dmg file to executable
+* For MAC, run "xattr -cr ~/Downloads/Client" (replace ~/Downloads/Client with your path to Client.app)
+* Run the Client.app app by double clicking
 
 ## ⚖️ Gameplay Rules
 
