@@ -215,11 +215,13 @@ public partial class Gameloop : Node2D
 
 		if (state == WebSocketPeer.State.Connecting)
 		{
+			GD.Print("Websocket is connecting");
 			return;
 		}
 
 		if (state != WebSocketPeer.State.Open)
 		{
+			GD.Print("Websocket is not open");
 			// Do Some connection error and try to rehandle
 			_reconnectTimer += GetProcessDeltaTime();
 			if (_reconnectTimer < _reconnectDelay) return;
@@ -240,7 +242,9 @@ public partial class Gameloop : Node2D
 
 		while (Socket.GetAvailablePacketCount() > 0)
 		{
-			readQueue.Enqueue(Socket.GetPacket().GetStringFromUtf8());
+			string message = Socket.GetPacket().GetStringFromUtf8();
+			GD.Print("Message from server\n", message);
+			readQueue.Enqueue(message);
 		}
 
 	}
