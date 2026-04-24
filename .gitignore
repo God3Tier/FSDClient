@@ -12,3 +12,5 @@ Tester*
 .env
 assets/*.import
 assets/**/*.import
+FSDClient.zip
+Client.app
