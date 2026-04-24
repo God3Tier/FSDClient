@@ -86,8 +86,11 @@ On the **Home Screen**, ensure you have an active deck selected and press **Batt
 
 *   **Deck Size**: Exactly 12 cards.
 *   **Duplicates**: Max 2 of the same Card ID per deck.
-*   **Elixir**: Maximum cap of 8. Generation speed and caps scale with the turn round.
+*   **Turns**: THere is a draw phase where you will see cards from your deck, and are able to add cards to your hand, and a playing phase where you play cards from your hand onto the battefield.
+*   **Elixir**: Maximum cap of 8. Players start with 5 elixir on turn 1, and the cap gets increased up to 8 with each passing turn. Elixir is regenerated only during playing phase.
 *   **Board**: Two 3x2 grids (Player vs. Opponent).
+*   **Cards**: Once a card is played onto the battlefield, it will automatically charge its attack meter and attack whatever is in front of it (unless otherwise mentioned in the card). If there is nothing in front of it, it will attack the hero.
+*   **Hero**: Your own hero will counterattack cards that attacked it first. When you reduce your opponent's HP to 0 or below, you win, and vice versa if your hero's HP gets reduced to 0 or below, you lose.
 
 ---
 *Developed as a Modular CCG Framework.*
