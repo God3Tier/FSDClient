@@ -87,6 +87,14 @@ On the **Home Screen**, ensure you have an active deck selected and press **Batt
 *   `src/`: Core logic files stored here
 *   `styles/`: Fixed style files (.tres) used for visual elements
 
+## How To Export Cilent
+
+* After cloning the repo, launch godot_mono and open the project folder
+* Go to Project > Export...
+* - If godot warns you about missing templates, click on manage export templates on the bottom left, then go online mode, and select best mirror to download
+* Once that is done, Export Project
+* Godot will then generate the dmg file to executable
+
 ## ⚖️ Gameplay Rules
 
 *   **Deck Size**: Exactly 12 cards.
