@@ -1,11 +1,11 @@
-[gd_scene format=3 uid="uid://csm0ojou5aa2g"]
+[gd_scene format=3]
 
-[ext_resource type="Script" uid="uid://c1yx10hsdaqrr" path="res://src/card/display/Card.cs" id="1_4dx8l"]
-[ext_resource type="Texture2D" uid="uid://bao7lee1ns2yo" path="res://assets/complete_unit.png" id="2_tgmmg"]
-[ext_resource type="Texture2D" uid="uid://cg2psgby38730" path="res://assets/cards/blue_card_outline.png" id="3_5273u"]
-[ext_resource type="Texture2D" uid="uid://cbnvslai8owl" path="res://assets/symbols/attack_symbol.png" id="4_qbjcq"]
-[ext_resource type="Texture2D" uid="uid://cpuqudy24xd6d" path="res://assets/symbols/defence_symbol.png" id="5_dqwud"]
-[ext_resource type="Texture2D" uid="uid://by65mnrtxs6pp" path="res://assets/characters/Farmer.png" id="6_0223i"]
+[ext_resource type="Script" path="res://src/card/display/Card.cs" id="1_4dx8l"]
+[ext_resource type="Texture2D" path="res://assets/complete_unit.png" id="2_tgmmg"]
+[ext_resource type="Texture2D" path="res://assets/cards/blue_card_outline.png" id="3_5273u"]
+[ext_resource type="Texture2D" path="res://assets/symbols/attack_symbol.png" id="4_qbjcq"]
+[ext_resource type="Texture2D" path="res://assets/symbols/defence_symbol.png" id="5_dqwud"]
+[ext_resource type="Texture2D" path="res://assets/characters/Farmer.png" id="6_0223i"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_4dx8l"]
 size = Vector2(165, 196)

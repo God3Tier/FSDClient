@@ -1,7 +1,7 @@
-[gd_resource type="Resource" script_class="CardStats" format=3 uid="uid://dxiuhsrd242t6"]
+[gd_resource type="Resource" script_class="CardStats" format=3]
 
-[ext_resource type="Texture2D" uid="uid://cc3tbkus1kmqt" path="res://assets/characters/Krazy_Kraken.png" id="1_3ox1r"]
-[ext_resource type="Script" uid="uid://b2r5pcvph5drw" path="res://resource/CardStats.cs" id="2_edxav"]
+[ext_resource type="Texture2D" path="res://assets/characters/Krazy_Kraken.png" id="1_3ox1r"]
+[ext_resource type="Script" path="res://resource/CardStats.cs" id="2_edxav"]
 
 [resource]
 script = ExtResource("2_edxav")

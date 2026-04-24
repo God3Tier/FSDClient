@@ -1,11 +1,11 @@
-[gd_scene format=3 uid="uid://c7leg11ys58mp"]
+[gd_scene format=3]
 
-[ext_resource type="Script" uid="uid://bppiwtv57cawo" path="res://src/scenesScripts/login/LoginMenu.cs" id="1_u8sew"]
-[ext_resource type="Texture2D" uid="uid://dgjjaj7pbhqff" path="res://assets/battlefield/background/background_test_box.png" id="2_hhelq"]
-[ext_resource type="Texture2D" uid="uid://bif2ng1aadtnc" path="res://assets/heros/purple_hero.png" id="3_twuvq"]
-[ext_resource type="Texture2D" uid="uid://dqy1b78rbalrw" path="res://assets/heros/grey_hero.png" id="4_4hsiq"]
-[ext_resource type="StyleBox" uid="uid://bcc8641wxsiam" path="res://styles/form.tres" id="4_x2epc"]
-[ext_resource type="StyleBox" uid="uid://btymgymew14qs" path="res://styles/form_button.tres" id="5_4hsiq"]
+[ext_resource type="Script" path="res://src/scenesScripts/login/LoginMenu.cs" id="1_u8sew"]
+[ext_resource type="Texture2D" path="res://assets/battlefield/background/background_test_box.png" id="2_hhelq"]
+[ext_resource type="Texture2D" path="res://assets/heros/purple_hero.png" id="3_twuvq"]
+[ext_resource type="Texture2D" path="res://assets/heros/grey_hero.png" id="4_4hsiq"]
+[ext_resource type="StyleBox" path="res://styles/form.tres" id="4_x2epc"]
+[ext_resource type="StyleBox" path="res://styles/form_button.tres" id="5_4hsiq"]
 
 [sub_resource type="FontVariation" id="FontVariation_728b3"]
 

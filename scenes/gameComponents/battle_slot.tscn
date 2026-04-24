@@ -1,6 +1,6 @@
-[gd_scene format=3 uid="uid://diapfb1ab512i"]
+[gd_scene format=3]
 
-[ext_resource type="Texture2D" uid="uid://dfkhf45cicnwd" path="res://assets/battlefield/battlefield_square.png" id="1_mxh2e"]
+[ext_resource type="Texture2D" path="res://assets/battlefield/battlefield_square.png" id="1_mxh2e"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_nqaf0"]
 size = Vector2(166, 168.5)

@@ -1,10 +1,10 @@
-[gd_scene format=3 uid="uid://cd2tgmq07dh5a"]
+[gd_scene format=3]
 
-[ext_resource type="Script" uid="uid://xvmkcnns0gqe" path="res://src/player/display/PlayerView.cs" id="1_32va2"]
-[ext_resource type="Texture2D" uid="uid://bxapgn3a0tvgf" path="res://assets/portraits/portrait_blue.png" id="2_gk75m"]
-[ext_resource type="Texture2D" uid="uid://dxpaodnd52vgh" path="res://assets/heros/purple_hero.png" id="3_tbbf0"]
-[ext_resource type="Texture2D" uid="uid://duynx1a3jhvr8" path="res://assets/symbols/counterattack_symbol.png" id="4_mec3q"]
-[ext_resource type="Texture2D" uid="uid://u0l0s1ftn71l" path="res://assets/symbols/defence_symbol.png" id="5_hoqjl"]
+[ext_resource type="Script" path="res://src/player/display/PlayerView.cs" id="1_32va2"]
+[ext_resource type="Texture2D" path="res://assets/portraits/portrait_blue.png" id="2_gk75m"]
+[ext_resource type="Texture2D" path="res://assets/heros/purple_hero.png" id="3_tbbf0"]
+[ext_resource type="Texture2D" path="res://assets/symbols/counterattack_symbol.png" id="4_mec3q"]
+[ext_resource type="Texture2D" path="res://assets/symbols/defence_symbol.png" id="5_hoqjl"]
 
 [node name="PlayerIcon" type="Control" unique_id=911451999]
 layout_mode = 3

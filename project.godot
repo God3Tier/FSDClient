@@ -11,15 +11,15 @@ config_version=5
 [application]
 
 config/name="Client"
-run/main_scene="uid://bbgm8t1esyy3b"
+run/main_scene="res://scenes/login_menu.tscn"
 config/features=PackedStringArray("4.6", "C#", "GL Compatibility")
 
 [autoload]
 
-GameStateManager="*uid://5p8jvukstm3j"
+GameStateManager="*res://src/autoLoad/GameStateManager.cs"
 PlayerStateManager="*res://src/autoLoad/PlayerStateManager.cs"
-NetworkManager="*uid://bbwqfw7nmkams"
-ResourceManager="*uid://dn687fc81jpef"
+NetworkManager="*res://src/autoLoad/NetworkManager.cs"
+ResourceManager="*res://src/autoLoad/ResourceManager.cs"
 
 [display]
 
