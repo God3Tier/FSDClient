@@ -65,6 +65,7 @@ public partial class Gameloop : Node2D
 	// We put this in gameloop later
 	public override void _Ready()
 	{
+
 		MainPlayer = PlayerStateManager.Instance;
 		try
 		{

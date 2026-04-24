@@ -470,10 +470,15 @@ public partial class CardManagement : Control
 				int CardIndex = i;
 				
 				// Create control that gives the card its size
-				var CardContainer = CreateCard("Deck", Decks.Decks[DeckIndex].Cards[CardIndex].CardId, Decks.Decks[DeckIndex].Cards[CardIndex].Level);
+				try {
+					
+					var CardContainer = CreateCard("Deck", Decks.Decks[DeckIndex].Cards[CardIndex].CardId, Decks.Decks[DeckIndex].Cards[CardIndex].Level);
+					DeckContainer.AddChild(CardContainer);
+				} catch (Exception e) {
+					GD.PrintErr("Error: ", e); 
+				}
 				
 				// Add the card into the main container
-				DeckContainer.AddChild(CardContainer);
 			}
 			
 			

@@ -17,8 +17,6 @@ public class CardBuilder
 		.CardStatsTable;
 	private static readonly PackedScene packedScene = ResourceLoader.Load<PackedScene>("res://scenes/gameComponents/Card.tscn");
 
-
-
 	public static Card GenerateCard(int cardID)
 	{
 		// get a fresh copy (diff pointer)
