@@ -1,7 +1,7 @@
-[gd_scene format=3 uid="uid://ca1aeqga504up"]
+[gd_scene format=3]
 
-[ext_resource type="Texture2D" uid="uid://j361sy0nvt5q" path="res://assets/symbols/null_energy.png" id="1_3n0na"]
-[ext_resource type="Script" uid="uid://8r401ixhk5i0" path="res://src/battlefield/Elixir.cs" id="1_6mcbq"]
+[ext_resource type="Texture2D" path="res://assets/symbols/null_energy.png" id="1_3n0na"]
+[ext_resource type="Script" path="res://src/battlefield/Elixir.cs" id="1_6mcbq"]
 
 [node name="Elixir" type="Node2D" unique_id=205885167]
 script = ExtResource("1_6mcbq")

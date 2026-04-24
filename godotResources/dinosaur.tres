@@ -1,7 +1,7 @@
-[gd_resource type="Resource" script_class="CardStats" format=3 uid="uid://20nw8ihxyu3n"]
+[gd_resource type="Resource" script_class="CardStats" format=3]
 
-[ext_resource type="Texture2D" uid="uid://o8py3nap5nq4" path="res://assets/characters/Dinosaur.png" id="1_gt2bf"]
-[ext_resource type="Script" uid="uid://b2r5pcvph5drw" path="res://resource/CardStats.cs" id="2_4rue6"]
+[ext_resource type="Texture2D" path="res://assets/characters/Dinosaur.png" id="1_gt2bf"]
+[ext_resource type="Script" path="res://resource/CardStats.cs" id="2_4rue6"]
 
 [resource]
 script = ExtResource("2_4rue6")
