@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="CardStats" format=3]
 
 [ext_resource type="Texture2D" path="res://assets/characters/Technoblade.png" id="1_gmv1y"]
-[ext_resource type="Script" path="res://resource/CardStats.cs" id="2_cunq0"]
+[ext_resource type="Script" path="res://src/resource/CardStats.cs" id="2_cunq0"]
 
 [resource]
 script = ExtResource("2_cunq0")
