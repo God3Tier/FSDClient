@@ -61,11 +61,15 @@ public partial class Gameloop : Node2D
 	private string _currentPhase = string.Empty;
 	private bool _phaseDrivenByServer = false;
 
+	// Network (HTTP) connection to add packs once gameplay is over
+	private NetworkManager Network { get; set; }
+
 	// I am of the assumption that this is what is being called by the
 	// We put this in gameloop later
 	public override void _Ready()
 	{
 		MainPlayer = PlayerStateManager.Instance;
+		Network = NetworkManager.Instance;
 		try
 		{
 			var token = MainPlayer.Token;
@@ -478,7 +482,7 @@ public partial class Gameloop : Node2D
 				return;
 			}
 			GameEnd = true;
-			ReturnToHomeFromGameOver();
+			AddPacks();
 			return;
 		}
 
@@ -510,8 +514,22 @@ public partial class Gameloop : Node2D
 		}
 	}
 
-	private void ReturnToHomeFromGameOver()
+	private void AddPacks()
 	{
+		Network.SendRequestWithToken(NetworkManager.BASE_URL + NetworkManager.DECK + "/packs", Godot.HttpClient.Method.Post, "", AddPacksResponse);
+	}
+
+	private void AddPacksResponse(long result, long responseCode, string[] headers, byte[] body)
+	{
+		GD.Print(responseCode);
+		string json = System.Text.Encoding.UTF8.GetString(body);
+		if (responseCode != 201)
+		{
+			GD.PrintErr("Failed when adding packs");
+			return;
+		}
+
+		// return back home
 		var gameStateManager = GetNode<GameStateManager>("/root/GameStateManager");
 		gameStateManager.ChangeGameState(GameState.HOMESCREEN);
 	}
