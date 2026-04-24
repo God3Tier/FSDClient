@@ -65,7 +65,6 @@ public partial class Gameloop : Node2D
 	// We put this in gameloop later
 	public override void _Ready()
 	{
-
 		MainPlayer = PlayerStateManager.Instance;
 		try
 		{
@@ -151,6 +150,8 @@ public partial class Gameloop : Node2D
 		{
 			GD.PrintErr("Exception: ", e);
 		}
+
+		GD.Print("\n\n\n\nAble to intialise gameplay LOOP \n\n\n\n");
 	}
 
 	private void OnCardAdd(int cardID)
